@@ -1,0 +1,84 @@
+.alinear-vertical {
+    vertical-align: middle;
+}
+
+.codigo-size {
+    width: 100px;
+}
+
+.fondo {
+    background-color: #ecf0f5;
+}
+
+.help-block {
+    color: #e20000;
+}
+
+.icono-margen {
+    margin-right: 5px;
+}
+
+.id-size {
+    width: 50px;
+}
+
+.jumbotron {
+    background: #008d4c;
+    color: #fff;
+    padding-top: 35px;
+    padding-bottom: 35px;
+    text-align: center;
+}
+
+.jumbotron h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.margen-arriba {
+    margin-top: 10px;
+}
+
+.margen-abajo {
+    margin-bottom: 10px;
+}
+
+.margen-campo-imagen {
+    padding-top: 7px;
+}
+
+.mensaje-flash {
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: -15px;
+}
+
+.opc-size {
+    width: 150px;
+}
+
+.tabla-quitar-margen {
+    margin-bottom: 0;
+}
+
+.thumb {
+    margin-right: 10px;
+    width: 40%;
+}
+
+.thumb img {
+    width: 100%
+}
+
+.verde-claro {
+    color: #7bd6ac;
+}
+
+@media screen and (max-width: 768px) {
+    .thumb {
+        width: 100%;
+        margin-bottom: 10px;
+        margin-right: 0;
+    }
+}

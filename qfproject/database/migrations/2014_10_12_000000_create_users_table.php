@@ -19,8 +19,11 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password')->nullable();
             $table->enum('tipo', ['Administrador', 'Asistente', 'Docente'])->default('Docente');
+            $table->string('imagen')->nullable;
+            /* Agregar luego
             $table->string('provider');
             $table->string('provider_id')->unique();
+            */
             $table->rememberToken();
             $table->timestamps();
         });

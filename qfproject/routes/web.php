@@ -12,5 +12,14 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('layouts.principal');
+});
+
+Route::group(['prefix' => 'administracion'], function () {
+    
+    Route::resource('actividades', 'ActividadController');
+    Route::resource('asignaturas', 'AsignaturaController');
+    Route::resource('locales', 'LocalController');
+    Route::resource('suspensiones', 'SuspensionController');
+
 });

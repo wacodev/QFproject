@@ -16,10 +16,10 @@ class CreateNotificacionesTable extends Migration
         Schema::create('notificaciones', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('reservacion_id')->unsigned();
-            $table->enum('tipo', ['crear', 'editar', 'eliminar']);
+            $table->integer('reservacione_id')->unsigned();
+            $table->enum('tipo', ['crear', 'editar']);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('reservacion_id')->references('id')->on('reservaciones')->onDelete('cascade');
+            $table->foreign('reservacione_id')->references('id')->on('reservaciones')->onDelete('cascade');
             $table->timestamps();
         });
     }
