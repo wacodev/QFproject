@@ -2,12 +2,38 @@
     vertical-align: middle;
 }
 
+.alinear-error {
+    padding-left: 30px;
+}
+
+.cero-margen p {
+    margin-bottom: 0;
+}
+
 .codigo-size {
+    width: 100px;
+}
+
+.fecha-hora-c {
+    font-size: 12px;
+}
+
+.fecha-size {
     width: 100px;
 }
 
 .fondo {
     background-color: #ecf0f5;
+}
+
+.fondo-login {
+    background-image: /**/
+}
+
+.footer-pagina {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
 }
 
 .help-block {
@@ -16,6 +42,10 @@
 
 .icono-margen {
     margin-right: 5px;
+}
+
+.icono-margen-grande {
+    margin-right: 15px;
 }
 
 .id-size {
@@ -35,8 +65,19 @@
     margin-bottom: 0;
 }
 
+.logo {
+    float: right;
+    height: 100px;
+    padding-left: 15px;
+    width: 100px;
+}
+
 .margen-arriba {
     margin-top: 10px;
+}
+
+.margen-arriba-grande {
+    margin-top: 50px;
 }
 
 .margen-abajo {
@@ -47,11 +88,25 @@
     padding-top: 7px;
 }
 
+.margen-inicio {
+    margin-bottom: 0;
+}
+
 .mensaje-flash {
     padding-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
     margin-bottom: -15px;
+}
+
+.mensaje-flash-local {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.mini-logo-barra {
+    width: 30px;
+    height: 30px;
 }
 
 .opc-size {
@@ -69,6 +124,16 @@
 
 .thumb img {
     width: 100%
+}
+
+.tipo-size {
+    width: 130px;
+}
+
+.titulo {
+    margin-bottom: 50px;
+    margin-top: 70px;
+    font-size: 20px;
 }
 
 .verde-claro {

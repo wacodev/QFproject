@@ -22,13 +22,12 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Nuevo local</h3>
                 </div>
-                    {!! Form::open(['route' => 'locales.store', 'method' => 'POST', 'files' => true, 'class' => 'form-horizontal']) !!}
-                        {{ Form::token() }}
+                    {!! Form::open(['route' => 'locales.store', 'autocomplete' => 'off', 'method' => 'POST', 'files' => true, 'class' => 'form-horizontal']) !!}
                         <div class="box-body">
-                            <div class="form-group">
-                                {!! Form::label('nombre', 'Nombre', ['class' => 'col-sm-2 control-label']) !!}
-                                <div class="col-sm-10">
-                                    {!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre del local']) !!}
+                            <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">
+                                {!! Form::label('nombre', 'Nombre', ['class' => 'col-sm-4 control-label']) !!}
+                                <div class="col-sm-7">
+                                    {!! Form::text('nombre', old('nombre'), ['class' => 'form-control', 'placeholder' => 'Nombre del local', 'required']) !!}
                                     @if ($errors->has('nombre'))
                                         <span class="help-block">
                                             <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>{{ $errors->first('nombre') }}
@@ -36,10 +35,10 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="form-group">
-                                {!! Form::label('capacidad', 'Capacidad', ['class' => 'col-sm-2 control-label']) !!}
-                                <div class="col-sm-10">
-                                    {!! Form::number('capacidad', null, ['class' => 'form-control', 'placeholder' => 'Capacidad del local', 'min' => '1']) !!}
+                            <div class="form-group{{ $errors->has('capacidad') ? ' has-error' : '' }}">
+                                {!! Form::label('capacidad', 'Capacidad', ['class' => 'col-sm-4 control-label']) !!}
+                                <div class="col-sm-7">
+                                    {!! Form::number('capacidad', old('capacidad'), ['class' => 'form-control', 'placeholder' => 'Capacidad del local', 'min' => '1', 'required']) !!}
                                     @if ($errors->has('capacidad'))
                                         <span class="help-block">
                                             <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>{{ $errors->first('capacidad') }}
@@ -47,9 +46,9 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="form-group">
-                                {!! Form::label('imagen', 'Imagen', ['class' => 'col-sm-2 control-label']) !!}
-                                <div class="col-sm-10">
+                            <div class="form-group{{ $errors->has('imagen') ? ' has-error' : '' }}">
+                                {!! Form::label('imagen', 'Imagen', ['class' => 'col-sm-4 control-label']) !!}
+                                <div class="col-sm-7">
                                     {!! Form::file('imagen', ['class' => 'margen-campo-imagen']) !!}
                                     @if ($errors->has('imagen'))
                                         <span class="help-block">
@@ -60,10 +59,10 @@
                             </div>
                         </div>
                         <div class="box-footer">
-                    	    <div class="pull-right">
-                    	        <a href="{{ route('locales.index') }}" class="btn btn-default">Cancelar</a>
-                    	        {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
-                    	    </div>
+                            <div class="pull-right">
+                                <a href="{{ route('locales.index') }}" class="btn btn-default">Cancelar</a>
+                                {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
+                            </div>
                         </div>
                     {!! Form::close() !!}
             </div>

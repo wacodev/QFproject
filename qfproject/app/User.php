@@ -10,19 +10,31 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * ---------------------------------------------------------------------------
+     * Atributos que son asignados en masa.
      *
      * @var array
+     * ---------------------------------------------------------------------------
      */
+    
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'lastname',
+        'carnet',
+        'email',
+        'password',
+        'tipo',
+        'imagen'
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * ---------------------------------------------------------------------------
+     * Atributos que deberían estar ocultos para las matrices.
      *
      * @var array
+     * ---------------------------------------------------------------------------
      */
+
     protected $hidden = [
         'password', 'remember_token',
     ];

@@ -24,7 +24,7 @@ class CreateReservacionesTable extends Migration
             $table->time('hora_fin');
             $table->string('tema')->nullable();
             $table->enum('tipo', ['Ordinaria', 'Extraordinaria']);
-            $table->string('codigo');
+            $table->string('codigo')->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('local_id')->references('id')->on('locales')->onDelete('cascade');
             $table->foreign('asignatura_id')->references('id')->on('asignaturas')->onDelete('cascade');

@@ -47,17 +47,21 @@
 
     <!-- MIS ESTILOS -->
     
-    <link rel="stylesheet" href="{{ asset('css/mis_estilos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/mis-estilos.css') }}">
     
     <!-- FAVICON -->
-    <!-- Editar (Borrar comentario al editar) -->
     
-    <link rel="apple-touch-icon" href="{{ asset('img/apple-touch-icon.png') }}">
-    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
+    <link rel="logo-simple" href="{{ asset('images/sistema/logos-simple.png') }}">
+    <link rel="shortcut icon" href="{{ asset('images/sistema/logo-simple.ico') }}">
 
   </head>
   
   <body class="hold-transition skin-green sidebar-mini" onload="startTime()">
+
+    <?php
+      $nombre = explode(' ', Auth::user()->name);
+      $apellido = explode(' ', Auth::user()->lastname);
+    ?>
     
     <div class="wrapper">
 
@@ -65,17 +69,24 @@
 
         <!-- LOGO -->
         
-        <a href="index2.html" class="logo">
-          <!-- Mini logo para la mini barra lateral 50x50 pixels -->
-          <span class="logo-mini">UES</span>
-          <!-- Logo para estado regular y dispositivos móviles -->
+        <a href="" class="logo">
+          
+          <!-- MINI LOGO PARA LA MINI BARRA LATERAL 50X50 PIXELES -->
+          
+          <span class="logo-mini"><img src="{{ asset('images/sistema/logo-simple-blanco.png') }}" class="mini-logo-barra"></span>
+          
+          <!-- LOGO PARA ESTADO REGULAR Y DISPOSITIVOS MÓVILES -->
+          
           <span class="logo-lg">Química y Farmacia</span>
+        
         </a>
 
         <!-- BARRA DE NAVEGACIÓN DEL ENCABEZADO -->
         
         <nav class="navbar navbar-static-top" role="navigation">
-          <!-- Menú desplegable de la barra lateral -->
+          
+          <!-- MENÚ DESPLEGABLE DE LA BARRA LATERAL -->
+          
           <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Navegación</span>
           </a>
@@ -96,27 +107,32 @@
               </li>
               
               <!-- CUENTA DE USUARIO -->
-              
+
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="{{ asset('images/users/default_profile.jpg') }}" class="user-image" alt="Imagen de usuario">
-                  <span class="hidden-xs">Nombre de usuario</span>
+                  <span class="hidden-xs">{{ $nombre[0] . ' ' . $apellido[0] }}</span>
                 </a>
                 <ul class="dropdown-menu">
-                  <!-- Imagen de usuario -->
+                  
+                  <!-- IMAGEN DE USUARIO -->
+                  
                   <li class="user-header">
                     <img src="{{ asset('images/users/default_profile.jpg') }}" class="img-circle" alt="Imagen de usuario">
-                    <p>Nombre de usuario<small>Tipo de usuario</small></p>
+                    <p>{{ $nombre[0] . ' ' . $apellido[0] }}<small>{{ Auth::user()->tipo }}</small></p>
                   </li>
                   
                   <!-- MENÚ DE PIE DE PÁGINA -->
                   
                   <li class="user-footer">
                     <div class="pull-left">
-                      <a href="#" class="btn btn-default btn-flat">Perfil</a>
+                      <a href="{{ route('home') }}" class="btn btn-default btn-flat">Inicio</a>
                     </div>
                     <div class="pull-right">
-                      <a href="#" class="btn btn-default btn-flat">Cerrar sesión</a>
+                      <a href="{{ route('logout') }}" class="btn btn-default btn-flat" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                      </form>
                     </div>
                   </li>
 
@@ -144,9 +160,10 @@
             <div class="pull-left image">
               <img src="{{ asset('images/users/default_profile.jpg') }}" class="img-circle" alt="Imagen de usuario">
             </div>
+
             <div class="pull-left info">
-              <p>Nombre de usuario</p>
-              <p style="font-size: 12px;">Tipo de usuario</p>
+              <p>{{ $nombre[0] . ' ' . $apellido[0] }}</p>
+              <p style="font-size: 12px;">{{ Auth::user()->tipo }}</p>
             </div>
           </div>
 
@@ -156,8 +173,8 @@
           <ul class="sidebar-menu">
             
             <li>
-              <a href="#">
-                <i class="fa fa-user"></i><span>Mi perfil</span>
+              <a href="{{ route('home') }}">
+                <i class="fa fa-home"></i><span>Inicio</span>
               </a>
             </li>
 
@@ -175,7 +192,9 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="#"><i class="fa fa-circle-o"></i>Nueva reservación *</a></li>
+                <li><a href="#"><i class="fa fa-circle-o"></i>Mis reservaciones *</a></li>
+                <li><a href="#"><i class="fa fa-circle-o"></i>Todas *</a></li>
+                <li><a href="{{ route('reservaciones.paso-uno') }}"><i class="fa fa-circle-o"></i>Nueva reservación *</a></li>
                 <li><a href="#"><i class="fa fa-circle-o"></i>Por paquete *</a></li>
                 <li><a href="#"><i class="fa fa-circle-o"></i>Historial *</a></li>
               </ul>
@@ -220,15 +239,14 @@
               <ul class="treeview-menu">
                 <li><a href="{{ route('actividades.index') }}"><i class="fa fa-circle-o"></i>Actividades</a></li>
                 <li><a href="{{ route('asignaturas.index') }}"><i class="fa fa-circle-o"></i>Asignaturas</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i>Asuetos *</a></li>
+                <li><a href="{{ route('asuetos.index') }}"><i class="fa fa-circle-o"></i>Asuetos</a></li>
                 <li><a href="{{ route('locales.index') }}"><i class="fa fa-circle-o"></i>Locales</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i>Reservaciones *</a></li>
                 <li><a href="{{ route('suspensiones.index') }}"><i class="fa fa-circle-o"></i>Suspensiones</a></li>
               </ul>
             </li>
 
             <li>
-              <a href="#">
+              <a href="{{ route('users.index') }}">
                 <i class="fa fa-users"></i><span>Usuarios</span>
               </a>
             </li>
@@ -241,7 +259,7 @@
 
             <li>
               <a href="#">
-                <i class="fa fa-book"></i><span>Ayuda</span>
+                <i class="fa fa-question-circle"></i><span>Ayuda</span>
               </a>
             </li>
                         
@@ -297,7 +315,7 @@
 
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
-          Versión Alpha 1.0
+          Sistema de reservación de locales
         </div>
         <a href="http://www.quimicayfarmacia.ues.edu.sv/" target="_blanck">Facultad de Química y Farmacia</a> &copy; 2017-2018
       </footer>

@@ -16,8 +16,8 @@ class CreateAsuetosTable extends Migration
         Schema::create('asuetos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
-            $table->integer('dia');
-            $table->integer('mes');
+            $table->string('dia', 2);
+            $table->string('mes', 2);
             $table->timestamps();
         });
     }

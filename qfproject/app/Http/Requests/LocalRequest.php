@@ -7,32 +7,32 @@ use Illuminate\Foundation\Http\FormRequest;
 class LocalRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * ---------------------------------------------------------------------------
+     * Determina si el usuario está autorizado para realizar esta solicitud.
      *
      * @return bool
+     * ---------------------------------------------------------------------------
      */
+
     public function authorize()
     {
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * ---------------------------------------------------------------------------
+     * Obtiene las reglas de validación que se aplican a la solicitud.
      *
      * @return array
+     * ---------------------------------------------------------------------------
      */
+    
     public function rules()
     {
-        $method = $this->_method;
-        $rules = array(
-            'nombre'    => 'required|max:190',
-            'capacidad' => 'required|numeric',
-            'imagen'    => 'image|max:2048|mimes:jpeg, png'
-        );
-        if ($method != 'PUT')
-        {
-            $rules['nombre'] .='|unique:locales';
-        }
-        return $rules;
+        return [
+            'nombre'    => 'required|max:190|unique:locales,nombre,' . $this->route('locale'),
+            'capacidad' => 'required|integer|min:1',
+            'imagen'    => 'image|mimes:jpeg,bmp,png|max:2048|unique:locales,imagen,' . $this->route('locale')
+        ];
     }
 }

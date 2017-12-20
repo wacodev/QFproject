@@ -27,7 +27,7 @@
 
         <!-- MIS ESTILOS -->
     
-        <link rel="stylesheet" href="{{ asset('css/mis_estilos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/mis-estilos.css') }}">
 
     </head>
     

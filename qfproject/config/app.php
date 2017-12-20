@@ -173,19 +173,20 @@ return [
          */
         qfproject\Providers\AppServiceProvider::class,
         qfproject\Providers\AuthServiceProvider::class,
-        // qfproject\Providers\BroadcastServiceProvider::class,
+        qfproject\Providers\BroadcastServiceProvider::class,
         qfproject\Providers\EventServiceProvider::class,
         qfproject\Providers\RouteServiceProvider::class,
 
-        /*
+        /**
          * ---------------------------------------------------------------------------
-         * Providers agregados por el autor.
+         * Providers agregados.
          * ---------------------------------------------------------------------------
          */
         
+        Barryvdh\DomPDF\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -236,15 +237,16 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         
-        /*
+        /**
          * ---------------------------------------------------------------------------
-         * Aliases agregados por el autor.
+         * Aliases agregados.
          * ---------------------------------------------------------------------------
          */
 
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Flash' => Laracasts\Flash\Flash::class,
         'Form'  => Collective\Html\FormFacade::class,
         'Html'  => Collective\Html\HtmlFacade::class,
-        'Flash' => Laracasts\Flash\Flash::class,
         'PDF'   => Barryvdh\DomPDF\Facade::class,
 
     ],

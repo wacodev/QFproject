@@ -16,16 +16,24 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('lastname');
+            $table->string('carnet')->unique();
             $table->string('email')->unique();
-            $table->string('password')->nullable();
+            $table->string('password');
             $table->enum('tipo', ['Administrador', 'Asistente', 'Docente'])->default('Docente');
-            $table->string('imagen')->nullable;
-            /* Agregar luego
-            $table->string('provider');
-            $table->string('provider_id')->unique();
-            */
+            $table->string('imagen')->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
+            
+            /*
+             * ---------------------------------------------------------------------------
+             * Agregar luego en caso de usar acceso por medio de Google y permitir que
+             * password sea nula:
+             *
+             * $table->string('provider');
+             * $table->string('provider_id')->unique();
+             * ---------------------------------------------------------------------------
+             */
         });
     }
 

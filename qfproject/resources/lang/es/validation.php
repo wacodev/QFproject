@@ -98,6 +98,18 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'hora_inicio' => [
+            'after'           => 'El campo :attribute debe ser una hora posterior a :date.',
+            'after_or_equal'  => 'El campo :attribute debe ser una hora posterior o igual a :date.',
+            'before'          => 'El campo :attribute debe ser una hora anterior a :date.',
+            'before_or_equal' => 'El campo :attribute debe ser una hora anterior o igual a :date.',
+        ],
+        'hora_fin' => [
+            'after'           => 'El campo :attribute debe ser una hora posterior a :date.',
+            'after_or_equal'  => 'El campo :attribute debe ser una hora posterior o igual a :date.',
+            'before'          => 'El campo :attribute debe ser una hora anterior a :date.',
+            'before_or_equal' => 'El campo :attribute debe ser una hora anterior o igual a :date.',
+        ],
     ],
     /*
     |--------------------------------------------------------------------------

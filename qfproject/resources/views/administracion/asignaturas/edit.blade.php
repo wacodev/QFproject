@@ -22,13 +22,12 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Editar asignatura: {{ $asignatura->nombre }}</h3>
                 </div>
-                    {!! Form::open(['route' => ['asignaturas.update', $asignatura], 'method' => 'PUT', 'class' => 'form-horizontal']) !!}
-                        {{ Form::token() }}
+                    {!! Form::open(['route' => ['asignaturas.update', $asignatura], 'autocomplete' => 'off', 'method' => 'PUT', 'class' => 'form-horizontal']) !!}
                         <div class="box-body">
-                            <div class="form-group">
-                                {!! Form::label('codigo', 'Código', ['class' => 'col-sm-2 control-label']) !!}
-                                <div class="col-sm-10">
-                                    {!! Form::text('codigo', $asignatura->codigo, ['class' => 'form-control', 'placeholder' => 'Código de la asignatura']) !!}
+                            <div class="form-group{{ $errors->has('codigo') ? ' has-error' : '' }}">
+                                {!! Form::label('codigo', 'Código', ['class' => 'col-sm-4 control-label']) !!}
+                                <div class="col-sm-7">
+                                    {!! Form::text('codigo', $asignatura->codigo, ['class' => 'form-control', 'placeholder' => 'Código de la asignatura', 'required']) !!}
                                     @if ($errors->has('codigo'))
                                         <span class="help-block">
                                             <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>{{ $errors->first('codigo') }}
@@ -36,10 +35,10 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="form-group">
-                                {!! Form::label('nombre', 'Nombre', ['class' => 'col-sm-2 control-label']) !!}
-                                <div class="col-sm-10">
-                                    {!! Form::text('nombre', $asignatura->nombre, ['class' => 'form-control', 'placeholder' => 'Nombre de la asignatura']) !!}
+                            <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">
+                                {!! Form::label('nombre', 'Nombre', ['class' => 'col-sm-4 control-label']) !!}
+                                <div class="col-sm-7">
+                                    {!! Form::text('nombre', $asignatura->nombre, ['class' => 'form-control', 'placeholder' => 'Nombre de la asignatura', 'required']) !!}
                                     @if ($errors->has('nombre'))
                                         <span class="help-block">
                                             <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>{{ $errors->first('nombre') }}
@@ -49,10 +48,10 @@
                             </div>
                         </div>
                         <div class="box-footer">
-                    	    <div class="pull-right">
-                    	        <a href="{{ route('asignaturas.index') }}" class="btn btn-default">Cancelar</a>
-                    	        {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
-                    	    </div>
+                            <div class="pull-right">
+                                <a href="{{ route('asignaturas.index') }}" class="btn btn-default">Cancelar</a>
+                                {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
+                            </div>
                         </div>
                     {!! Form::close() !!}
             </div>
