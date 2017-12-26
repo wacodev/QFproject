@@ -26,14 +26,14 @@ class AsignaturaController extends Controller
 
     public function index(Request $request)
     {
-        if ($request)
-        {
+        if ($request) {
             $query = trim($request->get('searchText'));
             $asignaturas = Asignatura::where('nombre', 'like', '%' . $query . '%')
                 ->orWhere('codigo', 'like', '%' . $query . '%')
                 ->orderBy('codigo', 'asc')
                 ->paginate(10);
         }
+
         return view('administracion.asignaturas.index')
             ->with('asignaturas', $asignaturas)
             ->with('searchText', $query);
@@ -65,6 +65,7 @@ class AsignaturaController extends Controller
     {
         $asignatura = new Asignatura($request->all());
         $asignatura->save();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -75,6 +76,7 @@ class AsignaturaController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('asignaturas.index');
     }
 
@@ -104,6 +106,7 @@ class AsignaturaController extends Controller
     public function edit($id)
     {
         $asignatura = Asignatura::find($id);
+
         return view('administracion.asignaturas.edit')->with('asignatura', $asignatura);
     }
 
@@ -122,6 +125,7 @@ class AsignaturaController extends Controller
         $asignatura = Asignatura::find($id);
         $asignatura->fill($request->all());
         $asignatura->save();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -132,6 +136,7 @@ class AsignaturaController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('asignaturas.index');
     }
 
@@ -148,6 +153,7 @@ class AsignaturaController extends Controller
     {
         $asignatura = Asignatura::find($id);
         $asignatura->delete();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -158,6 +164,7 @@ class AsignaturaController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('asignaturas.index');
     }
 }

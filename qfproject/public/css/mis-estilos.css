@@ -27,7 +27,12 @@
 }
 
 .fondo-login {
-    background-image: /**/
+    background-image: url(../images/sistema/fondo-login.jpg);;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #113222;
 }
 
 .footer-pagina {
@@ -140,10 +145,13 @@
     color: #7bd6ac;
 }
 
-@media screen and (max-width: 768px) {
+@media only screen and (max-width: 767px) {
     .thumb {
         width: 100%;
         margin-bottom: 10px;
         margin-right: 0;
+    }
+    .fondo-login {
+    background-image: url(../images/sistema/fondo-login-telefono.jpg);;
     }
 }

@@ -63,6 +63,17 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        /**
+         * ---------------------------------------------------------------------------
+         * Disco de sistema de archivos agregado.
+         * ---------------------------------------------------------------------------
+         */
+
+        'archivos' => [
+            'driver' => 'local',
+            'root' => storage_path('archivos'),
+        ],
+
     ],
 
 ];

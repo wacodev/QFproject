@@ -26,10 +26,11 @@ class UserRequest extends FormRequest
      * @return array
      * ---------------------------------------------------------------------------
      */
-    
+
     public function rules()
     {
         $method = $this->_method;
+
         $rules = array(
             'name'     => 'max:190|required',
             'lastname' => 'max:190|required',
@@ -40,15 +41,16 @@ class UserRequest extends FormRequest
             'imagen'   => 'image|max:2048|mimes:jpeg,png',
 
         );
-        if ($method != 'PUT')
-        {
+
+        if ($method != 'PUT') {
             $rules['carnet']   .= '|unique:users';
             $rules['email']    .= '|unique:users';
             $rules['password'] .= '|required';
             $rules['imagen']   .= '|unique:users';
         }
+
         return $rules;
-        
+
         /*
         return [
             //

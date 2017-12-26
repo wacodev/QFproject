@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      * ---------------------------------------------------------------------------
      */
-    
+
     protected $fillable = [
         'name',
         'lastname',
@@ -38,6 +38,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Relación uno a muchos con el modelo Reservacion.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * ---------------------------------------------------------------------------
+     */
 
     public function reservaciones()
     {

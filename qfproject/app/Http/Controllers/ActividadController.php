@@ -26,13 +26,13 @@ class ActividadController extends Controller
 
     public function index(Request $request)
     {
-        if ($request)
-        {
+        if ($request) {
             $query = trim($request->get('searchText'));
             $actividades = Actividad::where('nombre', 'like', '%' . $query . '%')
                 ->orderBy('nombre', 'asc')
                 ->paginate(10);
         }
+
         return view('administracion.actividades.index')
             ->with('actividades', $actividades)
             ->with('searchText', $query);
@@ -64,6 +64,7 @@ class ActividadController extends Controller
     {
         $actividad = new Actividad($request->all());
         $actividad->save();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -74,6 +75,7 @@ class ActividadController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('actividades.index');
     }
 
@@ -103,6 +105,7 @@ class ActividadController extends Controller
     public function edit($id)
     {
         $actividad = Actividad::find($id);
+
         return view('administracion.actividades.edit')->with('actividad', $actividad);
     }
 
@@ -121,6 +124,7 @@ class ActividadController extends Controller
         $actividad = Actividad::find($id);
         $actividad->fill($request->all());
         $actividad->save();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -131,6 +135,7 @@ class ActividadController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('actividades.index');
     }
 
@@ -147,6 +152,7 @@ class ActividadController extends Controller
     {
         $actividad = Actividad::find($id);
         $actividad->delete();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -157,6 +163,7 @@ class ActividadController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('actividades.index');
     }
 }

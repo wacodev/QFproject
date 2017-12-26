@@ -11,10 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+Route::get('/', 'HomeController@index');
 
+// Área administrativa
 Route::group(['prefix' => 'administracion'], function () {
     
     Route::resource('actividades', 'ActividadController');
@@ -26,20 +25,38 @@ Route::group(['prefix' => 'administracion'], function () {
 
 });
 
+// Reservaciones simples
 Route::group(['prefix' => 'reservaciones'], function () {
 
-    Route::get('/paso-uno', 'ReservacionController@individual')->name('reservaciones.paso-uno');
-    Route::get('/paso-dos', 'ReservacionController@pasoUno')->name('reservaciones.paso-dos');
-    Route::get('/paso-tres', 'ReservacionController@pasoDos')->name('reservaciones.paso-tres');
-    Route::post('/', 'ReservacionController@pasoTres')->name('reservaciones.guardar');
+    Route::get('/paso-uno', 'ReservacionController@create')->name('reservaciones.paso-uno');
+    Route::get('/paso-dos', 'ReservacionController@hacerPasoUno')->name('reservaciones.paso-dos');
+    Route::get('/paso-tres', 'ReservacionController@hacerPasoDos')->name('reservaciones.paso-tres');
+    Route::post('/', 'ReservacionController@hacerPasoTres')->name('reservaciones.store');
     Route::delete('/{reservacion}', 'ReservacionController@destroy')->name('reservaciones.destroy');
     Route::get('/{reservacion}/edit', 'ReservacionController@edit')->name('reservaciones.edit');
     Route::put('/{reservacion}', 'ReservacionController@update')->name('reservaciones.update');
 
 });
 
+Route::group(['prefix' => 'importaciones'], function () {
+
+    Route::get('/reservaciones', 'ImportacionController@importarReservaciones')->name('reservaciones.importar');
+    Route::post('/', 'ImportacionController@almacenarReservaciones')->name('reservaciones.almacenar');
+
+});
+
+Route::group(['prefix' => 'exportaciones'], function () {
+    
+    Route::get('/reservaciones', 'ExportacionController@exportarReservaciones')->name('reservaciones.exportar');
+    Route::post('/', 'ExportacionController@recibirReservaciones')->name('reservaciones.recibir');
+
+});
+
 Auth::routes();
 
+// Página de inicio
 Route::get('/home', 'HomeController@index')->name('home');
 
+// Comprobante de reservación
 Route::get('/{reservacion}/comprobante', 'PdfController@generarComprobante')->name('reservacion.comprobante');
+

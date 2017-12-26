@@ -4,11 +4,11 @@
 
 @section('encabezado', 'Configuración')
 
-@section('subencabezado', 'Locales')
+@section('subencabezado', 'Nuevo local')
 
 @section('breadcrumb')
     
-    <li><i class="fa fa-cog icono-margen"></i>Configuración</li>
+    <li><i class="fa fa-ticket icono-margen"></i>Configuración</li>
     <li><a href="{{ route('locales.index') }}">Locales</a></li>
     <li class="active">Nuevo local</li>
 

@@ -27,8 +27,7 @@ class SuspensionController extends Controller
 
     public function index(Request $request)
     {
-        if ($request)
-        {
+        if ($request) {
             $query = trim($request->get('searchText'));
             $suspensiones = Suspension::where('fecha', 'like', '%' . $query . '%')
                 ->orWhere('hora_inicio', 'like', '%' . $query . '%')
@@ -36,6 +35,7 @@ class SuspensionController extends Controller
                 ->orderBy('fecha', 'desc')
                 ->paginate(10);
         }
+
         return view('administracion.suspensiones.index')
             ->with('suspensiones', $suspensiones)
             ->with('searchText', $query);
@@ -66,12 +66,14 @@ class SuspensionController extends Controller
     public function store(SuspensionRequest $request)
     {
         $suspension = new Suspension($request->all());
+
         $suspension->fecha = Carbon::parse($suspension->fecha)->format('Y-m-d');
         $suspension->hora_inicio = Carbon::parse($suspension->hora_inicio)->format('H:i:s');
         $suspension->hora_fin = Carbon::parse($suspension->hora_fin)->format('H:i:s');
+
         $error = $this->validarFechaHora($suspension->fecha, $suspension->hora_inicio, $suspension->hora_fin);
-        if ($error != 'No hay errores')
-        {
+
+        if ($error != 'No hay errores') {
             flash('
                 <h4>
                     <i class="fa fa-ban icono-margen-grande" aria-hidden="true"></i>¡Error en ingreso de datos!
@@ -82,7 +84,9 @@ class SuspensionController extends Controller
                 ->important();
             return back();
         }
+
         $suspension->save();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -93,6 +97,7 @@ class SuspensionController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('suspensiones.index');
     }
 
@@ -152,6 +157,7 @@ class SuspensionController extends Controller
     {
         $suspension = Suspension::find($id);
         $suspension->delete();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -162,6 +168,7 @@ class SuspensionController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('suspensiones.index');
     }
 
@@ -181,16 +188,16 @@ class SuspensionController extends Controller
     {
         $hi = explode(':', $hora_inicio);
         $hf = explode(':', $hora_fin);
+
         $fecha_actual = Carbon::now()->format('Y-m-d');
         $hora_actual = Carbon::now()->format('H:i:s');
-        if ($hi[1] != '00' || $hf[1] != '00')
-        {
+
+        if ($hi[1] != '00' || $hf[1] != '00') {
             return 'No puedes ingresar minutos distintos a cero.';
-        }
-        elseif ($fecha == $fecha_actual && $hora_inicio < $hora_actual)
-        {
+        } elseif ($fecha == $fecha_actual && $hora_inicio < $hora_actual) {
             return 'Si la reservación se desea programar para el día de hoy no puede ingresar una hora inferior a la actual.';
         }
+
         return 'No hay errores';
     }
 }

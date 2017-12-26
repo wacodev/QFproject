@@ -30,12 +30,11 @@ class AppServiceProvider extends ServiceProvider
          * Si utiliza MySQL v5.7.7 o superior, no debería tener problemas y podría
          * comentar o borrar las líneas 13 y 37.
          *
-         * Fuente: https://laravel-news.com/laravel-5-4-key-too-long-error
+         * @link https://laravel-news.com/laravel-5-4-key-too-long-error
          * ---------------------------------------------------------------------------
          */
         
         Schema::defaultStringLength(191);
-
     }
 
     /**

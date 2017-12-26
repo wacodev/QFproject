@@ -40,13 +40,13 @@
 
     </head>
 
-    <body class="hold-transition login-page">
+    <body class="hold-transition login-page fondo-login">
     
         <div class="login-box">
         
             <!-- LOGO -->
 
-            <div class="login-logo">
+            <div class="login-logo" style="color: #fff">
                 Facultad de Química y Farmacia
             </div>
         

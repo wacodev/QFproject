@@ -21,7 +21,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Paso 3: Detalles</h3>
                 </div>
-                {!! Form::open(['route' => 'reservaciones.guardar', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+                {!! Form::open(['route' => 'reservaciones.store', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
                     <div class="box-body">
                         <div class="form-group{{ $errors->has('asignatura_id') ? ' has-error' : '' }}">
                             {!! Form::label('asignatura_id', 'Asignatura', ['class' => 'col-sm-4 control-label']) !!}

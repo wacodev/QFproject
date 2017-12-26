@@ -39,8 +39,7 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        if ($request)
-        {
+        if ($request) {
             $query = trim($request->get('searchText'));
             $reservaciones = Reservacion::where('user_id', '=', \Auth::user()->id)
                 ->where('fecha', '>=', Carbon::now())
@@ -57,6 +56,7 @@ class HomeController extends Controller
                 $reservaciones->actividad;
             });
         }
+
         return view('home')
             ->with('reservaciones', $reservaciones)
             ->with('searchText', $query);

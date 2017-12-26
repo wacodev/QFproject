@@ -27,16 +27,16 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        if ($request)
-        {
+        if ($request) {
             $query = trim($request->get('searchText'));
             $users = User::where('name', 'like', '%' . $query . '%')
-            	->orWhere('lastname', 'like', '%' . $query . '%')
-            	->orWhere('carnet', 'like', '%' . $query . '%')
-            	->orWhere('tipo', 'like', '%' . $query . '%')
+                ->orWhere('lastname', 'like', '%' . $query . '%')
+                ->orWhere('carnet', 'like', '%' . $query . '%')
+                ->orWhere('tipo', 'like', '%' . $query . '%')
                 ->orderBy('carnet', 'asc')
                 ->paginate(10);
         }
+
         return view('administracion.users.index')
                 ->with('users', $users)
                 ->with('searchText', $query);
@@ -66,20 +66,22 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-        if ($request->file('imagen'))
-        {
+        if ($request->file('imagen')) {
             $file = $request->file('imagen');
             $nombre = 'user_' . time() . '.' . $file->getClientOriginalExtension();
             $path = public_path() . '/images/users/';
             $file->move($path, $nombre);
         }
+
         $user = new User($request->all());
         $user->password = bcrypt($request->password);
-        if ($user->imagen)
-        {
+
+        if ($user->imagen) {
             $user->imagen = $nombre;
         }
+
         $user->save();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -90,6 +92,7 @@ class UserController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('users.index');
     }
 
@@ -105,6 +108,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
+
         return view('users.show')->with('user', $user);
     }
 
@@ -120,6 +124,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+
         return view('administracion.users.edit')->with('user', $user);
     }
 
@@ -136,21 +141,23 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::find($id);
-        if ($request->file('imagen'))
-        {
+
+        if ($request->file('imagen')) {
             $file = $request->file('imagen');
             $nombre = 'user_' . time() . '.' . $file->getClientOriginalExtension();
             $path = public_path() . '/images/users/';
             $file->move($path, $nombre);
             $user->imagen = $nombre;
         }
+
         $user->name = $request->get('name');
         $user->lastname = $request->get('lastname');
         $user->carnet = $request->get('carnet');
         $user->email = $request->get('email');
         //$user->password = $request->get('password');
         $user->tipo = $request->get('tipo');
-        $local->save();
+        $user->save();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -161,6 +168,7 @@ class UserController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('users.index');
     }
 
@@ -177,6 +185,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $user->delete();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -187,6 +196,7 @@ class UserController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('users.index');
     }
 }

@@ -13,7 +13,7 @@ class AsuetoRequest extends FormRequest
      * @return bool
      * ---------------------------------------------------------------------------
      */
-    
+
     public function authorize()
     {
         return true;
@@ -33,10 +33,11 @@ class AsuetoRequest extends FormRequest
             'nombre' => 'max:190|required',
             'fecha'  => ''
         );
-        if ($this->route('asueto') == null)
-        {
+        
+        if ($this->route('asueto') == null) {
             $rules['fecha'] .= 'required';
         }
+        
         return $rules;
     }
 }

@@ -26,13 +26,13 @@ class LocalController extends Controller
 
     public function index(Request $request)
     {
-        if ($request)
-        {
+        if ($request) {
             $query = trim($request -> get('searchText'));
             $locales = Local::where('nombre', 'like', '%' . $query . '%')
                 ->orderBy('nombre', 'asc')
                 ->paginate(10);
         }
+
         return view('administracion.locales.index')
             ->with('locales', $locales)
             ->with('searchText', $query);
@@ -62,19 +62,21 @@ class LocalController extends Controller
 
     public function store(LocalRequest $request)
     {
-        if ($request->file('imagen'))
-        {
+        if ($request->file('imagen')) {
             $file = $request->file('imagen');
             $nombre = 'local_' . time() . '.' . $file->getClientOriginalExtension();
             $path = public_path() . '/images/locales/';
             $file->move($path, $nombre);
         }
+
         $local = new Local($request->all());
-        if ($local->imagen)
-        {
+
+        if ($local->imagen) {
             $local->imagen = $nombre;
         }
+
         $local->save();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -85,6 +87,7 @@ class LocalController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('locales.index');
     }
 
@@ -114,6 +117,7 @@ class LocalController extends Controller
     public function edit($id)
     {
         $local = Local::find($id);
+
         return view('administracion.locales.edit')->with('local', $local);
     }
 
@@ -130,6 +134,7 @@ class LocalController extends Controller
     public function update(LocalRequest $request, $id)
     {
         $local = Local::find($id);
+
         if ($request->file('imagen'))
         {
             $file = $request->file('imagen');
@@ -138,9 +143,11 @@ class LocalController extends Controller
             $file->move($path, $nombre);
             $local->imagen = $nombre;
         }
+
         $local->nombre = $request->get('nombre');
         $local->capacidad = $request->get('capacidad');
         $local->save();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -151,6 +158,7 @@ class LocalController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('locales.index');
     }
 
@@ -167,6 +175,7 @@ class LocalController extends Controller
     {
         $local = Local::find($id);
         $local->delete();
+
         flash('
             <h4>
                 <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
@@ -177,6 +186,7 @@ class LocalController extends Controller
         ')
             ->success()
             ->important();
+
         return redirect()->route('locales.index');
     }
 }
