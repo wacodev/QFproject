@@ -4,16 +4,26 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">x</span>
+                        <span aria-hidden="true">
+                            x
+                        </span>
                     </button>
-                    <h4 class="modal-title">¿Desea eliminar el usuario "{{ $user->name }}"?</h4>
+                    <h4 class="modal-title">
+                        ¿Desea eliminar el usuario "{{ $user->name }}"?
+                    </h4>
                 </div>
                 <div class="modal-body">
-                    <p>Cuando eliminas un usuario todas sus reservaciones son eliminadas también.</p>
+                    <p>
+                        Cuando eliminas un usuario todas sus reservaciones son eliminadas también.
+                    </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-success">Confirmar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cerrar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        Confirmar
+                    </button>
                 </div>
             </div>
         </div>

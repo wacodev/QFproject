@@ -5,6 +5,8 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+        <!-- CSRF TOKEN -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- TÍTULO -->
         <title>
             @yield('titulo', 'Química y Farmacia')
@@ -13,12 +15,8 @@
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
         <!-- FONT AWESOME -->
         <link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}" />
-        <!-- BOOTSTRAP DATE PICKER -->
-        <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}" />
-        <!-- BOOTSTRAP TIME PICKER -->
-        <link rel="stylesheet" href="{{ asset('css/bootstrap-timepicker.css') }}" />
         <!-- ESTILO DEL TEMA -->
-        <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css')}}" />
+        <link rel="stylesheet" href="{{ asset('css/AdminLTE.css')}}" />
         <!-- ADMINLTE SKINS -->
         <link rel="stylesheet" href="{{ asset('css/skin-green.min.css') }}" />
         <!-- MIS ESTILOS -->
@@ -28,12 +26,20 @@
         <!-- FAVICON -->
         <link rel="logo-simple" href="{{ asset('images/sistema/logos-simple.png') }}" />
         <link rel="shortcut icon" href="{{ asset('images/sistema/logo-simple.ico') }}" />
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
     </head>
     <body class="hold-transition skin-green sidebar-mini" onload="startTime()">
-        <!-- NOMBRE CORTO -->
         <?php
+            // Nombre corto de usuario autentificado.
             $nombre = explode(' ', Auth::user()->name);
             $apellido = explode(' ', Auth::user()->lastname);
+            // Número de notificaciones sin leer.
+            $notificaciones_c = Auth::user()->unreadNotifications->count();
         ?>
         <div class="wrapper">
             <header class="main-header">
@@ -60,28 +66,35 @@
                     <div class="navbar-custom-menu">         
                         <ul class="nav navbar-nav">
                             <!-- NOTIFICACIONES -->
-                            <li class="dropdown notifications-menu"> <!-- Editar -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <li>
+                                <a href="{{ route('notificaciones') }}">
                                     <i class="fa fa-bell"></i>
-                                    <span class="label label-danger">
-                                        10
-                                    </span>
+                                    @if ($notificaciones_c > 0)
+                                        <span class="badge label-danger">
+                                            {{ $notificaciones_c }}
+                                        </span>
+                                    @endif
                                 </a>
                             </li>
                             <!-- CUENTA DE USUARIO -->
                             <li class="dropdown user user-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="{{ asset('images/users/default_profile.jpg') }}" class="user-image" alt="Imagen de usuario"/>
+                                <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="{{ asset('images/users/' . Auth::user()->imagen) }}" class="user-image" alt="Imagen de usuario" />
+                                    <!--
+                                    <a href="{{ url('images/users/' . Auth::user()->imagen) }}" target="_blanck">
+                                        <img src="{{ asset('images/users/' . Auth::user()->imagen) }}" class="user-image" alt="Imagen de usuario">
+                                    </a>
+                                    -->
                                     <span class="hidden-xs">
-                                        {{ $nombre[0] . ' ' . $apellido[0] }}
+                                        {{ $nombre[0] }} {{ $apellido[0] }}
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <!-- IMAGEN DE USUARIO -->
                                     <li class="user-header">
-                                        <img src="{{ asset('images/users/default_profile.jpg') }}" class="img-circle" alt="Imagen de usuario"/>
+                                        <img src="{{ asset('images/users/' . Auth::user()->imagen) }}" class="img-circle" alt="Imagen de usuario" />
                                         <p>
-                                            {{ $nombre[0] . ' ' . $apellido[0] }}
+                                            {{ $nombre[0] }} {{ $apellido[0] }}
                                             <small>
                                                 {{ Auth::user()->tipo }}
                                             </small>
@@ -116,15 +129,17 @@
                     <!-- PANEL DE USUARIO DE LA BARRA LATERAL -->
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="{{ asset('images/users/default_profile.jpg') }}" class="img-circle" alt="Imagen de usuario" />
+                            <img src="{{ asset('images/users/' . Auth::user()->imagen) }}" class="img-circle" alt="Imagen de usuario" />
                         </div>
                         <div class="pull-left info">
                             <p>
-                                {{ $nombre[0] . ' ' . $apellido[0] }}
+                                {{ $nombre[0] }} {{ $apellido[0] }}
                             </p>
-                            <p style="font-size: 12px;">
-                                {{ Auth::user()->tipo }}
-                            </p> <!-- Editar -->
+                            <p>
+                                <small>
+                                    {{ Auth::user()->tipo }}
+                                </small>
+                            </p>
                         </div>
                     </div>
                     <!-- MENÚ DE LA BARRA LATERAL -->
@@ -137,17 +152,6 @@
                                 </span>
                             </a>
                         </li>
-                        <li>
-                            <a href="#"> <!-- Editar -->
-                                <i class="fa fa-bell"></i>
-                                <span>
-                                    Notificaciones
-                                </span>
-                                <small class="label pull-right bg-red">
-                                    10
-                                </small>
-                            </a>
-                        </li>
                         <li class="treeview">
                             <a href="#"> <!-- Editar -->
                                 <i class="fa fa-ticket"></i>
@@ -157,28 +161,18 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li>
-                                    <a href="#"> <!-- Editar -->
-                                        <i class="fa fa-circle-o"></i>
-                                        Mis reservaciones
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <!-- Editar -->
-                                        <i class="fa fa-circle-o"></i>
-                                        Todas
-                                    </a>
-                                </li>
+                                @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
+                                    <li>
+                                        <a href="{{ route('reservaciones.index') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Panel de administración
+                                        </a>
+                                    </li>
+                                @endif
                                 <li>
                                     <a href="{{ route('reservaciones.paso-uno') }}">
                                         <i class="fa fa-circle-o"></i>
                                         Nueva reservación
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <!-- Editar -->
-                                        <i class="fa fa-circle-o"></i>
-                                        Por paquete
                                     </a>
                                 </li>
                                 <li>
@@ -352,11 +346,7 @@
                 </section>
             </aside>
             <!-- CONTENEDOR -->
-            <div class="content-wrapper">        
-                <!-- MENSAJES FLASH -->        
-                <section class="mensaje-flash">
-                    @include('flash::message')
-                </section>
+            <div class="content-wrapper">
                 <!-- ENCABEZADO DEL CONTENIDO -->      
                 <section class="content-header">
                     <h1>
@@ -369,10 +359,22 @@
                         @yield('breadcrumb')
                     </ol>
                 </section>
-                <!-- SECCIÓN PARA AGREGAR EL CONTENIDO -->        
-                <section class="content">
-                    @yield('contenido')
-                </section>      
+                <div class="row">
+                    <!-- CONTENIDO -->
+                    <div class="content">
+                        <div class="col-md-8">
+                            <!-- MENSAJES FLASH -->
+                            @include('flash::message')
+                            <!-- CONTENIDO PRINCIPAL -->
+                            @yield('contenido')
+                        </div>
+                        <!-- SIDEBAR -->
+                        <div class="col-md-4">
+                            <!-- SIDEBAR PRINCIPAL -->
+                            @yield('sidebar')
+                        </div>
+                    </div>
+                </div>
             </div>      
             <!-- FOOTER -->
             <footer class="main-footer">
@@ -386,18 +388,22 @@
             </footer>
         </div>    
         <!-- JQUERY 2.1.4 -->    
-        <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>    
+        <script src="{{ asset('js/jQuery-2.1.4.min.js') }}"></script>
         <!-- BOOTSTRAP 3.3.5 -->    
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-        <!--  BOOTSTRAP DATE PICKER -->
-        <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
-        <!--  BOOTSTRAP TIME PICKER -->
-        <script src="{{ asset('js/bootstrap-timepicker.js') }}"></script>    
         <!-- ADMINLTE APP -->    
         <script src="{{ asset('js/app.min.js') }}"></script>
         <!-- HORA Y FECHA -->    
         <script src="{{ asset('js/hora-y-fecha.js') }}"></script>
         <!-- SECCIÓN PARA AGREGAR SCRIPTS -->
-        @stack('scripts')    
+        @stack('scripts')
+        <script>
+            (function() {
+                var refresh = function() {
+                    location.reload(true);
+                };
+                var int = setInterval(refresh, 300000);
+            }())
+        </script>
     </body>
 </html>

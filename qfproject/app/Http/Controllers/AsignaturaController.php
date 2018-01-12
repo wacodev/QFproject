@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Laracasts\Flash\Flash;
 use qfproject\Asignatura;
 use qfproject\Http\Requests\AsignaturaRequest;
+use qfproject\Notifications\ReservacionNotification;
+use qfproject\Reservacion;
+use qfproject\User;
 
 class AsignaturaController extends Controller
 {
@@ -28,15 +31,16 @@ class AsignaturaController extends Controller
     {
         if ($request) {
             $query = trim($request->get('searchText'));
+            
             $asignaturas = Asignatura::where('nombre', 'like', '%' . $query . '%')
                 ->orWhere('codigo', 'like', '%' . $query . '%')
                 ->orderBy('codigo', 'asc')
                 ->paginate(10);
-        }
 
-        return view('administracion.asignaturas.index')
-            ->with('asignaturas', $asignaturas)
-            ->with('searchText', $query);
+            return view('administracion.asignaturas.index')
+                ->with('asignaturas', $asignaturas)
+                ->with('searchText', $query);
+        }
     }
 
     /**
@@ -64,13 +68,15 @@ class AsignaturaController extends Controller
     public function store(AsignaturaRequest $request)
     {
         $asignatura = new Asignatura($request->all());
+        
         $asignatura->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
                 </h4>
-                <p style="padding-left: 34px;">
+                <p class="check">
                     La asignatura "' . $asignatura->nombre . '" se ha guardado correctamente.
                 </p>
         ')
@@ -123,14 +129,17 @@ class AsignaturaController extends Controller
     public function update(AsignaturaRequest $request, $id)
     {
         $asignatura = Asignatura::find($id);
+        
         $asignatura->fill($request->all());
+        
         $asignatura->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 La asignatura "' . $asignatura->nombre . '" se ha editado correctamente.
             </p>
         ')
@@ -152,14 +161,43 @@ class AsignaturaController extends Controller
     public function destroy($id)
     {
         $asignatura = Asignatura::find($id);
+
+        /**
+         * Eliminando reservaciones registradas anteriormente con la asignatura
+         * recién eliminada.
+         */
+
+        $reservaciones = Reservacion::where('asignatura_id', '=', $asignatura->id)
+            ->get();
+
+        $i = 0; // Número de reservaciones eliminadas.
+
+        if ($reservaciones->count() > 0) {
+            foreach ($reservaciones as $reservacion) {
+                $reservacion->delete();
+
+                if (\Auth::user()->id != $reservacion->user_id) {
+                    $user = User::where('id', '=', $reservacion->user_id)->first();
+
+                    $user->notify(new ReservacionNotification($reservacion, 'asignatura', false));
+                }
+
+                $i++;
+            }
+        }
+        
         $asignatura->delete();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 La asignatura ha sido eliminada correctamente.
+            </p>
+            <p class="check">
+                Reservaciones eliminadas por tener asignadas la asignatura recién eliminada: ' . $i . '.
             </p>
         ')
             ->success()

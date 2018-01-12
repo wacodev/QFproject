@@ -29,16 +29,17 @@ class AsuetoController extends Controller
     {
         if ($request) {
             $query = trim($request->get('searchText'));
+
             $asuetos = Asueto::where('nombre', 'like', '%' . $query . '%')
                 ->orWhere('dia', 'like', '%' . $query . '%')
                 ->orWhere('mes', 'like', '%' . $query . '%')
                 ->orderBy('nombre', 'asc')
                 ->paginate(10);
-        }
 
-        return view('administracion.asuetos.index')
-            ->with('asuetos', $asuetos)
-            ->with('searchText', $query);
+            return view('administracion.asuetos.index')
+                ->with('asuetos', $asuetos)
+                ->with('searchText', $query);
+        }
     }
 
     /**
@@ -70,16 +71,19 @@ class AsuetoController extends Controller
         $fecha = explode('-', $fecha_formato);
 
         $asueto = new Asueto;
+        
         $asueto->nombre = $request->get('nombre');
         $asueto->dia = $fecha[2];
         $asueto->mes = $fecha[1];
+        
         $asueto->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 El asueto por "' . $asueto->nombre . '" se ha guardado correctamente. Los usuarios no podrán realizar reservaciones para este día.
             </p>
         ')
@@ -132,14 +136,17 @@ class AsuetoController extends Controller
     public function update(AsuetoRequest $request, $id)
     {
         $asueto = Asueto::find($id);
+
         $asueto->fill($request->all());
+
         $asueto->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 El asueto por "' . $asueto->nombre . '" se ha editado correctamente.
             </p>
         ')
@@ -161,13 +168,15 @@ class AsuetoController extends Controller
     public function destroy($id)
     {
         $asueto = Asueto::find($id);
+
         $asueto->delete();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 El asueto ha sido eliminado correctamente. Ahora los usuarios podrán realizar reservaciones para ese día.
             </p>
         ')

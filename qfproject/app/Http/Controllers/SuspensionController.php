@@ -13,7 +13,10 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Laracasts\Flash\Flash;
 use qfproject\Http\Requests\SuspensionRequest;
+use qfproject\Notifications\ReservacionNotification;
+use qfproject\Reservacion;
 use qfproject\Suspension;
+use qfproject\User;
 
 class SuspensionController extends Controller
 {
@@ -29,16 +32,17 @@ class SuspensionController extends Controller
     {
         if ($request) {
             $query = trim($request->get('searchText'));
+
             $suspensiones = Suspension::where('fecha', 'like', '%' . $query . '%')
                 ->orWhere('hora_inicio', 'like', '%' . $query . '%')
                 ->orWhere('hora_fin', 'like', '%' . $query . '%')
                 ->orderBy('fecha', 'desc')
                 ->paginate(10);
-        }
 
-        return view('administracion.suspensiones.index')
-            ->with('suspensiones', $suspensiones)
-            ->with('searchText', $query);
+            return view('administracion.suspensiones.index')
+                ->with('suspensiones', $suspensiones)
+                ->with('searchText', $query);
+        }
     }
 
     /**
@@ -71,14 +75,17 @@ class SuspensionController extends Controller
         $suspension->hora_inicio = Carbon::parse($suspension->hora_inicio)->format('H:i:s');
         $suspension->hora_fin = Carbon::parse($suspension->hora_fin)->format('H:i:s');
 
-        $error = $this->validarFechaHora($suspension->fecha, $suspension->hora_inicio, $suspension->hora_fin);
+        $error = $this->validarHoras($suspension->fecha, $suspension->hora_inicio, $suspension->hora_fin);
 
-        if ($error != 'No hay errores') {
+        if ($error[0]) {
             flash('
                 <h4>
-                    <i class="fa fa-ban icono-margen-grande" aria-hidden="true"></i>¡Error en ingreso de datos!
+                    <i class="fa fa-ban icon" aria-hidden="true"></i>
+                    ¡Error en ingreso de datos!
                 </h4>
-                <p style="padding-left: 30px;">' . $error . '</p>
+                <p class="check">'
+                    . $error[1] .
+                '</p>
             ')
                 ->error()
                 ->important();
@@ -87,12 +94,47 @@ class SuspensionController extends Controller
 
         $suspension->save();
 
+        /**
+         * Eliminando reservaciones registradas anteriormente en la fecha y hora
+         * de la suspensión recién creada.
+         */
+
+        $reservaciones = Reservacion::where('fecha', '=', $suspension->fecha)
+            ->where('hora_inicio', '>=', $suspension->hora_inicio)
+            ->where('hora_inicio', '<', $suspension->hora_fin)
+            ->where('tipo', '=', 'Extraordinaria')
+            ->orWhere('fecha', '=', $suspension->fecha)
+            ->where('hora_fin', '<=', $suspension->hora_fin)
+            ->where('hora_fin', '>', $suspension->hora_inicio)
+            ->where('tipo', '=', 'Extraordinaria')
+            ->get();
+
+        $i = 0; // Número de reservaciones eliminadas.
+
+        if ($reservaciones->count() > 0) {
+            foreach ($reservaciones as $reservacion) {
+                $reservacion->delete();
+
+                if (\Auth::user()->id != $reservacion->user_id) {
+                    $user = User::where('id', '=', $reservacion->user_id)->first();
+
+                    $user->notify(new ReservacionNotification($reservacion, 'suspension', false));
+                }
+
+                $i++;
+            }
+        }
+
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
-                La suspensión se ha guardado correctamente. Puede que algún usuario anteriormente haya realizado una reservación en la fecha y hora de la suspensión, en ese caso, la eliminación de dichas reservaciones debe realizarse manualmente.
+            <p class="check">
+                La suspensión se ha guardado correctamente.
+            </p>
+            <p class="check">
+                Reservaciones extraordinarias eliminadas por coincidir con la nueva suspensión de actividades: ' . $i . '.
             </p>
         ')
             ->success()
@@ -156,13 +198,15 @@ class SuspensionController extends Controller
     public function destroy($id)
     {
         $suspension = Suspension::find($id);
+
         $suspension->delete();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 La suspensión ha sido eliminada correctamente.
             </p>
         ')
@@ -184,20 +228,21 @@ class SuspensionController extends Controller
      * ---------------------------------------------------------------------------
      */
 
-    public function validarFechaHora($fecha, $hora_inicio, $hora_fin)
+    public function validarHoras($fecha, $hora_inicio, $hora_fin)
     {
         $hi = explode(':', $hora_inicio);
         $hf = explode(':', $hora_fin);
 
         $fecha_actual = Carbon::now()->format('Y-m-d');
+
         $hora_actual = Carbon::now()->format('H:i:s');
 
         if ($hi[1] != '00' || $hf[1] != '00') {
-            return 'No puedes ingresar minutos distintos a cero.';
+            return [true, 'No puedes ingresar minutos distintos a cero.'];
         } elseif ($fecha == $fecha_actual && $hora_inicio < $hora_actual) {
-            return 'Si la reservación se desea programar para el día de hoy no puede ingresar una hora inferior a la actual.';
+            return [true, 'Si la reservación se desea programar para el día de hoy no puede ingresar una hora inferior a la actual.'];
+        } else {
+            return [false, null];
         }
-
-        return 'No hay errores';
     }
 }

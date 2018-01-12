@@ -44,8 +44,6 @@ php artisan key:generate
 
 > También puedes utilizar el servidor de Composer. En la consola ubicate en `..\xampp\htdocs\QFproject\qfproject` y ejecuta la siguiente instrucción:
 >
-> ```bash
-php artisan serve
-```
+> ```bash php artisan serve```
 >
 > Luego ingresa a `http://localhost:8000` para ver la aplicación.

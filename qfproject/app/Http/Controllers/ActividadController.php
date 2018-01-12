@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Laracasts\Flash\Flash;
 use qfproject\Actividad;
 use qfproject\Http\Requests\ActividadRequest;
+use qfproject\Notifications\ReservacionNotification;
+use qfproject\Reservacion;
+use qfproject\User;
 
 class ActividadController extends Controller
 {
@@ -28,14 +31,15 @@ class ActividadController extends Controller
     {
         if ($request) {
             $query = trim($request->get('searchText'));
+            
             $actividades = Actividad::where('nombre', 'like', '%' . $query . '%')
                 ->orderBy('nombre', 'asc')
                 ->paginate(10);
+            
+            return view('administracion.actividades.index')
+                ->with('actividades', $actividades)
+                ->with('searchText', $query);
         }
-
-        return view('administracion.actividades.index')
-            ->with('actividades', $actividades)
-            ->with('searchText', $query);
     }
 
     /**
@@ -63,13 +67,15 @@ class ActividadController extends Controller
     public function store(ActividadRequest $request)
     {
         $actividad = new Actividad($request->all());
+        
         $actividad->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 La actividad "' . $actividad->nombre . '" se ha guardado correctamente.
             </p>
         ')
@@ -122,14 +128,17 @@ class ActividadController extends Controller
     public function update(ActividadRequest $request, $id)
     {
         $actividad = Actividad::find($id);
+        
         $actividad->fill($request->all());
+        
         $actividad->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 La actividad "' . $actividad->nombre . '" se ha editado correctamente.
             </p>
         ')
@@ -151,14 +160,43 @@ class ActividadController extends Controller
     public function destroy($id)
     {
         $actividad = Actividad::find($id);
+
+        /**
+         * Eliminando reservaciones registradas anteriormente con la actividad
+         * recién eliminada.
+         */
+
+        $reservaciones = Reservacion::where('actividad_id', '=', $actividad->id)
+            ->get();
+
+        $i = 0; // Número de reservaciones eliminadas.
+
+        if ($reservaciones->count() > 0) {
+            foreach ($reservaciones as $reservacion) {
+                $reservacion->delete();
+
+                if (\Auth::user()->id != $reservacion->user_id) {
+                    $user = User::where('id', '=', $reservacion->user_id)->first();
+
+                    $user->notify(new ReservacionNotification($reservacion, 'actividad', false));
+                }
+
+                $i++;
+            }
+        }
+
         $actividad->delete();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 La actividad ha sido eliminada correctamente.
+            </p>
+            <p class="check">
+                Reservaciones eliminadas por tener asignadas la actividad recién eliminada: ' . $i . '.
             </p>
         ')
             ->success()

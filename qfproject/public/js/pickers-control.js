@@ -1,5 +1,8 @@
 $(function ()
 {            
+    //Date range picker
+    $('#reservation').daterangepicker()
+
     //Date picker
     $('#datepicker').datepicker({
         autoclose: true
@@ -20,7 +23,4 @@ $(function ()
             if (mer == 'AM' && h < 7 || mer == 'PM' && h > 6) $('.timepicker').timepicker('setTime', '07:00 AM');
         }
     });
-
-    //Date range picker
-    $('#reservation').daterangepicker()
 })

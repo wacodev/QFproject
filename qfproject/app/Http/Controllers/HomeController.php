@@ -26,6 +26,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        Carbon::setLocale('es');
     }
 
     /**
@@ -41,24 +42,65 @@ class HomeController extends Controller
     {
         if ($request) {
             $query = trim($request->get('searchText'));
+
+            $hoy = Carbon::now();
+
             $reservaciones = Reservacion::where('user_id', '=', \Auth::user()->id)
-                ->where('fecha', '>=', Carbon::now())
+                ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
                 ->where('codigo', 'like', '%' . $query . '%')
                 ->orWhere('user_id', '=', \Auth::user()->id)
-                ->where('fecha', '>=', Carbon::now())
+                ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
                 ->where('fecha', 'like', '%' . $query . '%')
                 ->orderBy('fecha', 'desc')
                 ->paginate(5);
+
             $reservaciones->each(function($reservaciones) {
                 $reservaciones->user;
                 $reservaciones->local;
                 $reservaciones->asignatura;
                 $reservaciones->actividad;
             });
-        }
 
-        return view('home')
-            ->with('reservaciones', $reservaciones)
-            ->with('searchText', $query);
+            return view('home')
+                ->with('reservaciones', $reservaciones)
+                ->with('searchText', $query);
+        }
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra una lista de notificaciones del usuario.
+     *
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function verNotificaciones(Request $request)
+    {
+        $notificaciones = \Auth::user()
+            ->notifications()
+            ->paginate(5);
+
+        return view('notificaciones')
+            ->with('notificaciones', $notificaciones);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Elimina la notificación especificada de la base de datos.
+     *
+     * @return void
+     * ---------------------------------------------------------------------------
+     */
+
+    public function eliminarNotificacion($id)
+    {
+        $notificacion = \Auth::user()
+            ->notifications()
+            ->where('id', '=', $id);
+
+        $notificacion->delete();
+
+        return back();
     }
 }

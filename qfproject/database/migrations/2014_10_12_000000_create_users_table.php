@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('tipo', ['Administrador', 'Asistente', 'Docente'])->default('Docente');
-            $table->string('imagen')->nullable()->unique();
+            $table->string('imagen')->default('user_default.jpg');
             $table->rememberToken();
             $table->timestamps();
             

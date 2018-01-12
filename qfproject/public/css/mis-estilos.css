@@ -1,73 +1,17 @@
-.alinear-vertical {
-    vertical-align: middle;
-}
-
-.alinear-error {
-    padding-left: 30px;
-}
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para el comprobante.
+ * ---------------------------------------------------------------------------
+ */
 
 .cero-margen p {
     margin-bottom: 0;
 }
 
-.codigo-size {
-    width: 100px;
-}
-
-.fecha-hora-c {
-    font-size: 12px;
-}
-
-.fecha-size {
-    width: 100px;
-}
-
-.fondo {
-    background-color: #ecf0f5;
-}
-
-.fondo-login {
-    background-image: url(../images/sistema/fondo-login.jpg);;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-color: #113222;
-}
-
 .footer-pagina {
-    position: absolute;
     bottom: 5px;
+    position: absolute;
     right: 10px;
-}
-
-.help-block {
-    color: #e20000;
-}
-
-.icono-margen {
-    margin-right: 5px;
-}
-
-.icono-margen-grande {
-    margin-right: 15px;
-}
-
-.id-size {
-    width: 50px;
-}
-
-.jumbotron {
-    background: #008d4c;
-    color: #fff;
-    padding-top: 35px;
-    padding-bottom: 35px;
-    text-align: center;
-}
-
-.jumbotron h2 {
-    margin-top: 0;
-    margin-bottom: 0;
 }
 
 .logo {
@@ -77,41 +21,121 @@
     width: 100px;
 }
 
-.margen-arriba {
-    margin-top: 10px;
-}
-
 .margen-arriba-grande {
     margin-top: 50px;
 }
 
-.margen-abajo {
-    margin-bottom: 10px;
+.titulo {
+    font-size: 20px;
+    margin-bottom: 50px;
+    margin-top: 70px;
 }
 
-.margen-campo-imagen {
-    padding-top: 7px;
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para el login.
+ * ---------------------------------------------------------------------------
+ */
+
+.login-fondo {
+    background-attachment: fixed;
+    background-color: #113222;
+    background-image: url(../images/sistema/fondo-login.jpg);;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
-.margen-inicio {
+.login-logo-color {
+    color: #fff;
+}
+
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para la plantilla de errores.
+ * ---------------------------------------------------------------------------
+ */
+
+.fondo {
+    background-color: #ecf0f5;
+}
+
+.jumbotron {
+    color: #fff;
+    background: #008d4c;
+    padding-bottom: 35px;
+    padding-top: 35px;
+    text-align: center;
+}
+
+.jumbotron h2 {
+    margin-top: 0;
     margin-bottom: 0;
 }
 
-.mensaje-flash {
-    padding-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-bottom: -15px;
-}
-
-.mensaje-flash-local {
-    padding-left: 15px;
-    padding-right: 15px;
-}
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para la plantilla principal.
+ * ---------------------------------------------------------------------------
+ */
 
 .mini-logo-barra {
-    width: 30px;
     height: 30px;
+    width: 30px;
+}
+
+.verde-claro {
+    color: #7bd6ac;
+}
+
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para las imágenes.
+ * ---------------------------------------------------------------------------
+ */
+
+.img-local {
+    border: 1px solid;
+    border-color: #ddd;
+    height: 100px;
+    margin-right: 15px;
+    width: 180px;
+}
+
+.img-local a img {
+    height: 100%;
+    width: 100%;
+}
+
+.img-local-reservacion img {
+    height: 200px;
+    width: 100%;
+}
+
+.img-miniatura {
+    border: 1px solid;
+    border-color: #ddd;
+    height: 50px;
+    margin-right: 15px;
+    width: 50px;
+}
+
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para las tablas.
+ * ---------------------------------------------------------------------------
+ */
+
+.codigo-size {
+    width: 100px;
+}
+
+.fecha-size {
+    width: 100px;
+}
+
+.id-size {
+    width: 50px;
 }
 
 .opc-size {
@@ -122,36 +146,155 @@
     margin-bottom: 0;
 }
 
-.thumb {
-    margin-right: 10px;
-    width: 40%;
-}
-
-.thumb img {
-    width: 100%
+.table thead tr th,
+.table tbody tr th,
+.table tfoot tr th,
+.table thead tr td,
+.table tbody tr td,
+.table tfoot tr td {
+    vertical-align: middle;
 }
 
 .tipo-size {
     width: 130px;
 }
 
-.titulo {
-    margin-bottom: 50px;
-    margin-top: 70px;
-    font-size: 20px;
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para los botones.
+ * ---------------------------------------------------------------------------
+ */
+
+.boton-margen {
+    margin-right: 10px;
 }
 
-.verde-claro {
-    color: #7bd6ac;
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para los encabezados.
+ * ---------------------------------------------------------------------------
+ */
+
+.encabezado-notificacion {
+    margin-bottom: 0;
+    margin-top: 6px;
 }
+
+
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para los enlaces.
+ * ---------------------------------------------------------------------------
+ */
+
+a {
+    color: #008d4c;
+}
+
+a:hover {
+    color: #00a65a;
+}
+
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para los formularios.
+ * ---------------------------------------------------------------------------
+ */
+
+.help-block {
+    color: #e20000;
+}
+
+.margen-campo-imagen {
+    padding-top: 7px;
+}
+
+.seleccionar {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: #00a65a;
+    border-color: #008d4c;
+    color: #fff;
+}
+
+.seleccionar input {
+    margin-top: 0;
+    position: relative;
+    top: 2px;
+}
+
+.seleccionar span {
+    margin-left: 5px;
+}
+
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para los iconos.
+ * ---------------------------------------------------------------------------
+ */
+
+.icono-danger {
+    color: #dd4b39;
+}
+
+.icono-margen {
+    margin-right: 5px;
+}
+
+.icono-notificacion i {
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+.icono-primary {
+    color: #3c8dbc;
+}
+
+.icono-success {
+    color: #00a65a;
+}
+
+/**
+ * ---------------------------------------------------------------------------
+ * Estilos para los well.
+ * ---------------------------------------------------------------------------
+ */
+
+.well-panel {
+    margin-bottom: 0;
+    margin-top: 15px;
+}
+
+.well-parrafo p {
+    margin-bottom: 0;
+}
+
+/**
+ * ---------------------------------------------------------------------------
+ * Media querie.
+ * ---------------------------------------------------------------------------
+ */
 
 @media only screen and (max-width: 767px) {
-    .thumb {
-        width: 100%;
-        margin-bottom: 10px;
+
+    .img-local {
+        height: 100%;
+        margin-bottom: 15px;
         margin-right: 0;
+        width: 100%;
     }
-    .fondo-login {
-    background-image: url(../images/sistema/fondo-login-telefono.jpg);;
+
+    .login-fondo {
+        background-image: url(../images/sistema/fondo-login-telefono.jpg);;
     }
+
 }

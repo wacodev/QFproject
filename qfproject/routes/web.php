@@ -28,6 +28,8 @@ Route::group(['prefix' => 'administracion'], function () {
 // Reservaciones simples
 Route::group(['prefix' => 'reservaciones'], function () {
 
+    Route::get('/', 'ReservacionController@index')->name('reservaciones.index');
+    Route::get('/{reservacion}/show', 'ReservacionController@show')->name('reservaciones.show');
     Route::get('/paso-uno', 'ReservacionController@create')->name('reservaciones.paso-uno');
     Route::get('/paso-dos', 'ReservacionController@hacerPasoUno')->name('reservaciones.paso-dos');
     Route::get('/paso-tres', 'ReservacionController@hacerPasoDos')->name('reservaciones.paso-tres');
@@ -35,6 +37,8 @@ Route::group(['prefix' => 'reservaciones'], function () {
     Route::delete('/{reservacion}', 'ReservacionController@destroy')->name('reservaciones.destroy');
     Route::get('/{reservacion}/edit', 'ReservacionController@edit')->name('reservaciones.edit');
     Route::put('/{reservacion}', 'ReservacionController@update')->name('reservaciones.update');
+    Route::get('/crear-ciclo', 'ReservacionController@crearNuevoCiclo')->name('reservaciones.crear-ciclo');
+    Route::post('/registrar-ciclo', 'ReservacionController@registrarNuevoCiclo')->name('reservaciones.registrar-ciclo');
 
 });
 
@@ -60,3 +64,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Comprobante de reservación
 Route::get('/{reservacion}/comprobante', 'PdfController@generarComprobante')->name('reservacion.comprobante');
 
+Route::get('notificaciones', 'HomeController@verNotificaciones')->name('notificaciones');
+
+Route::get('notificaciones/{notificacion}/destroy', 'HomeController@eliminarNotificacion')->name('notificaciones.destroy');

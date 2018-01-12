@@ -1,4 +1,4 @@
-/*
+/**
  * -----------------------------------------------------------------------------------------------
  * Script tomado de:
  * http://www.programacion.net/articulo/crear_un_reloj_digital_con_date_utilizando_javascript_1765

@@ -112,6 +112,7 @@
   .daterangepicker td.start-date.end-date {
     border-radius: 4px; }
   .daterangepicker td.active, .daterangepicker td.active:hover {
+    /* COLOR VERDE */
     background-color: #00a65a;
     border-color: transparent;
     color: #fff; }

@@ -63,6 +63,12 @@
         this.applyClass = 'btn-success';
         this.cancelClass = 'btn-default';
 
+        /**
+         * ---------------------------------------------------------------------------
+         * Modificaciones para cambiar idioma.
+         * ---------------------------------------------------------------------------
+         */
+         
         this.locale = {
             direction: 'ltr',
             format: moment.localeData().longDateFormat('L'),
@@ -71,8 +77,10 @@
             cancelLabel: 'Cancelar',
             weekLabel: 'W',
             customRangeLabel: 'Custom Range',
-            daysOfWeek: moment.weekdaysMin(),
-            monthNames: moment.monthsShort(),
+            //daysOfWeek: moment.weekdaysMin(),
+            daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+            //monthNames: moment.monthsShort(),
+            monthNames: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
             firstDay: moment.localeData().firstDayOfWeek()
         };
 

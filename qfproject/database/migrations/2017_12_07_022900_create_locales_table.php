@@ -17,7 +17,7 @@ class CreateLocalesTable extends Migration
             $table->increments('id');
             $table->string('nombre')->unique();
             $table->integer('capacidad');
-            $table->string('imagen')->nullable()->unique();
+            $table->string('imagen')->default('local_default.jpg');
             $table->timestamps();
         });
     }

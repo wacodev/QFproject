@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Laracasts\Flash\Flash;
 use qfproject\Http\Requests\LocalRequest;
 use qfproject\Local;
+use qfproject\Notifications\ReservacionNotification;
+use qfproject\Reservacion;
+use qfproject\User;
 
 class LocalController extends Controller
 {
@@ -28,14 +31,15 @@ class LocalController extends Controller
     {
         if ($request) {
             $query = trim($request -> get('searchText'));
+
             $locales = Local::where('nombre', 'like', '%' . $query . '%')
                 ->orderBy('nombre', 'asc')
                 ->paginate(10);
-        }
 
-        return view('administracion.locales.index')
-            ->with('locales', $locales)
-            ->with('searchText', $query);
+            return view('administracion.locales.index')
+                ->with('locales', $locales)
+                ->with('searchText', $query);
+        }
     }
 
     /**
@@ -62,10 +66,17 @@ class LocalController extends Controller
 
     public function store(LocalRequest $request)
     {
+        /**
+         * Almacenando imagen.
+         */
+
         if ($request->file('imagen')) {
             $file = $request->file('imagen');
+
             $nombre = 'local_' . time() . '.' . $file->getClientOriginalExtension();
+
             $path = public_path() . '/images/locales/';
+
             $file->move($path, $nombre);
         }
 
@@ -73,15 +84,18 @@ class LocalController extends Controller
 
         if ($local->imagen) {
             $local->imagen = $nombre;
+        } else {
+            $local->imagen = 'local_default.jpg';
         }
 
         $local->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 El local "' . $local->nombre . '" se ha guardado correctamente.
             </p>
         ')
@@ -133,26 +147,49 @@ class LocalController extends Controller
 
     public function update(LocalRequest $request, $id)
     {
+
         $local = Local::find($id);
+
+        /**
+         * Almacenando nueva imagen.
+         */
 
         if ($request->file('imagen'))
         {
             $file = $request->file('imagen');
+
             $nombre = 'local_' . time() . '.' . $file->getClientOriginalExtension();
+
             $path = public_path() . '/images/locales/';
+
             $file->move($path, $nombre);
+
+            /**
+             * Eliminando imagen anterior.
+             */
+
+            if (\File::exists($path . $local->imagen) && $local->imagen != 'local_default.jpg') {
+                \File::delete($path . $local->imagen);
+            }
+
+            /**
+             * Guardando nueva imagen.
+             */
+
             $local->imagen = $nombre;
         }
 
         $local->nombre = $request->get('nombre');
         $local->capacidad = $request->get('capacidad');
+
         $local->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 El local "' . $local -> nombre . '" se ha editado correctamente.
             </p>
         ')
@@ -174,14 +211,53 @@ class LocalController extends Controller
     public function destroy($id)
     {
         $local = Local::find($id);
+
+        /**
+         * Eliminando reservaciones registradas anteriormente con el local
+         * recién eliminado.
+         */
+
+        $reservaciones = Reservacion::where('local_id', '=', $local->id)
+            ->get();
+
+        $i = 0; // Número de reservaciones eliminadas.
+
+        if ($reservaciones->count() > 0) {
+            foreach ($reservaciones as $reservacion) {
+                $reservacion->delete();
+
+                if (\Auth::user()->id != $reservacion->user_id) {
+                    $user = User::where('id', '=', $reservacion->user_id)->first();
+
+                    $user->notify(new ReservacionNotification($reservacion, 'local', false));
+                }
+
+                $i++;
+            }
+        }
+
         $local->delete();
+
+        /**
+         * Eliminando imagen anterior.
+         */
+
+        $path = public_path() . '/images/locales/';
+
+        if (\File::exists($path . $local->imagen) && $local->imagen != 'local_default.jpg') {
+            \File::delete($path . $local->imagen);
+        }
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
-                El local ha sido eliminada correctamente.
+            <p class="check">
+                El local ha sido eliminado correctamente.
+            </p>
+            <p class="check">
+                Reservaciones eliminadas por tener asignadas el local recién eliminado: ' . $i . '.
             </p>
         ')
             ->success()

@@ -29,17 +29,18 @@ class UserController extends Controller
     {
         if ($request) {
             $query = trim($request->get('searchText'));
+
             $users = User::where('name', 'like', '%' . $query . '%')
                 ->orWhere('lastname', 'like', '%' . $query . '%')
                 ->orWhere('carnet', 'like', '%' . $query . '%')
                 ->orWhere('tipo', 'like', '%' . $query . '%')
                 ->orderBy('carnet', 'asc')
                 ->paginate(10);
-        }
 
-        return view('administracion.users.index')
+            return view('administracion.users.index')
                 ->with('users', $users)
                 ->with('searchText', $query);
+        }
     }
 
     /**
@@ -66,27 +67,38 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
+        /**
+         * Almacenando imagen.
+         */
+
         if ($request->file('imagen')) {
             $file = $request->file('imagen');
+
             $nombre = 'user_' . time() . '.' . $file->getClientOriginalExtension();
+
             $path = public_path() . '/images/users/';
+
             $file->move($path, $nombre);
         }
 
         $user = new User($request->all());
+
         $user->password = bcrypt($request->password);
 
         if ($user->imagen) {
             $user->imagen = $nombre;
+        } else {
+            $user->imagen = 'user_default.jpg';
         }
 
         $user->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 El usuario "' . $user->name . '" se ha guardado correctamente.
             </p>
         ')
@@ -142,11 +154,31 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
+        /**
+         * Almacenando nueva imagen.
+         */
+
         if ($request->file('imagen')) {
             $file = $request->file('imagen');
+
             $nombre = 'user_' . time() . '.' . $file->getClientOriginalExtension();
+
             $path = public_path() . '/images/users/';
+
             $file->move($path, $nombre);
+
+            /**
+             * Eliminando imagen anterior.
+             */
+
+            if (\File::exists($path . $user->imagen) && $user->imagen != 'user_default.jpg') {
+                \File::delete($path . $user->imagen);
+            }
+
+            /**
+             * Guardando nueva imagen.
+             */
+
             $user->imagen = $nombre;
         }
 
@@ -156,13 +188,15 @@ class UserController extends Controller
         $user->email = $request->get('email');
         //$user->password = $request->get('password');
         $user->tipo = $request->get('tipo');
+
         $user->save();
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 El usuario "' . $user->name . '" se ha editado correctamente.
             </p>
         ')
@@ -184,13 +218,25 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
+
         $user->delete();
+
+        /**
+         * Eliminando imagen anterior.
+         */
+
+        $path = public_path() . '/images/users/';
+
+        if (\File::exists($path . $user->imagen) && $user->imagen != 'user_default.jpg') {
+            \File::delete($path . $user->imagen);
+        }
 
         flash('
             <h4>
-                <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
             </h4>
-            <p style="padding-left: 34px;">
+            <p class="check">
                 El usuario ha sido eliminado correctamente.
             </p>
         ')

@@ -275,13 +275,19 @@ a:focus {
 .main-header .navbar .nav > li.user > a > .ion {
   margin-right: 5px;
 }
-.main-header .navbar .nav > li > a > .label {
+/**
+ * ---------------------------------------------------------------------------
+ * Modificaciones para el label/badge del menú de notificaciones.
+ * ---------------------------------------------------------------------------
+ */
+.main-header .navbar .nav > li > a > .label,
+.main-header .navbar .nav > li > a > .badge {
   position: absolute;
   top: 9px;
   right: 7px;
   text-align: center;
-  font-size: 9px;
-  padding: 2px 3px;
+  font-size: 11px;
+  padding: 4px 6px;
   line-height: .9;
 }
 .main-header .logo {
@@ -2396,6 +2402,24 @@ a:focus {
 .alert-info {
   border-color: #00acd6;
 }
+
+/**
+ * ---------------------------------------------------------------------------
+ * Clases agregadas al componente alert.
+ * ---------------------------------------------------------------------------
+ */
+
+.alert .ban,
+.alert .info-circle {
+  margin-top: 0;
+  margin-left: 30px;
+}
+.alert .check,
+.alert .exclamation-triangle {
+  margin-top: 0;
+  margin-left: 32px;
+}
+
 /*
  * Component: Nav
  * --------------

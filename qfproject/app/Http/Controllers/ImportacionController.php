@@ -49,36 +49,62 @@ class ImportacionController extends Controller
 
     public function almacenarReservaciones(Request $request)
     {
-        $archivo = $request->file('archivo');
+        /**
+         * Validando datos de entrada.
+         */
 
-        $nombre_original = $archivo->getClientOriginalName();
-        $extension = $archivo->getClientOriginalExtension();
-        $rl = Storage::disk('archivos')->put($nombre_original, \File::get($archivo));
-        $ruta = storage_path('archivos') . "/" . "$nombre_original";
+        $this->validate(request(), [
+            'archivo' => 'required|mimes:xlsx,xls'
+        ]);
 
-        if ($rl) {
+        /**
+         * Obteniendo archivo.
+         */
+
+        $file = $request->file('archivo');
+
+        $nombre = 'archivo_' . time() . '.' . $file->getClientOriginalExtension();
+
+        $archivo = Storage::disk('archivos')->put($nombre, \File::get($file));
+
+        $ruta = storage_path('archivos') . '/' . $nombre;
+
+        /**
+         * Importando datos del archivo.
+         */
+
+        if ($archivo) {
             Excel::selectSheetsByIndex(0)->load($ruta, function($hoja) {
                 $registros = $hoja->get();
-                $i = 2;
+
+                $i = 2; // Número de fila.
+
+                $j = 0; // Número de reservaciones registradas.
+
                 foreach ($registros as $fila) {
                     $error = $this->validarReservacion($fila);
-                    if ($error != 'No hay errores') {
+
+                    if ($error[0]) {
                         flash('
                             <h4>
-                                <i class="fa fa-ban icono-margen-grande" aria-hidden="true"></i>¡Error en ingreso de datos!
+                                <i class="fa fa-info-circle icon" aria-hidden="true"></i>
+                                Detalles de la operación
                             </h4>
-                            <p style="padding-left: 30px;">
-                                En la fila ' . $i . ' se presentó el siguiente error: ' . $error . '
+                            <p class="info-circle">
+                                <strong>Reservaciones registradas satisfactoriamente: ' . $j . '.</strong>
                             </p>
-                            <p style="padding-left: 30px;">
-                                Las reservaciones anteriores se guardaron correctamente.
+                            <p class="info-circle">
+                                En la fila ' . $i . ' se presentó el siguiente error: ' . $error[1] . ' <strong>Los registros en las filas anteriores se guardaron correctamente</strong>.
                             </p>
                         ')
-                        ->error()
+                        ->info()
                         ->important();
+
                         break;
                     }
+
                     $reservacion = new Reservacion;
+
                     $reservacion->user_id = \Auth::user()->id;
                     $reservacion->local_id = $fila->local_id;
                     $reservacion->asignatura_id = $fila->asignatura_id;
@@ -87,25 +113,38 @@ class ImportacionController extends Controller
                     $reservacion->hora_inicio = $fila->hora_inicio;
                     $reservacion->hora_fin = $fila->hora_fin;
                     $reservacion->tema = $fila->tema;
-                    $reservacion->tipo = 'Ordinaria';
-                    $reservacion->codigo = $i . '-' . time() . '-' . $reservacion->asignatura_id . '-' . $reservacion->local_id . '-' . $reservacion->user_id;
+                    $reservacion->tipo = $fila->tipo;
+
+                    /**
+                     * Generando código de comprobación.
+                     */
+
+                    $cr = str_pad(mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
+                    $ca = str_pad(substr($reservacion->asignatura_id, 0, 2), 2, '0', STR_PAD_LEFT);
+                    $cl = str_pad(substr($reservacion->local_id, 0, 2), 2, '0', STR_PAD_LEFT);
+                    $cu = str_pad(substr($reservacion->user_id, 0, 2), 2, '0', STR_PAD_LEFT);
+
+                    $reservacion->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
+
+                    $reservacion->codigo = $j . '-' . time() . '-' . $reservacion->asignatura_id . '-' . $reservacion->local_id . '-' . $reservacion->user_id;
+
                     $reservacion->save();
+
                     $i++;
-                }
-                if ($error == 'No hay errores') {
-                    flash('
-                    <h4>
-                        <i class="fa fa-check icono-margen-grande" aria-hidden="true"></i>¡Bien hecho!
-                    </h4>
-                    <p style="padding-left: 34px;">
-                        Se han registrado todas las reservaciones correctamente.
-                    </p>
-                ')
-                    ->success()
-                    ->important();
+
+                    $j++;
                 }
             });
-            return redirect()->route('home');
+
+            /**
+             * Eliminando archivo almacenado previamente.
+             */
+
+            if (\File::exists($ruta)) {
+                \File::delete($ruta);
+            }
+
+            return redirect()->route('reservaciones.index');
         }
     }
 
@@ -114,17 +153,15 @@ class ImportacionController extends Controller
      * Valida exhaustivamente los datos ingresados de la reservación.
      * 
      * @param  RowCollection  $fila
-     * @return string
+     * @return array
      * ---------------------------------------------------------------------------
      */
 
     public function validarReservacion($fila)
     {        
         /**
-         * ---------------------------------------------------------------------------
          * Validando ingreso de campos obligatorios y que existe el local, la
          * asignatura y la actividad ingresada.
-         * ---------------------------------------------------------------------------
          */
 
         $fila->fecha = Carbon::parse($fila->fecha)->format('Y-m-d');
@@ -132,20 +169,18 @@ class ImportacionController extends Controller
         $fila->hora_fin = Carbon::parse($fila->hora_fin)->format('H:i:s');
 
         if ($fila->local_id == null || $fila->asignatura_id == null || $fila->actividad_id == null || $fila->fecha == null || $fila->hora_inicio == null || $fila->hora_fin == null) {
-            return 'No ingresó algún dato requerido para realizar la reservación. Revise que se ingresó: Local, asignatura, actividad, fecha, hora de inicio y hora de finalización de la reservación.';
+            return [true, 'La fila está vacía o no ingresó algún dato requerido para realizar la reservación. Revise que se ingresó: Local, asignatura, actividad, fecha, hora de inicio, hora de finalización y tipo de reservación.'];
         } elseif (Local::where('id', '=', $fila->local_id)->first() == null) {
-            return 'No existe el local ingresado.';
+            return [true, 'No existe el local ingresado.'];
         } elseif (Asignatura::where('id', '=', $fila->asignatura_id)->first() == null) {
-            return 'No existe la asignatura ingresada.';
+            return [true, 'No existe la asignatura ingresada.'];
         } elseif (Actividad::where('id', '=', $fila->actividad_id)->first() == null) {
-            return 'No existe la actividad ingresada.';
+            return [true, 'No existe la actividad ingresada.'];
         }
 
         /**
-         * ---------------------------------------------------------------------------
          * Validando que la fecha, la hora de inicio y la hora de finalización cumplen
          * con las reglas del negocio.
-         * ---------------------------------------------------------------------------
          */
 
         $hi = explode(':', $fila->hora_inicio);
@@ -155,22 +190,20 @@ class ImportacionController extends Controller
         $hora_actual = Carbon::now()->format('H:i:s');
         
         if ($fila->fecha < $fecha_actual) {
-            return 'No puede realizar una reservación en una fecha anterior a la actual.';
+            return [true, 'No puede realizar una reservación en una fecha anterior a la actual.'];
         } elseif ($fila->hora_inicio < '07:00:00' || $fila->hora_inicio > '17:00:00') {
-            return 'La hora de inicio debe ser entre 07:00 AM y 05:00 PM.';
+            return [true, 'La hora de inicio debe ser entre 07:00 AM y 05:00 PM.'];
         } elseif ($fila->hora_fin <= $fila->hora_inicio || $fila->hora_fin > '18:00:00') {
-            return 'La hora de finalización debe ser mayor a la hora de inicio y menor o igual a las 06:00 PM.';
+            return [true, 'La hora de finalización debe ser mayor a la hora de inicio y menor o igual a las 06:00 PM.'];
         } elseif ($hi[1] != '00' || $hf[1] != '00') {
-            return 'No puedes ingresar minutos distintos a cero.';
+            return [true, 'No puedes ingresar minutos distintos a cero.'];
         } elseif ($fila->fecha == $fecha_actual && $fila->hora_inicio < $hora_actual) {
-            return 'Si la reservación se desea programar para el día de hoy no puede ingresar una hora inferior a la actual.';
+            return [true, 'Si la reservación se desea programar para el día de hoy no puede ingresar una hora inferior a la actual.'];
         }
 
         /**
-         * ---------------------------------------------------------------------------
          * Validando que la fecha, la hora de inicio y la hora de finalización no
          * coincidan con un asueto o suspensión de actividades.
-         * ---------------------------------------------------------------------------
          */
 
         $asuetos = Asueto::all();
@@ -179,7 +212,7 @@ class ImportacionController extends Controller
         
         foreach ($asuetos as $asueto) {
             if ($f[1] == $asueto->mes && $f[2] == $asueto->dia) {
-                return 'Para la fecha que ingresaste hay programado un asueto por ser: ' . $asueto->nombre . '.';
+                return [true, 'Para la fecha que ingresaste hay programado un asueto por ser: ' . $asueto->nombre . '.'];
             }
         }
         
@@ -191,16 +224,15 @@ class ImportacionController extends Controller
                     $suspension->fecha = Carbon::parse($suspension->fecha)->format('d/m/Y');
                     $suspension->hora_inicio = Carbon::parse($suspension->hora_inicio)->format('h:i A');
                     $suspension->hora_fin = Carbon::parse($suspension->hora_fin)->format('h:i A');
-                    return 'Para la fecha ' . $suspension->fecha . ' hay programada una suspensión de actividades de ' . $suspension->hora_inicio . ' a ' . $suspension->hora_fin . '.';
+
+                    return [true, 'Para la fecha ' . $suspension->fecha . ' hay programada una suspensión de actividades de ' . $suspension->hora_inicio . ' a ' . $suspension->hora_fin . '.'];
                 }
             }
         }
 
         /**
-         * ---------------------------------------------------------------------------
          * Validando que el local esté disponible para la fecha y hora de la
          * reservación.
-         * ---------------------------------------------------------------------------
          */
 
         $reservaciones = Reservacion::where('fecha', '=', $fila->fecha)
@@ -214,15 +246,13 @@ class ImportacionController extends Controller
             ->get();
 
         if ($reservaciones->count() > 0) {
-            return 'El local no está disponible para reservarse en la fecha y horas ingresadas.';
+            return [true, 'El local no está disponible para reservarse en la fecha y horas ingresadas.'];
         }
 
         /**
-         * ---------------------------------------------------------------------------
          * Si pasó todas las validaciones.
-         * ---------------------------------------------------------------------------
          */
 
-        return 'No hay errores';
+        return [false, null];
     }
 }

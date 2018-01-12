@@ -32,12 +32,12 @@ class UserRequest extends FormRequest
         $method = $this->_method;
 
         $rules = array(
-            'name'     => 'max:190|required',
-            'lastname' => 'max:190|required',
-            'carnet'   => 'max:190|required',
-            'email'    => 'max:190|required|email',
+            'name'     => 'required|max:190',
+            'lastname' => 'required|max:190',
+            'carnet'   => 'required|max:190',
+            'email'    => 'required|max:190|email',
             'password' => 'min:6|max:190|confirmed',
-            'tipo'     => 'max:190|required',
+            'tipo'     => 'required|max:190',
             'imagen'   => 'image|max:2048|mimes:jpeg,png',
 
         );

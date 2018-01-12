@@ -5,97 +5,131 @@
 @section('encabezado', 'Inicio')
 
 @section('breadcrumb')
-    
-    <li class="active"><i class="fa fa-home icono-margen"></i>Inicio</li>
-
+    <li class="active">
+        <i class="fa fa-home icono-margen"></i>
+        Inicio
+    </li>
 @endsection
 
 @section('contenido')
-
-    <div class="row">
-        <div class="col-md-8">
-        	<div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Mis reservaciones</h3>
-                </div>
-                <div class="box-body">
-                    {!! Form::open(array('url' => 'home', 'method' => 'GET', 'autocomplete' => 'off', 'role' => 'search')) !!}
-                        <div class="form-group">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="searchText", placeholder="Buscar", value="{{ $searchText }}"></input>
-                                <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-default"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                </span>
-                            </div>
-                        </div>
-                    {!! Form::close() !!}
-                    @if ($reservaciones->count() > 0)
-                        @foreach ($reservaciones as $reservacion)
-                            <hr>
-                            <span class="text-muted fecha-hora-c pull-right">
-                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ \Carbon\Carbon::parse($reservacion->created_at)->format('d/m/Y | h:i A') }}
-                            </span>
-                            <h4><strong>Reservación: {{ $reservacion->codigo }}</strong></h4>
-                            <p class="text-muted margen-inicio">
-                                <strong>Local:</strong> {{ $reservacion->local->nombre }}
-                            </p>
-                            <p class="text-muted margen-inicio">
-                                <strong>Fecha y hora:</strong> {{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }} | {{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}
-                            </p>
-                            <p class="text-muted margen-inicio">
-                                <strong>Asignatura:</strong> [{{ $reservacion->asignatura->codigo }}] {{ $reservacion->asignatura->nombre }}
-                            </p>
-                            <p class="text-muted">
-                                <strong>Actividad:</strong> {{ $reservacion->actividad->nombre }}
-                                    @if ($reservacion->tema != null)
-                                        | {{ $reservacion->tema }}
-                                    @endif
-                            </p>
-                            <div class="btn-group btn-group-justified" role="group">
-                                <div class="btn-group" role="group">
-                                    <a href="{{ route('reservacion.comprobante', $reservacion->id) }}" class="btn btn-default"><i class="fa fa-download icono-margen" aria-hidden="true"></i>Comprobante</a>
-                                </div>
-                                <div class="btn-group" role="group">
-                                    <a href="{{ route('reservaciones.edit', $reservacion->id) }}" class="btn btn-default"><i class="fa fa-wrench icono-margen" aria-hidden="true"></i>Editar</a>
-                                </div>
-                                <div class="btn-group" role="group">
-                                    <a href="" data-target="#modal-delete-{{ $reservacion->id }}" data-toggle="modal" class="btn btn-danger"><i class="fa fa-trash icono-margen" aria-hidden="true"></i>Eliminar</a>
-                                </div>
-                            </div>
-                            @include('reservaciones.modal')
-                        @endforeach
-                        <div class="box-footer clearfix">
-                            <div class="text-center">
-                                {!! $reservaciones->render() !!}
-                            </div>
-                        </div>
-                    @else
-                        <div class="text-center">
-                            <i class="fa fa-frown-o fa-5x verde-claro" aria-hidden="true"></i>
-                            <h4 class="verde-claro">No se encontraron reservaciones</h4>
-                        </div>
-                    @endif
-                </div>     
-            </div>
+    <div class="box box-success">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                Mis reservaciones
+            </h3>
         </div>
-        <div class="col-md-4">
-            <div class="box box-success">
-                <div class="box-body box-profile">
-                    <img class="profile-user-img img-responsive img-circle" src="{{ asset('images/users/default_profile.jpg') }}" alt="Imagen de usuario">
-                    <h3 class="profile-username text-center">{{ Auth::user()->name }} {{ Auth::user()->lastname }}</h3>
-                    <p class="text-muted text-center">{{ Auth::user()->tipo }}</p>
-                    <ul class="list-group list-group-unbordered">
-                        <li class="list-group-item">
-                            <b>Carnet</b> <p class="pull-right">{{ Auth::user()->carnet }}</p>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Correo electrónico</b> <p class="pull-right">{{ Auth::user()->email }}</p>
-                        </li>
-                    </ul>
-                    <a href="{{ route('reservaciones.paso-uno') }}" class="btn btn-success btn-block">Nueva reservación</a>
-                    <a href="#" class="btn btn-default btn-block">Editar perfil</a>
+        <div class="box-body">
+            {!! Form::open(array('url' => 'home', 'method' => 'GET', 'autocomplete' => 'off', 'role' => 'search')) !!}
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="searchText", placeholder="Buscar", value="{{ $searchText }}"></input>
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
                 </div>
+            {!! Form::close() !!}
+            @if ($reservaciones->count() > 0)
+                @foreach ($reservaciones as $reservacion)
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="btn-group pull-left icono-notificacion">
+                                <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-caret-down fa-2x" aria-hidden="true"></i>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{{ route('reservacion.comprobante', $reservacion->id) }}">
+                                            Descargar comprobante
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('reservaciones.edit', $reservacion->id) }}">
+                                            Editar
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="" data-target="#modal-delete-{{ $reservacion->id }}" data-toggle="modal" >
+                                            Eliminar
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="pull-left">
+                                <a href="{{ url('images/locales/' . $reservacion->local->imagen) }}" target="_blanck">
+                                    <img src="{{ asset('images/locales/' . $reservacion->local->imagen) }}" class="img-circle img-miniatura" alt="Imagen del local">
+                                </a>
+                            </div>
+                            <span class="text-muted pull-right">
+                                <small>
+                                    <i class="fa fa-clock-o icono-margen" aria-hidden="true"></i>
+                                    {{ $reservacion->created_at->diffForHumans() }}
+                                </small>
+                            </span>
+                            <h4 class="encabezado-notificacion">
+                                Reservación {{ $reservacion->tipo }}
+                            </h4>
+                            <p>
+                                <small>
+                                Código:
+                                {{ $reservacion->codigo }}
+                                </small>
+                            </p>
+                            <div class="well well-sm well-panel well-parrafo">
+                                <p>
+                                    <strong>
+                                        Local:
+                                    </strong>
+                                    {{ $reservacion->local->nombre }}
+                                </p>
+                                <p>
+                                    <strong>
+                                        Fecha y hora:
+                                    </strong>
+                                    {{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }} &nbsp;&#8226;&nbsp; {{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}
+                                </p>
+                                <p>
+                                    <strong>
+                                        Asignatura:
+                                    </strong>
+                                    {{ $reservacion->asignatura->nombre }} &nbsp;-&nbsp; ({{ $reservacion->asignatura->codigo }})
+                                </p>
+                                <p>
+                                    <strong>
+                                        Actividad:
+                                    </strong>
+                                    {{ $reservacion->actividad->nombre }}
+                                    @if ($reservacion->tema != null)
+                                        &nbsp;-&nbsp; {{ $reservacion->tema }}
+                                    @endif
+                                </p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!-- MODAL PARA CONFIRMAR ELIMINACIÓN DE ASIGNATURA -->
+                    @include('reservaciones.modal')
+                @endforeach
+            @else
+                <div class="text-center">
+                    <i class="fa fa-frown-o fa-5x verde-claro" aria-hidden="true"></i>
+                    <h4 class="verde-claro">
+                        No se encontraron reservaciones
+                    </h4>
+                </div>
+            @endif
+        </div>
+        <div class="box-footer">
+            <div class="text-center">
+                {!! $reservaciones->render() !!}
             </div>
         </div>
     </div>
+@endsection
+
+@section('sidebar')
+    <!-- PANEL DEL PERFIL DE USUARIO -->
+    @include('layouts.perfil')
 @endsection
