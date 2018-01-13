@@ -17,7 +17,7 @@
  * ---------------------------------------------------------------------------
  */
 
-Route::group(['prefix' => 'administracion'], function() {
+Route::group(['prefix' => 'administracion', 'middleware' => ['auth', 'administrador']], function() {
 
     /**
      * Opciones de configuración.
@@ -51,7 +51,7 @@ Auth::routes();
  * ---------------------------------------------------------------------------
  */
 
-Route::group(['prefix' => 'notificaciones'], function() {
+Route::group(['prefix' => 'notificaciones', 'middleware' => 'auth'], function() {
 
     Route::get('/', 'HomeController@verNotificaciones')->name('notificaciones');
     Route::get('/{notificacion}/destroy', 'HomeController@eliminarNotificacion')->name('notificaciones.destroy');
@@ -68,7 +68,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 /**
  * ---------------------------------------------------------------------------
- * Raíz.
+ * Raíz - Inicio de sesión.
  * ---------------------------------------------------------------------------
  */
 
@@ -80,7 +80,7 @@ Route::get('/', 'HomeController@index');
  * ---------------------------------------------------------------------------
  */
 
-Route::group(['prefix' => 'reservaciones'], function() {
+Route::group(['prefix' => 'reservaciones', 'middleware' => 'auth'], function() {
 
     /**
      * Opciones básicas para las reservaciones.
@@ -105,32 +105,37 @@ Route::group(['prefix' => 'reservaciones'], function() {
     Route::get('/paso-tres', 'ReservacionController@hacerPasoDos')->name('reservaciones.paso-tres');
     Route::post('/store', 'ReservacionController@hacerPasoTres')->name('reservaciones.store');
 
-    /**
-     * Opciones básicas para las reservaciones - [Administradores y Asistentes].
-     */
+    Route::group(['middleware' => ['administrador', 'asistente']], function() {
 
-    Route::get('/', 'ReservacionController@index')->name('reservaciones.index');
-    Route::get('/{reservacion}/show', 'ReservacionController@show')->name('reservaciones.show');
+        /**
+         * Opciones básicas para las reservaciones - [Administradores y Asistentes].
+         */
 
-    /**
-     * Reservaciones por ciclo.
-     */
+        Route::get('/', 'ReservacionController@index')->name('reservaciones.index');
+        Route::get('/{reservacion}/show', 'ReservacionController@show')->name('reservaciones.show');
 
-    Route::get('/crear-ciclo', 'ReservacionController@crearNuevoCiclo')->name('reservaciones.crear-ciclo');
-    Route::post('/registrar-ciclo', 'ReservacionController@registrarNuevoCiclo')->name('reservaciones.registrar-ciclo');
+        /**
+         * Reservaciones por ciclo.
+         */
 
-    /**
-     * Importar reservaciones desde Excel.
-     */
+        Route::get('/crear-ciclo', 'ReservacionController@crearNuevoCiclo')->name('reservaciones.crear-ciclo');
+        Route::post('/registrar-ciclo', 'ReservacionController@registrarNuevoCiclo')->name('reservaciones.registrar-ciclo');
 
-    Route::get('/importar', 'ImportacionController@importarReservaciones')->name('reservaciones.importar');
-    Route::post('/almacenar', 'ImportacionController@almacenarReservaciones')->name('reservaciones.almacenar');
+        /**
+         * Importar reservaciones desde Excel.
+         */
 
-    /**
-     * Exportar reservaciones a Excel.
-     */
+        Route::get('/importar', 'ImportacionController@importarReservaciones')->name('reservaciones.importar');
+        Route::post('/almacenar', 'ImportacionController@almacenarReservaciones')->name('reservaciones.almacenar');
 
-    Route::get('/exportar', 'ExportacionController@exportarReservaciones')->name('reservaciones.exportar');
-    Route::post('/recibir', 'ExportacionController@recibirReservaciones')->name('reservaciones.recibir');
+        /**
+         * Exportar reservaciones a Excel.
+         */
+
+        Route::get('/exportar', 'ExportacionController@exportarReservaciones')->name('reservaciones.exportar');
+        Route::post('/recibir', 'ExportacionController@recibirReservaciones')->name('reservaciones.recibir');
+
+    });
+
 
 });

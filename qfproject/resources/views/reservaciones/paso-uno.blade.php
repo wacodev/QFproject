@@ -71,7 +71,7 @@
                         @endif
                     </div>
                 </div>
-                @if (Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
+                @if (Auth::user()->administrador() || Auth::user()->asistente())
                     <div class="form-group{{ $errors->has('tipo') ? ' has-error' : '' }}">
                         {!! Form::label('tipo', 'Tipo de reservación', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
@@ -91,7 +91,7 @@
             </div>
             <div class="box-footer">
                 <div class="pull-right">
-                    @if(Auth::user()->tipo == 'Docente')
+                    @if(Auth::user()->docente())
                         <a href="{{ route('home') }}" class="btn btn-default">
                             Cancelar
                         </a>

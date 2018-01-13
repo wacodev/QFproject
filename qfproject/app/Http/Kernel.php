@@ -56,5 +56,14 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \qfproject\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+
+        /**
+         * ---------------------------------------------------------------------------
+         * Middlewares agregados.
+         * ---------------------------------------------------------------------------
+         */
+
+        'administrador' => \qfproject\Http\Middleware\Administrador::class,
+        'asistente' => \qfproject\Http\Middleware\Asistente::class,
     ];
 }

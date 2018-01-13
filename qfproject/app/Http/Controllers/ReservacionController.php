@@ -73,7 +73,7 @@ class ReservacionController extends Controller
      * ---------------------------------------------------------------------------
      * Almacena una reservación recién creada en la base de datos.
      * 
-     * @param  qfproject\Http\Request  $request
+     * @param  \qfproject\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -93,20 +93,10 @@ class ReservacionController extends Controller
      */
 
     public function show($id)
-    {
-        /**
-         * Validando acceso para mostrar la reservación especificada.
-         */
+    {   
+        $reservacion = Reservacion::find($id);
 
-        $tipo = \Auth::user()->tipo;
-        
-        if ($tipo == 'Administrador' || $tipo == 'Asistente') {
-            $reservacion = Reservacion::find($id);
-
-            return view('reservaciones.show')->with('reservacion', $reservacion);
-        } else {
-            return abort(503);
-        }
+        return view('reservaciones.show')->with('reservacion', $reservacion);
     }
 
     /**
@@ -126,28 +116,7 @@ class ReservacionController extends Controller
          * Validando acceso para editar la reservación especificada.
          */
 
-        $acceso = false;
-        
-        switch ($reservacion->user->tipo) {
-            case 'Administrador':
-                if (\Auth::user()->id == $reservacion->user_id) {
-                    $acceso = true;
-                }
-                
-                break;
-            
-            case 'Asistente':
-                if (\Auth::user()->tipo == 'Administrador' || \Auth::user()->id == $reservacion->user_id) {
-                    $acceso = true;
-                }
-                
-                break;
-            
-            case 'Docente':
-                $acceso = true;
-                
-                break;
-        }
+        $acceso = $this->acceder($reservacion->user->tipo, $reservacion->user_id);
 
         if ($acceso) {
             $asignaturas = Asignatura::orderBy('nombre')->pluck('nombre', 'id');
@@ -159,7 +128,7 @@ class ReservacionController extends Controller
                 ->with('asignaturas', $asignaturas)
                 ->with('actividades', $actividades);
         } else {
-            return abort(503);
+            abort(401);
         }
     }
 
@@ -167,7 +136,7 @@ class ReservacionController extends Controller
      * ---------------------------------------------------------------------------
      * Actualiza la reservación especificada en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\SuspensionRequest  $request
+     * @param  \qfproject\Http\Requests\SuspensionRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
@@ -208,10 +177,10 @@ class ReservacionController extends Controller
             ->success()
             ->important();
 
-        if (\Auth::user()->tipo == 'Administrador' || \Auth::user()->tipo == 'Asistente') {
-            return redirect()->route('reservaciones.index');
-        } else {
+        if (\Auth::user()->docente()) {
             return redirect()->route('home');
+        } else {
+            return redirect()->route('reservaciones.index');
         }
     }
 
@@ -232,28 +201,7 @@ class ReservacionController extends Controller
          * Validando acceso para eliminar la reservación especificada.
          */
 
-        $acceso = false;
-        
-        switch ($reservacion->user->tipo) {
-            case 'Administrador':
-                if (\Auth::user()->id == $reservacion->user_id) {
-                    $acceso = true;
-                }
-                
-                break;
-            
-            case 'Asistente':
-                if (\Auth::user()->tipo == 'Administrador' || \Auth::user()->id == $reservacion->user_id) {
-                    $acceso = true;
-                }
-                
-                break;
-            
-            case 'Docente':
-                $acceso = true;
-                
-                break;
-        }
+        $acceso = $this->acceder($reservacion->user->tipo, $reservacion->user_id);
 
         if ($acceso) {
             $reservacion->delete();
@@ -276,13 +224,13 @@ class ReservacionController extends Controller
                 ->success()
                 ->important();
 
-            if (\Auth::user()->tipo == 'Administrador' || \Auth::user()->tipo == 'Asistente') {
-                return redirect()->route('reservaciones.index');
-            } else {
+            if (\Auth::user()->docente()) {
                 return redirect()->route('home');
+            } else {
+                return redirect()->route('reservaciones.index');
             }
         } else {
-            return abort(503);
+            abort(401);
         }
     }
 
@@ -549,13 +497,13 @@ class ReservacionController extends Controller
          * Notificando a los usuarios correspondientes la acción realizada.
          */
 
-        if (\Auth::user()->tipo != 'Administrador') {
+        if (\Auth::user()->administrador()) {
             
             /**
              * Obteniendo usuarios que se les enviará la notificación.
              */
 
-            if (\Auth::user()->tipo == 'Asistente') {
+            if (\Auth::user()->asistente()) {
                 $users = User::where('tipo', '=', 'Administrador')
                     ->get();
             } else {
@@ -585,10 +533,10 @@ class ReservacionController extends Controller
             ->success()
             ->important();
 
-        if (\Auth::user()->tipo == 'Administrador' || \Auth::user()->tipo == 'Asistente') {
-            return redirect()->route('reservaciones.index');
-        } else {
+        if (\Auth::user()->docente()) {
             return redirect()->route('home');
+        } else {
+            return redirect()->route('reservaciones.index');
         }
     }
 
@@ -611,7 +559,7 @@ class ReservacionController extends Controller
      * Almacena un conjunto de reservaciones en la base de datos. Utilizado para
      * el registro de reservaciones por ciclo.
      * 
-     * @param  qfproject\Http\Request  $request
+     * @param  \qfproject\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -998,7 +946,7 @@ class ReservacionController extends Controller
      * Crea y envia notificaciones de las acciones de editar y eliminar
      * reservaciones a los usuarios correspondientes.
      * 
-     * @param  qfproject\Reservacion  $reservacion
+     * @param  \qfproject\Reservacion  $reservacion
      * @param  string  $tipo
      * @return void
      * ---------------------------------------------------------------------------
@@ -1013,8 +961,8 @@ class ReservacionController extends Controller
              * reservación.
              */
 
-            if (\Auth::user()->tipo != 'Administrador') {
-                if (\Auth::user()->tipo == 'Asistente') {
+            if (\Auth::user()->administrador()) {
+                if (\Auth::user()->asistente()) {
                     $users = User::where('tipo', '=', 'Administrador')
                         ->get();
                 } else {
@@ -1034,7 +982,7 @@ class ReservacionController extends Controller
              * reservación.
              */
 
-            if (\Auth::user()->tipo == 'Administrador') {
+            if (\Auth::user()->administrador()) {
                 $user = User::where('id', '=', $reservacion->user_id)->first();
 
                 $user->notify(new ReservacionNotification($reservacion, $tipo, false));
@@ -1044,7 +992,7 @@ class ReservacionController extends Controller
                     ->get();
 
                 foreach ($users as $user) {
-                    if ($user->tipo == 'Administrador') {
+                    if ($user->administrador()) {
                         $user->notify(new ReservacionNotification($reservacion, $tipo, true));
                     } else {
                         $user->notify(new ReservacionNotification($reservacion, $tipo, false));
@@ -1052,5 +1000,45 @@ class ReservacionController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Valida si el usuario tiene acceso para realizar una acción.
+     * 
+     * @param  string  $tipo
+     * @param  int  $propietario
+     * @return bool
+     * ---------------------------------------------------------------------------
+     */
+
+    public function acceder($tipo, $propietario)
+    {
+        $acceso = false;
+
+        switch ($tipo) {
+            case 'Administrador':
+                if (\Auth::user()->id == $propietario) {
+                    $acceso = true;
+                }
+                
+                break;
+            
+            case 'Asistente':
+                if (\Auth::user()->administrador() || \Auth::user()->id == $propietario) {
+                    $acceso = true;
+                }
+                
+                break;
+            
+            case 'Docente':
+                if (\Auth::user()->administrador() || \Auth::user()->asistente() || \Auth::user()->id == $propietario) {
+                    $acceso = true;
+                }
+                
+                break;
+        }
+
+        return $acceso;
     }
 }

@@ -260,55 +260,57 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="treeview">
-                            <a href="#"> <!-- Editar -->
-                                <i class="fa fa-cog"></i>
-                                <span>
-                                    Configuración
-                                </span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="{{ route('actividades.index') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Actividades
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('asignaturas.index') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Asignaturas
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('asuetos.index') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Asuetos
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('locales.index') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Locales
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('suspensiones.index') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Suspensiones
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="{{ route('users.index') }}">
-                                <i class="fa fa-users"></i>
-                                <span>
-                                    Usuarios
-                                </span>
-                            </a>
-                        </li>   
+                        @if (Auth::user()->administrador())
+                            <li class="treeview">
+                                <a href="#"> <!-- Editar -->
+                                    <i class="fa fa-cog"></i>
+                                    <span>
+                                        Configuración
+                                    </span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="{{ route('actividades.index') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Actividades
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('asignaturas.index') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Asignaturas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('asuetos.index') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Asuetos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('locales.index') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Locales
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('suspensiones.index') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Suspensiones
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ route('users.index') }}">
+                                    <i class="fa fa-users"></i>
+                                    <span>
+                                        Usuarios
+                                    </span>
+                                </a>
+                            </li>
+                        @endif
                         <li>
                             <a href="#"> <!-- Editar -->
                                 <i class="fa fa-info-circle"></i>

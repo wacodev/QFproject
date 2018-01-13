@@ -77,4 +77,43 @@ class User extends Authenticatable
             $this->attributes['password'] = Hash::make($value);
         }
     }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Indica si el usuario es de tipo Administrador.
+     *
+     * @return bool
+     * ---------------------------------------------------------------------------
+     */
+
+    public function administrador()
+    {
+        return $this->tipo === 'Administrador';
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Indica si el usuario es de tipo Asistente.
+     *
+     * @return bool
+     * ---------------------------------------------------------------------------
+     */
+
+    public function asistente()
+    {
+        return $this->tipo === 'Asistente';
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Indica si el usuario es de tipo Docente.
+     *
+     * @return bool
+     * ---------------------------------------------------------------------------
+     */
+
+    public function docente()
+    {
+        return $this->tipo === 'Docente';
+    }
 }
