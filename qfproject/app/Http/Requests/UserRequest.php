@@ -4,6 +4,14 @@ namespace qfproject\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * ---------------------------------------------------------------------------
+ * Clases agregadas.
+ * ---------------------------------------------------------------------------
+ */
+
+use qfproject\User;
+
 class UserRequest extends FormRequest
 {
     /**
@@ -29,32 +37,22 @@ class UserRequest extends FormRequest
 
     public function rules()
     {
-        $method = $this->_method;
+        $user = User::find($this->route('user'));
 
         $rules = array(
             'name'     => 'required|max:190',
             'lastname' => 'required|max:190',
-            'carnet'   => 'required|max:190',
-            'email'    => 'required|max:190|email',
-            'password' => 'min:6|max:190|confirmed',
-            'tipo'     => 'required|max:190',
-            'imagen'   => 'image|max:2048|mimes:jpeg,png',
-
+            'carnet'   => 'required|max:190|unique:users,carnet,' . $this->route('user'),
+            'email'    => 'required|max:190|email|unique:users,email,' . $this->route('user'),
+            'password' => 'max:190|confirmed',
+            'tipo'     => 'required',
+            'imagen'   => 'image|mimes:jpeg,png,bmp|max:2048'
         );
 
-        if ($method != 'PUT') {
-            $rules['carnet']   .= '|unique:users';
-            $rules['email']    .= '|unique:users';
-            $rules['password'] .= '|required';
-            $rules['imagen']   .= '|unique:users';
+        if ($user == null) {
+            $rules['password'] .= '|required|min:6';
         }
 
         return $rules;
-
-        /*
-        return [
-            //
-        ];
-        */
     }
 }

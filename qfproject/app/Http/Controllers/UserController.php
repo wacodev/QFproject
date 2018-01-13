@@ -150,7 +150,7 @@ class UserController extends Controller
      * ---------------------------------------------------------------------------
      */
 
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
         $user = User::find($id);
 
@@ -186,7 +186,7 @@ class UserController extends Controller
         $user->lastname = $request->get('lastname');
         $user->carnet = $request->get('carnet');
         $user->email = $request->get('email');
-        //$user->password = $request->get('password');
+        $user->password = $request->get('password');
         $user->tipo = $request->get('tipo');
 
         $user->save();

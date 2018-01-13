@@ -75,6 +75,7 @@
                 {!! Form::hidden('fecha', $reservacion->fecha) !!}
                 {!! Form::hidden('hora_inicio', $reservacion->hora_inicio) !!}
                 {!! Form::hidden('hora_fin', $reservacion->hora_fin) !!}
+                {!! Form::hidden('tipo', $reservacion->tipo) !!}
             </div>
             <div class="box-footer">
                 <div class="pull-right">

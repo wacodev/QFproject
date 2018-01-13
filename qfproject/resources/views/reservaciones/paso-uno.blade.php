@@ -71,6 +71,23 @@
                         @endif
                     </div>
                 </div>
+                @if (Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
+                    <div class="form-group{{ $errors->has('tipo') ? ' has-error' : '' }}">
+                        {!! Form::label('tipo', 'Tipo de reservación', ['class' => 'col-sm-4 control-label']) !!}
+                        <div class="col-sm-7">
+                            {!! Form::select('tipo', [
+                                'Ordinaria' => 'Ordinaria',
+                                'Extraordinaria'     => 'Extraordinaria'
+                                ], old('tipo'), ['class' => 'form-control', 'placeholder' => '-- Seleccione el tipo de reservación --']) !!}
+                            @if ($errors->has('tipo'))
+                                <span class="help-block">
+                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                                    {{ $errors->first('tipo') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                @endif
             </div>
             <div class="box-footer">
                 <div class="pull-right">

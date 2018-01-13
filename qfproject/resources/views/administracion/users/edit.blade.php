@@ -31,7 +31,7 @@
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         {!! Form::label('name', 'Nombre', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::text('name', {{ $user->name }}, ['class' => 'form-control', 'placeholder' => 'Nombres del usuario', 'required']) !!}
+                            {!! Form::text('name', $user->name, ['class' => 'form-control', 'placeholder' => 'Nombres del usuario', 'required']) !!}
                             @if ($errors->has('name'))
                                 <span class="help-block">
                                     <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -43,7 +43,7 @@
                     <div class="form-group{{ $errors->has('lastname') ? ' has-error' : '' }}">
                         {!! Form::label('lastname', 'Apellido', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::text('lastname', {{ $user->lastname }}, ['class' => 'form-control', 'placeholder' => 'Apellidos del usuario', 'required']) !!}
+                            {!! Form::text('lastname', $user->lastname, ['class' => 'form-control', 'placeholder' => 'Apellidos del usuario', 'required']) !!}
                             @if ($errors->has('lastname'))
                                 <span class="help-block">
                                     <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -55,7 +55,7 @@
                     <div class="form-group{{ $errors->has('carnet') ? ' has-error' : '' }}">
                         {!! Form::label('carnet', 'Carnet', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::text('carnet', {{ $user->carnet }}, ['class' => 'form-control', 'placeholder' => 'Carnet del usuario', 'required']) !!}
+                            {!! Form::text('carnet', $user->carnet, ['class' => 'form-control', 'placeholder' => 'Carnet del usuario', 'required']) !!}
                             @if ($errors->has('carnet'))
                                 <span class="help-block">
                                     <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -67,7 +67,7 @@
                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                         {!! Form::label('email', 'Correo electrónico', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'ejemplo@correo.com', 'required']) !!}
+                            {!! Form::email('email', $user->email, ['class' => 'form-control', 'placeholder' => 'ejemplo@correo.com', 'required']) !!}
                             @if ($errors->has('email'))
                                 <span class="help-block">
                                     <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -76,11 +76,10 @@
                             @endif
                         </div>
                     </div>
-                    <!--
                     <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                         {!! Form::label('password', 'Contraseña', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'Nueva contraseña', 'required']) !!}
+                            {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'Nueva contraseña']) !!}
                             @if ($errors->has('password'))
                                 <span class="help-block">
                                     <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -92,10 +91,9 @@
                     <div class="form-group">
                         {!! Form::label('password_confirmation', 'Confirmar contraseña', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => 'Confirmar nueva contraseña', 'required']) !!}
+                            {!! Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => 'Confirmar nueva contraseña']) !!}
                         </div>
                     </div>
-                    -->
                     <div class="form-group{{ $errors->has('tipo') ? ' has-error' : '' }}">
                         {!! Form::label('tipo', 'Tipo de usuario', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
@@ -103,7 +101,7 @@
                                 'Administrador' => 'Administrador',
                                 'Asistente'     => 'Asistente',
                                 'Docente'       => 'Docente'
-                                ], {{ $user->tipo }}, ['class' => 'form-control', 'placeholder' => 'Tipo de usuario', 'required']) !!}
+                                ], $user->tipo, ['class' => 'form-control', 'placeholder' => 'Tipo de usuario', 'required']) !!}
                             @if ($errors->has('tipo'))
                                 <span class="help-block">
                                     <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>

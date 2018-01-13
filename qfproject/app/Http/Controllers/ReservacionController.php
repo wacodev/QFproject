@@ -306,7 +306,7 @@ class ReservacionController extends Controller
         $this->validate(request(), [
             'fecha'       => 'date|after_or_equal:' . Carbon::now()->format('Y-m-d'),
             'hora_inicio' => 'required|after_or_equal:07:00:00|before_or_equal:17:00:00',
-            'hora_fin'    => 'required|after:hora_inicio|before_or_equal:18:00:00',
+            'hora_fin'    => 'required|after:hora_inicio|before_or_equal:18:00:00'
         ]);
 
         /**
@@ -340,51 +340,68 @@ class ReservacionController extends Controller
             
             return back();
         }
-        
+
         /**
-         * Validando que la fecha ingresada no coincide con un asueto.
+         * Asignando tipo de reservación Extraordinaria en caso que el usuario sea
+         * de tipo Docente o no se haya llenado el campo en el formulario.
          */
-        
-        $error = $this->validarAsueto($reservacion->fecha);
-        
-        if ($error[0])
-        {
-            flash('
-                <h4>
-                    <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
-                    ¡No puedes hacer una reservación para esa fecha y hora!
-                </h4>
-                <p class="exclamation-triangle">'
-                    . $error[1] .
-                '</p>
-            ')
-                ->warning()
-                ->important();
-            
-            return back();
+
+        if ($reservacion->tipo == null) {
+            $reservacion->tipo = 'Extraordinaria';
         }
 
         /**
-         * Validando que la fecha ingresada no coincide con una suspensión de actividades.
+         * Validaciones solo para las reservaciones de tipo Extraordinaria.
          */
 
-        $error = $this->validarSuspension($reservacion->fecha, $reservacion->hora_inicio, $reservacion->hora_fin);
-        
-        if ($error[0])
-        {
-            flash('
-                <h4>
-                    <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
-                    ¡No puedes hacer una reservación para esa fecha y hora!
-                </h4>
-                <p class="exclamation-triangle">'
-                    . $error[1] .
-                '</p>
-            ')
-                ->warning()
-                ->important();
+        if ($reservacion->tipo == 'Extraordinaria') {
+
+            /**
+             * Validando que la fecha ingresada no coincide con un asueto.
+             */
             
-            return back();
+            $error = $this->validarAsueto($reservacion->fecha);
+            
+            if ($error[0])
+            {
+                flash('
+                    <h4>
+                        <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                        ¡No puedes hacer una reservación para esa fecha y hora!
+                    </h4>
+                    <p class="exclamation-triangle">'
+                        . $error[1] .
+                    '</p>
+                ')
+                    ->warning()
+                    ->important();
+                
+                return back();
+            }
+
+            /**
+             * Validando que la fecha ingresada no coincide con una suspensión de
+             * actividades.
+             */
+
+            $error = $this->validarSuspension($reservacion->fecha, $reservacion->hora_inicio, $reservacion->hora_fin);
+            
+            if ($error[0])
+            {
+                flash('
+                    <h4>
+                        <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                        ¡No puedes hacer una reservación para esa fecha y hora!
+                    </h4>
+                    <p class="exclamation-triangle">'
+                        . $error[1] .
+                    '</p>
+                ')
+                    ->warning()
+                    ->important();
+                
+                return back();
+            }
         }
         
         /**
@@ -495,10 +512,6 @@ class ReservacionController extends Controller
         $cu = str_pad(substr($reservacion->user_id, 0, 2), 2, '0', STR_PAD_LEFT);
 
         $reservacion->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
-
-        if ($reservacion->tipo == null) {
-            $reservacion->tipo = 'Extraordinaria';
-        }
 
         /**
          * Validando que local aún está disponible.
@@ -732,55 +745,50 @@ class ReservacionController extends Controller
             
             /**
              * Registrando las reservaciones anteriores en sus correspondientes
-             * fechas futuras y validando que no coincidan con un asueto.
+             * fechas futuras.
              */
             
-            $ra = 0; // Número de reservaciones no registradas por coincidir con un asueto.
+            // $ra = 0; // Número de reservaciones no registradas por coincidir con un asueto.
             
             $rr = 0; // Número de reservaciones registradas.
             
             if ($reservaciones->count() > 0) {
                 foreach ($reservaciones as $reservacion) {
+
+                    /**
+                     * Obteniendo nueva fecha de la reservación.
+                     */
+
                     $fn = explode('-', $reservacion->fecha);
                     $fn_carbon = Carbon::create($fn[0], $fn[1], $fn[2], 0);
                     $fecha_nueva = Carbon::parse($fn_carbon->addDays($diferencia))->format('Y-m-d');
-                    
-                    $error = $this->validarAsueto($fecha_nueva);
-                    
-                    if ($error[0]) {
-                        $ra++;
-                    } else {
-                        $reservacion_nueva = new Reservacion;
+
+                    $reservacion_nueva = new Reservacion;
                         
-                        $reservacion_nueva->user_id = \Auth::user()->id;
-                        $reservacion_nueva->local_id = $reservacion->local_id;
-                        $reservacion_nueva->asignatura_id = $reservacion->asignatura_id;
-                        $reservacion_nueva->actividad_id = $reservacion->actividad_id;
-                        $reservacion_nueva->fecha = $fecha_nueva;
-                        $reservacion_nueva->hora_inicio = $reservacion->hora_inicio;
-                        $reservacion_nueva->hora_fin = $reservacion->hora_fin;
-                        $reservacion_nueva->tema = $reservacion->tema;
-                        $reservacion_nueva->tipo = 'Ordinaria';
+                    $reservacion_nueva->user_id = \Auth::user()->id;
+                    $reservacion_nueva->local_id = $reservacion->local_id;
+                    $reservacion_nueva->asignatura_id = $reservacion->asignatura_id;
+                    $reservacion_nueva->actividad_id = $reservacion->actividad_id;
+                    $reservacion_nueva->fecha = $fecha_nueva;
+                    $reservacion_nueva->hora_inicio = $reservacion->hora_inicio;
+                    $reservacion_nueva->hora_fin = $reservacion->hora_fin;
+                    $reservacion_nueva->tema = $reservacion->tema;
+                    $reservacion_nueva->tipo = 'Ordinaria';
 
-                        /**
-                         * Generando código de comprobación.
-                         */
+                    /**
+                     * Generando código de comprobación.
+                     */
 
-                        $cr = str_pad(mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
-                        $ca = str_pad(substr($reservacion_nueva->asignatura_id, 0, 2), 2, '0', STR_PAD_LEFT);
-                        $cl = str_pad(substr($reservacion_nueva->local_id, 0, 2), 2, '0', STR_PAD_LEFT);
-                        $cu = str_pad(substr($reservacion_nueva->user_id, 0, 2), 2, '0', STR_PAD_LEFT);
+                    $cr = str_pad(mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
+                    $ca = str_pad(substr($reservacion_nueva->asignatura_id, 0, 2), 2, '0', STR_PAD_LEFT);
+                    $cl = str_pad(substr($reservacion_nueva->local_id, 0, 2), 2, '0', STR_PAD_LEFT);
+                    $cu = str_pad(substr($reservacion_nueva->user_id, 0, 2), 2, '0', STR_PAD_LEFT);
 
-                        $reservacion_nueva->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
+                    $reservacion_nueva->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
 
-                        //$reservacion_nueva->codigo = $rr . '-' . time() . '-' . $reservacion_nueva->asignatura_id . '-' . $reservacion_nueva->local_id . '-' . $reservacion_nueva->user_id;
-
-                        //dd($reservacion_nueva->codigo);
-
-                        $reservacion_nueva->save();
-                        
-                        $rr++;
-                    }
+                    $reservacion_nueva->save();
+                    
+                    $rr++;
                 }
             }
             DB::commit();
@@ -809,9 +817,6 @@ class ReservacionController extends Controller
             </h4>
             <p class="info-circle">
                 Se registraron ' . $rr . ' reservaciones de un total de ' . $reservaciones->count() . '.
-            </p>
-            <p class="info-circle">
-                Reservaciones no registradas por asueto: ' . $ra . '.
             </p>
             <p class="info-circle">
                 Reservaciones antiguas que fueron eliminadas: ' . $re . '.

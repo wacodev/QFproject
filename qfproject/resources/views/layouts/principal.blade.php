@@ -57,7 +57,7 @@
                 <!-- BARRA DE NAVEGACIÓN DEL ENCABEZADO -->
                 <nav class="navbar navbar-static-top" role="navigation">
                     <!-- MENÚ DESPLEGABLE DE LA BARRA LATERAL -->
-                    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <a href="" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span class="sr-only">
                             Navegación
                         </span>
@@ -80,11 +80,6 @@
                             <li class="dropdown user user-menu">
                                 <a href="" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="{{ asset('images/users/' . Auth::user()->imagen) }}" class="user-image" alt="Imagen de usuario" />
-                                    <!--
-                                    <a href="{{ url('images/users/' . Auth::user()->imagen) }}" target="_blanck">
-                                        <img src="{{ asset('images/users/' . Auth::user()->imagen) }}" class="user-image" alt="Imagen de usuario">
-                                    </a>
-                                    -->
                                     <span class="hidden-xs">
                                         {{ $nombre[0] }} {{ $apellido[0] }}
                                     </span>

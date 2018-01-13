@@ -42,7 +42,7 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
                                         <a href="{{ route('reservacion.comprobante', $reservacion->id) }}">
-                                            Descargar comprobante
+                                            Comprobante
                                         </a>
                                     </li>
                                     <li>

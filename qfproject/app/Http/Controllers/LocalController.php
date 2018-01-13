@@ -154,8 +154,7 @@ class LocalController extends Controller
          * Almacenando nueva imagen.
          */
 
-        if ($request->file('imagen'))
-        {
+        if ($request->file('imagen')) {
             $file = $request->file('imagen');
 
             $nombre = 'local_' . time() . '.' . $file->getClientOriginalExtension();

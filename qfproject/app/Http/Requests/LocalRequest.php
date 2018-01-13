@@ -32,7 +32,7 @@ class LocalRequest extends FormRequest
         return [
             'nombre'    => 'required|max:190|unique:locales,nombre,' . $this->route('locale'),
             'capacidad' => 'required|integer|min:1',
-            'imagen'    => 'image|mimes:jpeg,bmp,png|max:2048|unique:locales,imagen,' . $this->route('locale')
+            'imagen'    => 'image|mimes:jpeg,png,bmp|max:2048'
         ];
     }
 }

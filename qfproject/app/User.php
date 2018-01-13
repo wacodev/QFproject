@@ -5,6 +5,14 @@ namespace qfproject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * ---------------------------------------------------------------------------
+ * Clases agregadas.
+ * ---------------------------------------------------------------------------
+ */
+
+use Illuminate\Support\Facades\Hash;
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -50,5 +58,23 @@ class User extends Authenticatable
     public function reservaciones()
     {
         return $this->hasMany('qfproject\Reservacion');
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Recibe el valor de password y si es vacío asigna el valor que tenía
+     * anteriormente.
+     *
+     * @param  string  $value
+     * @return void
+     * ---------------------------------------------------------------------------
+     */
+
+    public function setPasswordAttribute($value)
+    {
+        if (!empty($value))
+        {
+            $this->attributes['password'] = Hash::make($value);
+        }
     }
 }

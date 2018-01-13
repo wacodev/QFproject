@@ -75,7 +75,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      */
 
-    public function verNotificaciones(Request $request)
+    public function verNotificaciones()
     {
         $notificaciones = \Auth::user()
             ->notifications()
@@ -89,6 +89,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Elimina la notificación especificada de la base de datos.
      *
+     * @param  int  $id
      * @return void
      * ---------------------------------------------------------------------------
      */

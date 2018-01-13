@@ -152,7 +152,7 @@ class ImportacionController extends Controller
      * ---------------------------------------------------------------------------
      * Valida exhaustivamente los datos ingresados de la reservación.
      * 
-     * @param  RowCollection  $fila
+     * @param  Maatwebsite\Excel\Readers\LaravelExcelReader  $fila
      * @return array
      * ---------------------------------------------------------------------------
      */
@@ -203,32 +203,36 @@ class ImportacionController extends Controller
 
         /**
          * Validando que la fecha, la hora de inicio y la hora de finalización no
-         * coincidan con un asueto o suspensión de actividades.
+         * coincidan con un asueto o suspensión de actividades. Esto solo para
+         * las reservaciones de tipo Extraordinaria.
          */
 
-        $asuetos = Asueto::all();
+        if ($fila->tipo == 'Extraordinaria') {
+            $asuetos = Asueto::all();
 
-        $f = explode('-', $fila->fecha);
-        
-        foreach ($asuetos as $asueto) {
-            if ($f[1] == $asueto->mes && $f[2] == $asueto->dia) {
-                return [true, 'Para la fecha que ingresaste hay programado un asueto por ser: ' . $asueto->nombre . '.'];
+            $f = explode('-', $fila->fecha);
+            
+            foreach ($asuetos as $asueto) {
+                if ($f[1] == $asueto->mes && $f[2] == $asueto->dia) {
+                    return [true, 'Para la fecha que ingresaste hay programado un asueto por ser: ' . $asueto->nombre . '.'];
+                }
             }
-        }
-        
-        $suspensiones = Suspension::where('fecha', '=', $fila->fecha)->get();
+            
+            $suspensiones = Suspension::where('fecha', '=', $fila->fecha)->get();
 
-        if ($suspensiones->count() > 0) {
-            foreach ($suspensiones as $suspension) {
-                if (($fila->hora_inicio >= $suspension->hora_inicio && $fila->hora_inicio < $suspension->hora_fin) || ($fila->hora_fin <= $suspension->hora_fin && $fila->hora_fin > $suspension->hora_inicio)) {
-                    $suspension->fecha = Carbon::parse($suspension->fecha)->format('d/m/Y');
-                    $suspension->hora_inicio = Carbon::parse($suspension->hora_inicio)->format('h:i A');
-                    $suspension->hora_fin = Carbon::parse($suspension->hora_fin)->format('h:i A');
+            if ($suspensiones->count() > 0) {
+                foreach ($suspensiones as $suspension) {
+                    if (($fila->hora_inicio >= $suspension->hora_inicio && $fila->hora_inicio < $suspension->hora_fin) || ($fila->hora_fin <= $suspension->hora_fin && $fila->hora_fin > $suspension->hora_inicio)) {
+                        $suspension->fecha = Carbon::parse($suspension->fecha)->format('d/m/Y');
+                        $suspension->hora_inicio = Carbon::parse($suspension->hora_inicio)->format('h:i A');
+                        $suspension->hora_fin = Carbon::parse($suspension->hora_fin)->format('h:i A');
 
-                    return [true, 'Para la fecha ' . $suspension->fecha . ' hay programada una suspensión de actividades de ' . $suspension->hora_inicio . ' a ' . $suspension->hora_fin . '.'];
+                        return [true, 'Para la fecha ' . $suspension->fecha . ' hay programada una suspensión de actividades de ' . $suspension->hora_inicio . ' a ' . $suspension->hora_fin . '.'];
+                    }
                 }
             }
         }
+
 
         /**
          * Validando que el local esté disponible para la fecha y hora de la
