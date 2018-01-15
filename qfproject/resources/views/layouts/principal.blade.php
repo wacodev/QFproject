@@ -25,13 +25,17 @@
         @yield('estilos')
         <!-- FAVICON -->
         <link rel="logo-simple" href="{{ asset('images/sistema/logos-simple.png') }}" />
+
         <link rel="shortcut icon" href="{{ asset('images/sistema/logo-simple.ico') }}" />
+
+  
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+
     </head>
     <body class="hold-transition skin-green sidebar-mini" onload="startTime()">
         <?php
@@ -229,31 +233,25 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li>
-                                    <a href="#"> <!-- Editar -->
-                                        <i class="fa fa-circle-o"></i>
-                                        General
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <!-- Editar -->
+                                    <a href="{{ route('estadisticas.dos') }}"> 
                                         <i class="fa fa-circle-o"></i>
                                         Por actividades
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#"> <!-- Editar -->
+                                    <a href="{{ route('estadisticas.tres') }}"> 
                                         <i class="fa fa-circle-o"></i>
                                         Por asignaturas
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#"> <!-- Editar -->
+                                    <a href="{{ route('estadisticas.uno') }}">
                                         <i class="fa fa-circle-o"></i>
                                         Por locales
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#"> <!-- Editar -->
+                                    <a href="{{ route('estadisticas.cuatro') }}">
                                         <i class="fa fa-circle-o"></i>
                                         Por usuarios
                                     </a>
@@ -392,6 +390,10 @@
         <script src="{{ asset('js/app.min.js') }}"></script>
         <!-- HORA Y FECHA -->    
         <script src="{{ asset('js/hora-y-fecha.js') }}"></script>
+        <!-- ESTADÍSTICAS -->
+       
+
+   
         <!-- SECCIÓN PARA AGREGAR SCRIPTS -->
         @stack('scripts')
         <script>
