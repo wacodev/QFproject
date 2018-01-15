@@ -222,7 +222,7 @@ class UserController extends Controller
         $user->delete();
 
         /**
-         * Eliminando imagen anterior.
+         * Eliminando imagen.
          */
 
         $path = public_path() . '/images/users/';

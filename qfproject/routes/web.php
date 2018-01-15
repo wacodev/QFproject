@@ -2,12 +2,12 @@
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Rutas Web
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| Aquí es donde puede registrar rutas web para su aplicación. Estas rutas
+| las carga el RouteServiceProvider dentro de un grupo que contiene el
+| grupo de middleware "web". ¡Ahora crea algo grandioso!
 |
 */
 
@@ -105,7 +105,7 @@ Route::group(['prefix' => 'reservaciones', 'middleware' => 'auth'], function() {
     Route::get('/paso-tres', 'ReservacionController@hacerPasoDos')->name('reservaciones.paso-tres');
     Route::post('/store', 'ReservacionController@hacerPasoTres')->name('reservaciones.store');
 
-    Route::group(['middleware' => ['administrador', 'asistente']], function() {
+    Route::group(['middleware' => 'asistente'], function() {
 
         /**
          * Opciones básicas para las reservaciones - [Administradores y Asistentes].

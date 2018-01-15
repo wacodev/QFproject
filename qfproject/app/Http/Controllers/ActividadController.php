@@ -167,7 +167,14 @@ class ActividadController extends Controller
          */
 
         $reservaciones = Reservacion::where('actividad_id', '=', $actividad->id)
+            ->where('tipo', '=', 'Extraordinaria')
             ->get();
+
+        $actividad->delete();
+
+        /**
+         * Notificando a los usuarios correspondientes la acción realizada.
+         */
 
         $i = 0; // Número de reservaciones eliminadas.
 
@@ -185,8 +192,6 @@ class ActividadController extends Controller
             }
         }
 
-        $actividad->delete();
-
         flash('
             <h4>
                 <i class="fa fa-check icon" aria-hidden="true"></i>
@@ -196,7 +201,7 @@ class ActividadController extends Controller
                 La actividad ha sido eliminada correctamente.
             </p>
             <p class="check">
-                Reservaciones eliminadas por tener asignadas la actividad recién eliminada: ' . $i . '.
+                Reservaciones extraordinarias eliminadas por tener asignadas la actividad recién eliminada: ' . $i . '.
             </p>
         ')
             ->success()

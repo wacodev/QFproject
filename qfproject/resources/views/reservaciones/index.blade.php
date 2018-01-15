@@ -137,6 +137,6 @@
 @section('sidebar')
     <!-- MENÚ DE HERRAMIENTAS ADICIONALES PARA LAS RESERVACIONES -->
     @include('reservaciones.partials.herramientas')
-    <!-- INFORMACIÓN ADICIONAL DEL PANEL DE ADMINISTRACIÓN DE RESERVACIONES -->
+    <!-- AYUDA DEL PANEL DE ADMINISTRACIÓN DE RESERVACIONES -->
     @include('reservaciones.partials.info-panel')
 @endsection

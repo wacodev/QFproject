@@ -16,7 +16,7 @@ class Administrador
 {
     /**
      * ---------------------------------------------------------------------------
-     * The Guard implementation.
+     * Implementación de Guard.
      *
      * @var Guard
      * ---------------------------------------------------------------------------
@@ -26,7 +26,7 @@ class Administrador
 
     /**
      * ---------------------------------------------------------------------------
-     * Create a new filter instance.
+     * Crea una nueva instancia de filtro.
      *
      * @param  Guard  $auth
      * @return void
@@ -40,7 +40,7 @@ class Administrador
 
     /**
      * ---------------------------------------------------------------------------
-     * Handle an incoming request.
+     * Maneja una solicitud entrante.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -53,7 +53,7 @@ class Administrador
         if ($this->auth->user()->administrador()) {
             return $next($request);
         } else {
-            abort(401);
+            abort(403);
         }
     }
 }

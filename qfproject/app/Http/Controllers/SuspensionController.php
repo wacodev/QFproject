@@ -109,6 +109,10 @@ class SuspensionController extends Controller
             ->where('tipo', '=', 'Extraordinaria')
             ->get();
 
+        /**
+         * Notificando a los usuarios correspondientes la acción realizada.
+         */
+
         $i = 0; // Número de reservaciones eliminadas.
 
         if ($reservaciones->count() > 0) {

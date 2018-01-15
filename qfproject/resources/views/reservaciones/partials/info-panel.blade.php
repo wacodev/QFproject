@@ -1,8 +1,8 @@
-<!-- INFORMACIÓN ADICIONAL DEL PANEL DE ADMINISTRACIÓN DE RESERVACIONES -->
+<!-- AYUDA DEL PANEL DE ADMINISTRACIÓN DE RESERVACIONES -->
 <div class="box box-success">
     <div class="box-header with-border">
         <h3 class="box-title">
-            Información adicional
+            Ayuda
         </h3>
         <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse">

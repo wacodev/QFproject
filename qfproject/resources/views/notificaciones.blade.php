@@ -21,7 +21,11 @@
         <div class="box-body">
             @if ($notificaciones->count() > 0)
                 @foreach ($notificaciones as $notificacion)
-                    <div class="panel panel-default">
+                    @if ($notificacion->read_at)
+                        <div class="panel panel-default">
+                    @else
+                        <div class="panel panel-default panel-sin-leer">
+                    @endif
                         <div class="panel-body">
                             <div class="pull-left icono-notificacion">
                                 @if ($notificacion->data['tipo'] == 'crear')

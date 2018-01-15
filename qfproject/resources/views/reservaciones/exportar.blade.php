@@ -70,7 +70,7 @@
 @section('sidebar')
     <!-- MENÚ DE HERRAMIENTAS ADICIONALES PARA LAS RESERVACIONES -->
     @include('reservaciones.partials.herramientas')
-    <!-- INFORMACIÓN ADICIONAL DE EXPORTAR RESERVACIONES A EXCEL -->
+    <!-- AYUDA DE EXPORTAR RESERVACIONES A EXCEL -->
     @include('reservaciones.partials.info-exportar')
 @endsection
 

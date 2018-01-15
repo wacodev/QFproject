@@ -84,9 +84,15 @@
     width: 30px;
 }
 
+.panel-sin-leer {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
 .verde-claro {
     color: #7bd6ac;
 }
+
 
 /**
  * ---------------------------------------------------------------------------

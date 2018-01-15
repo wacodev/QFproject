@@ -168,7 +168,14 @@ class AsignaturaController extends Controller
          */
 
         $reservaciones = Reservacion::where('asignatura_id', '=', $asignatura->id)
+            ->where('tipo', '=', 'Extraordinaria')
             ->get();
+
+        $asignatura->delete();
+
+        /**
+         * Notificando a los usuarios correspondientes la acción realizada.
+         */
 
         $i = 0; // Número de reservaciones eliminadas.
 
@@ -185,8 +192,6 @@ class AsignaturaController extends Controller
                 $i++;
             }
         }
-        
-        $asignatura->delete();
 
         flash('
             <h4>
@@ -197,7 +202,7 @@ class AsignaturaController extends Controller
                 La asignatura ha sido eliminada correctamente.
             </p>
             <p class="check">
-                Reservaciones eliminadas por tener asignadas la asignatura recién eliminada: ' . $i . '.
+                Reservaciones extraordinarias eliminadas por tener asignadas la asignatura recién eliminada: ' . $i . '.
             </p>
         ')
             ->success()

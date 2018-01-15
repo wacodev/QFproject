@@ -128,7 +128,7 @@ class ReservacionController extends Controller
                 ->with('asignaturas', $asignaturas)
                 ->with('actividades', $actividades);
         } else {
-            abort(401);
+            abort(403);
         }
     }
 
@@ -230,7 +230,7 @@ class ReservacionController extends Controller
                 return redirect()->route('reservaciones.index');
             }
         } else {
-            abort(401);
+            abort(403);
         }
     }
 
@@ -816,8 +816,9 @@ class ReservacionController extends Controller
         } else {
             $locales_disponibles = null;
 
+            $i = 0; // Índice del arreglo de locales disponibles.
+
             foreach ($locales as $local) {
-                $i = 0; // Índice del arreglo de locales disponibles.
                 
                 $disponible = true;            
                 
@@ -961,7 +962,7 @@ class ReservacionController extends Controller
              * reservación.
              */
 
-            if (\Auth::user()->administrador()) {
+            if (!\Auth::user()->administrador()) {
                 if (\Auth::user()->asistente()) {
                     $users = User::where('tipo', '=', 'Administrador')
                         ->get();

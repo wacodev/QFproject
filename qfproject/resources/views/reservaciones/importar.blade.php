@@ -53,6 +53,6 @@
 @section('sidebar')
     <!-- MENÚ DE HERRAMIENTAS ADICIONALES PARA LAS RESERVACIONES -->
     @include('reservaciones.partials.herramientas')
-    <!-- INFORMACIÓN ADICIONAL DE IMPORTAR RESERVACIONES DESDE EXCEL -->
+    <!-- AYUDA DE IMPORTAR RESERVACIONES DESDE EXCEL -->
     @include('reservaciones.partials.info-importar')
 @endsection

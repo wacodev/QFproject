@@ -72,7 +72,7 @@
 @section('sidebar')
     <!-- MENÚ DE HERRAMIENTAS ADICIONALES PARA LAS RESERVACIONES -->
     @include('reservaciones.partials.herramientas')
-    <!-- INFORMACIÓN ADICIONAL DE LA RESERVACIÓN POR CICLO -->
+    <!-- AYUDA DE LA RESERVACIÓN POR CICLO -->
     @include('reservaciones.partials.info-crear-ciclo')
 @endsection
 

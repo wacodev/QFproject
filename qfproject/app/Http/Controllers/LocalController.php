@@ -217,7 +217,14 @@ class LocalController extends Controller
          */
 
         $reservaciones = Reservacion::where('local_id', '=', $local->id)
+            ->where('tipo', '=', 'Extraordinaria')
             ->get();
+
+        $local->delete();
+
+        /**
+         * Notificando a los usuarios correspondientes la acción realizada.
+         */
 
         $i = 0; // Número de reservaciones eliminadas.
 
@@ -235,10 +242,8 @@ class LocalController extends Controller
             }
         }
 
-        $local->delete();
-
         /**
-         * Eliminando imagen anterior.
+         * Eliminando imagen.
          */
 
         $path = public_path() . '/images/locales/';
@@ -256,7 +261,7 @@ class LocalController extends Controller
                 El local ha sido eliminado correctamente.
             </p>
             <p class="check">
-                Reservaciones eliminadas por tener asignadas el local recién eliminado: ' . $i . '.
+                Reservaciones extraordinarias eliminadas por tener asignadas el local recién eliminado: ' . $i . '.
             </p>
         ')
             ->success()

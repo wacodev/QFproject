@@ -16,7 +16,7 @@ class Asistente
 {
     /**
      * ---------------------------------------------------------------------------
-     * The Guard implementation.
+     * Implementación de Guard.
      *
      * @var Guard
      * ---------------------------------------------------------------------------
@@ -26,7 +26,7 @@ class Asistente
 
     /**
      * ---------------------------------------------------------------------------
-     * Create a new filter instance.
+     * Crea una nueva instancia de filtro.
      *
      * @param  Guard  $auth
      * @return void
@@ -40,7 +40,7 @@ class Asistente
 
     /**
      * ---------------------------------------------------------------------------
-     * Handle an incoming request.
+     * Maneja una solicitud entrante.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -50,10 +50,10 @@ class Asistente
 
     public function handle($request, Closure $next)
     {
-        if ($this->auth->user()->asistente()) {
+        if ($this->auth->user()->asistente() || $this->auth->user()->administrador()) {
             return $next($request);
         } else {
-            abort(401);
+            abort(403);
         }
     }
 }

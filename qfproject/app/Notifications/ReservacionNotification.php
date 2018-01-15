@@ -23,41 +23,76 @@ class ReservacionNotification extends Notification
 {
     use Queueable;
 
+    /**
+     * ---------------------------------------------------------------------------
+     * Instancia de Reservación.
+     *
+     * @var \qfproject\Reservacion
+     * ---------------------------------------------------------------------------
+     */
+
     protected $reservacion;
 
+    /**
+     * ---------------------------------------------------------------------------
+     * Tipo de notificación según la acción realizada por el usuario.
+     *
+     * @var string
+     * ---------------------------------------------------------------------------
+     */
+
     protected $tipo;
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Indica si el usuario que hizo la acción es propietario de la reservación.
+     *
+     * @var bool
+     * ---------------------------------------------------------------------------
+     */
 
     protected $propietario;
 
     /**
-     * Create a new notification instance.
+     * ---------------------------------------------------------------------------
+     * Crea una nueva instancia de notificación.
      *
      * @return void
+     * ---------------------------------------------------------------------------
      */
+
     public function __construct($reservacion, $tipo, $propietario)
     {
         $this->reservacion = $reservacion;
+
         $this->tipo = $tipo;
+
         $this->propietario = $propietario;
     }
 
     /**
-     * Get the notification's delivery channels.
+     * ---------------------------------------------------------------------------
+     * Obtiene los canales de entrega de la notificación.
      *
      * @param  mixed  $notifiable
      * @return array
+     * ---------------------------------------------------------------------------
      */
+
     public function via($notifiable)
     {
         return ['database'];
     }
 
     /**
-     * Get the mail representation of the notification.
+     * ---------------------------------------------------------------------------
+     * Obtiene la representación de base de datos de la notificación.
      *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
+     * ---------------------------------------------------------------------------
      */
+
     public function toDatabase($notifiable)
     {
         switch ($this->tipo) {
@@ -117,11 +152,14 @@ class ReservacionNotification extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
+     * ---------------------------------------------------------------------------
+     * Obtiene la representación de la matriz de la notificación.
      *
      * @param  mixed  $notifiable
      * @return array
+     * ---------------------------------------------------------------------------
      */
+
     public function toArray($notifiable)
     {
         return [
