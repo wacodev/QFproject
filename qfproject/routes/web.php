@@ -134,8 +134,16 @@ Route::group(['prefix' => 'reservaciones', 'middleware' => 'auth'], function() {
 
         Route::get('/exportar', 'ExportacionController@exportarReservaciones')->name('reservaciones.exportar');
         Route::post('/recibir', 'ExportacionController@recibirReservaciones')->name('reservaciones.recibir');
+          });
 
-    });
-
+    /**
+     * ---------------------------------------------------------------------------
+     * Estadísticas.
+     * ---------------------------------------------------------------------------
+    */
+       Route::get('estadisticas-local', 'ChartController@index')->name('estadisticas.uno');
+       Route::get('estadisticas-actividad', 'ChartController@porActividad')->name('estadisticas.dos');
+       Route::get('estadisticas-asignatura', 'ChartController@porAsignatura')->name('estadisticas.tres');
+       Route::get('estadisticas-usuario', 'ChartController@porUsuarios')->name('estadisticas.cuatro');
 
 });
