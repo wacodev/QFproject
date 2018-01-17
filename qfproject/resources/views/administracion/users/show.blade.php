@@ -1,36 +1,62 @@
 @extends('layouts.principal')
 
-@section('titulo', 'Inicio')
+@section('titulo', 'Usuarios | Ver usuario')
 
-@section('encabezado', 'Inicio')
+@section('encabezado', 'Usuarios')
+
+@section('subencabezado', 'Ver usuario')
 
 @section('breadcrumb')
+    <li>
+        <i class="fa fa-users icono-margen"></i>
+        <a href="{{ route('users.index') }}">
+            Usuarios
+        </a>
+    </li>
     <li class="active">
-        <i class="fa fa-home icono-margen"></i>
-        Inicio
+        Ver usuario
     </li>
 @endsection
 
 @section('contenido')
     <div class="box box-success">
+        <div class="box-body box-profile">
+            <a href="{{ url('images/users/' . $user->imagen) }}" target="_blanck">
+                <img src="{{ asset('images/users/' . $user->imagen) }}" class="profile-user-img img-responsive img-circle" alt="Imagen de usuario">
+            </a>
+            <h3 class="profile-username text-center">
+                {{ $user->name }} {{ $user->lastname }}
+            </h3>
+            <p class="text-muted text-center">
+                {{ $user->tipo }}
+            </p>
+            <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                    <strong>
+                        Carnet
+                    </strong>
+                    <p class="pull-right">
+                        {{ $user->carnet }}
+                    </p>
+                </li>
+                <li class="list-group-item">
+                    <strong>
+                        Correo electrónico
+                    </strong>
+                    <p class="pull-right">
+                        {{ $user->email }}
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">
-                Mis reservaciones
+                Reservaciones vigentes
             </h3>
         </div>
         <div class="box-body">
-            {!! Form::open(array('url' => 'home', 'method' => 'GET', 'autocomplete' => 'off', 'role' => 'search')) !!}
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="searchText", placeholder="Buscar", value="{{ $searchText }}"></input>
-                        <span class="input-group-btn">
-                            <button type="submit" class="btn btn-default">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                            </button>
-                        </span>
-                    </div>
-                </div>
-            {!! Form::close() !!}
             @if ($reservaciones->count() > 0)
                 @foreach ($reservaciones as $reservacion)
                     <div class="panel panel-default">
@@ -41,7 +67,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="{{ route('reservacion.comprobante', $reservacion->id) }}" target="_blanck">
+                                        <a href="{{ route('reservacion.comprobante', $reservacion->id) }}">
                                             Comprobante
                                         </a>
                                     </li>
@@ -73,7 +99,8 @@
                             </h4>
                             <p>
                                 <small>
-                                Código: {{ $reservacion->codigo }}
+                                Código:
+                                {{ $reservacion->codigo }}
                                 </small>
                             </p>
                             <div class="well well-sm well-panel well-parrafo">
@@ -129,6 +156,8 @@
 @endsection
 
 @section('sidebar')
-    <!-- PANEL DEL PERFIL DE USUARIO -->
-    @include('layouts.perfil')
+    <!-- MENÚ DE HERRAMIENTAS PARA LA GESTIÓN ADMINISTRATIVA -->
+    @include('administracion.partials.herramientas')
+    <!-- INFORMACIÓN ADICIONAL DE USUARIOS -->
+    @include('administracion.partials.info-usuarios')
 @endsection

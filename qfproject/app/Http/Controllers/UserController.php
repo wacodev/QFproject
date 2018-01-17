@@ -11,8 +11,10 @@ use Illuminate\Http\Request;
  */
 
 use DB;
+use Carbon\Carbon;
 use Laracasts\Flash\Flash;
 use qfproject\Http\Requests\UserRequest;
+use qfproject\Reservacion;
 use qfproject\User;
 
 class UserController extends Controller
@@ -121,7 +123,23 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        return view('users.show')->with('user', $user);
+        $hoy = Carbon::now();
+
+        $reservaciones = Reservacion::where('user_id', '=', $user->id)
+            ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->orderBy('fecha', 'desc')
+            ->paginate(5);
+
+        $reservaciones->each(function($reservaciones) {
+            $reservaciones->user;
+            $reservaciones->local;
+            $reservaciones->asignatura;
+            $reservaciones->actividad;
+        });
+
+        return view('administracion.users.show')
+            ->with('user', $user)
+            ->with('reservaciones', $reservaciones);
     }
 
     /**

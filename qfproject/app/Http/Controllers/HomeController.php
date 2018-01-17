@@ -31,8 +31,8 @@ class HomeController extends Controller
 
     /**
      * ---------------------------------------------------------------------------
-     * Muestra una lista de reservaciones hechas por el usuario y un panel con los
-     * datos del mismo.
+     * Muestra una lista de reservaciones vigentes hechas por el usuario y un
+     * panel con los datos del mismo.
      *
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
@@ -63,6 +63,44 @@ class HomeController extends Controller
 
             return view('home')
                 ->with('reservaciones', $reservaciones)
+                ->with('searchText', $query);
+        }
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra una lista de todas las reservaciones hechas por el usuario.
+     *
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function verHistorial(Request $request)
+    {
+        if ($request) {
+            $query = trim($request->get('searchText'));
+
+            $hoy_carbon = Carbon::now();
+
+            $hoy = Carbon::parse($hoy_carbon)->format('Y-m-d');
+
+            $reservaciones = Reservacion::where('user_id', '=', \Auth::user()->id)
+                ->where('codigo', 'like', '%' . $query . '%')
+                ->orWhere('user_id', '=', \Auth::user()->id)
+                ->where('fecha', 'like', '%' . $query . '%')
+                ->orderBy('fecha', 'desc')
+                ->paginate(5);
+
+            $reservaciones->each(function($reservaciones) {
+                $reservaciones->user;
+                $reservaciones->local;
+                $reservaciones->asignatura;
+                $reservaciones->actividad;
+            });
+
+            return view('reservaciones.historial')
+                ->with('reservaciones', $reservaciones)
+                ->with('hoy', $hoy)
                 ->with('searchText', $query);
         }
     }

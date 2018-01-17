@@ -42,6 +42,11 @@
                                 </h4>
                                 <p>
                                     <strong>
+                                        ID:
+                                    </strong>
+                                    {{ $local->id }}
+                                    &nbsp;&#8226;&nbsp;
+                                    <strong>
                                         Capacidad:
                                     </strong>
                                     {{ $local->capacidad }}

@@ -1,13 +1,13 @@
 @extends('layouts.principal')
 
-@section('titulo', 'Inicio')
+@section('titulo', 'Historial')
 
-@section('encabezado', 'Inicio')
+@section('encabezado', 'Historial')
 
 @section('breadcrumb')
     <li class="active">
-        <i class="fa fa-home icono-margen"></i>
-        Inicio
+        <i class="fa fa-clock-o icono-margen"></i>
+        Historial
     </li>
 @endsection
 
@@ -15,11 +15,11 @@
     <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">
-                Mis reservaciones
+                Historial de reservaciones
             </h3>
         </div>
         <div class="box-body">
-            {!! Form::open(array('url' => 'home', 'method' => 'GET', 'autocomplete' => 'off', 'role' => 'search')) !!}
+            {!! Form::open(array('url' => 'reservaciones/historial', 'method' => 'GET', 'autocomplete' => 'off', 'role' => 'search')) !!}
                 <div class="form-group">
                     <div class="input-group">
                         <input type="text" class="form-control" name="searchText", placeholder="Buscar", value="{{ $searchText }}"></input>
@@ -45,16 +45,18 @@
                                             Comprobante
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="{{ route('reservaciones.edit', $reservacion->id) }}">
-                                            Editar
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="" data-target="#modal-delete-{{ $reservacion->id }}" data-toggle="modal" >
-                                            Eliminar
-                                        </a>
-                                    </li>
+                                    @if ($reservacion->fecha >= $hoy)
+                                        <li>
+                                            <a href="{{ route('reservaciones.edit', $reservacion->id) }}">
+                                                Editar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="" data-target="#modal-delete-{{ $reservacion->id }}" data-toggle="modal" >
+                                                Eliminar
+                                            </a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                             <div class="pull-left">
@@ -73,8 +75,17 @@
                             </h4>
                             <p>
                                 <small>
-                                Código: {{ $reservacion->codigo }}
+                                    Código: {{ $reservacion->codigo }}
                                 </small>
+                                @if ($reservacion->fecha >= $hoy)
+                                    <label class="label label-success">
+                                        Vigente
+                                    </label>
+                                @else
+                                    <label class="label label-danger">
+                                        Expirada
+                                    </label>
+                                @endif
                             </p>
                             <div class="well well-sm well-panel well-parrafo">
                                 <p>

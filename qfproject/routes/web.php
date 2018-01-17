@@ -97,6 +97,12 @@ Route::group(['prefix' => 'reservaciones', 'middleware' => 'auth'], function() {
     Route::get('/{reservacion}/comprobante', 'PdfController@generarComprobante')->name('reservacion.comprobante');
 
     /**
+     * Historial de reservaciones.
+     */
+
+    Route::get('/historial', 'HomeController@verHistorial')->name('reservaciones.historial');
+
+    /**
      * Reservaciones individuales.
      */
 

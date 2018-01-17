@@ -152,7 +152,7 @@
                             </a>
                         </li>
                         <li class="treeview">
-                            <a href="#"> <!-- Editar -->
+                            <a href="">
                                 <i class="fa fa-ticket"></i>
                                 <span>
                                     Reservaciones
@@ -175,7 +175,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#"> <!-- Editar -->
+                                    <a href="{{ route('reservaciones.historial') }}">
                                         <i class="fa fa-circle-o"></i>
                                         Historial
                                     </a>
@@ -183,7 +183,7 @@
                             </ul>
                         </li>
                         <li class="treeview">
-                            <a href="#"> <!-- Editar -->
+                            <a href="">
                                 <i class="fa fa-file-text"></i>
                                 <span>
                                     Reportes
