@@ -89,8 +89,6 @@ class UserController extends Controller
 
         if ($user->imagen) {
             $user->imagen = $nombre;
-        } else {
-            $user->imagen = 'user_default.jpg';
         }
 
         $user->save();

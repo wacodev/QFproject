@@ -19,6 +19,7 @@ use qfproject\Asueto;
 use qfproject\Local;
 use qfproject\Reservacion;
 use qfproject\Suspension;
+use qfproject\User;
 use Storage;
 
 class ImportacionController extends Controller
@@ -42,7 +43,7 @@ class ImportacionController extends Controller
      * Almacena las reservaciones recién importadas de un archivo de Excel en la
      * base de datos.
      * 
-     * @param  qfproject\Http\Request  $request
+     * @param  \qfproject\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -63,7 +64,7 @@ class ImportacionController extends Controller
 
         $file = $request->file('archivo');
 
-        $nombre = 'archivo_' . time() . '.' . $file->getClientOriginalExtension();
+        $nombre = 'reservaciones_' . time() . '.' . $file->getClientOriginalExtension();
 
         $archivo = Storage::disk('archivos')->put($nombre, \File::get($file));
 
@@ -126,13 +127,28 @@ class ImportacionController extends Controller
 
                     $reservacion->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
 
-                    $reservacion->codigo = $j . '-' . time() . '-' . $reservacion->asignatura_id . '-' . $reservacion->local_id . '-' . $reservacion->user_id;
-
                     $reservacion->save();
 
                     $i++;
 
                     $j++;
+                }
+
+                if (!$error[0]) {
+                    flash('
+                        <h4>
+                            <i class="fa fa-check icon" aria-hidden="true"></i>
+                            ¡Bien hecho!
+                        </h4>
+                        <p class="check">
+                            <strong>Todos las reservaciones fueron registradas correctamente.</strong>
+                        </p>
+                        <p class="check">
+                            <strong>Total de reservaciones registradas:</strong> ' . $j . '.
+                        </p>
+                    ')
+                    ->success()
+                    ->important();
                 }
             });
 
@@ -152,13 +168,13 @@ class ImportacionController extends Controller
      * ---------------------------------------------------------------------------
      * Valida exhaustivamente los datos ingresados de la reservación.
      * 
-     * @param  Maatwebsite\Excel\Readers\LaravelExcelReader  $fila
+     * @param  \Maatwebsite\Excel\Readers\LaravelExcelReader  $fila
      * @return array
      * ---------------------------------------------------------------------------
      */
 
     public function validarReservacion($fila)
-    {        
+    {
         /**
          * Validando ingreso de campos obligatorios y que existe el local, la
          * asignatura y la actividad ingresada.
@@ -169,7 +185,7 @@ class ImportacionController extends Controller
         $fila->hora_fin = Carbon::parse($fila->hora_fin)->format('H:i:s');
 
         if ($fila->local_id == null || $fila->asignatura_id == null || $fila->actividad_id == null || $fila->fecha == null || $fila->hora_inicio == null || $fila->hora_fin == null) {
-            return [true, 'La fila está vacía o no ingresó algún dato requerido para realizar la reservación. Revise que se ingresó: Local, asignatura, actividad, fecha, hora de inicio, hora de finalización y tipo de reservación.'];
+            return [true, 'La fila está vacía o no ingresó algún dato requerido para realizar la reservación.'];
         } elseif (Local::where('id', '=', $fila->local_id)->first() == null) {
             return [true, 'No existe el local ingresado.'];
         } elseif (Asignatura::where('id', '=', $fila->asignatura_id)->first() == null) {
@@ -251,6 +267,166 @@ class ImportacionController extends Controller
 
         if ($reservaciones->count() > 0) {
             return [true, 'El local no está disponible para reservarse en la fecha y horas ingresadas.'];
+        }
+
+        /**
+         * Si pasó todas las validaciones.
+         */
+
+        return [false, null];
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario para crear nuevos usuarios mediante un archivo de
+     * Excel.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function importarUsers()
+    {
+        return view('administracion.users.importar');
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Almacena las reservaciones recién importadas de un archivo de Excel en la
+     * base de datos.
+     * 
+     * @param  \qfproject\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function almacenarUsers(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'archivo' => 'required|mimes:xlsx,xls'
+        ]);
+
+        /**
+         * Obteniendo archivo.
+         */
+
+        $file = $request->file('archivo');
+
+        $nombre = 'users_' . time() . '.' . $file->getClientOriginalExtension();
+
+        $archivo = Storage::disk('archivos')->put($nombre, \File::get($file));
+
+        $ruta = storage_path('archivos') . '/' . $nombre;
+
+        /**
+         * Importando datos del archivo.
+         */
+
+        if ($archivo) {
+            Excel::selectSheetsByIndex(0)->load($ruta, function($hoja) {
+                $registros = $hoja->get();
+
+                $i = 2; // Número de fila.
+
+                $j = 0; // Número de usuarios registrados.
+
+                foreach ($registros as $fila) {
+                    $error = $this->validarUser($fila);
+
+                    if ($error[0]) {
+                        flash('
+                            <h4>
+                                <i class="fa fa-info-circle icon" aria-hidden="true"></i>
+                                Detalles de la operación
+                            </h4>
+                            <p class="info-circle">
+                                <strong>Usuarios registrados satisfactoriamente: ' . $j . '.</strong>
+                            </p>
+                            <p class="info-circle">
+                                En la fila ' . $i . ' se presentó el siguiente error: ' . $error[1] . ' <strong>Los registros en las filas anteriores se guardaron correctamente</strong>.
+                            </p>
+                        ')
+                        ->info()
+                        ->important();
+
+                        break;
+                    }
+
+                    $user = new User;
+
+                    $user->name = $fila->name;
+                    $user->lastname = $fila->lastname;
+                    $user->carnet = $fila->carnet;
+                    $user->email = $fila->email;
+                    $user->password = bcrypt($fila->password);
+                    $user->tipo = $fila->tipo;
+
+                    $user->save();
+
+                    $i++;
+
+                    $j++;
+                }
+
+                if (!$error[0]) {
+                    flash('
+                        <h4>
+                            <i class="fa fa-check icon" aria-hidden="true"></i>
+                            ¡Bien hecho!
+                        </h4>
+                        <p class="check">
+                            <strong>Todos los usuarios fueron registrados correctamente.</strong>
+                        </p>
+                        <p class="check">
+                            <strong>Total de usuarios registrados:</strong> ' . $j . '.
+                        </p>
+                    ')
+                    ->success()
+                    ->important();
+                }
+            });
+
+
+            /**
+             * Eliminando archivo almacenado previamente.
+             */
+
+            if (\File::exists($ruta)) {
+                \File::delete($ruta);
+            }
+
+            return redirect()->route('users.index');
+        }
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Valida exhaustivamente los datos ingresados del usuario.
+     * 
+     * @param  \Maatwebsite\Excel\Readers\LaravelExcelReader  $fila
+     * @return array
+     * ---------------------------------------------------------------------------
+     */
+
+    public function validarUser($fila)
+    {
+        /**
+         * Validando ingreso de campos obligatorios y que cumplan con las reglas
+         * del negocio.
+         */
+
+        if ($fila->name == null || $fila->lastname == null || $fila->carnet == null || $fila->email == null || $fila->password == null || $fila->tipo == null) {
+            return [true, 'La fila está vacía o no ingresó algún dato requerido para registrar al usuario.'];
+        } elseif ($fila->tipo != 'Administrador' && $fila->tipo != 'Asistente' && $fila->tipo != 'Docente') {
+            return [true, 'El tipo de usuario ingresado no existe'];
+        } elseif (User::where('email', '=', $fila->email)->first()) {
+            return [true, 'El correo electrónico ' . $fila->email . ' ya existe.'];
+        } elseif (User::where('carnet', '=', $fila->carnet)->first()) {
+            return [true, 'El carnet ' . $fila->carnet . ' ya existe.'];
         }
 
         /**

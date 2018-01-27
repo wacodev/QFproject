@@ -34,6 +34,8 @@ Route::group(['prefix' => 'administracion', 'middleware' => ['auth', 'administra
      */
 
     Route::resource('users', 'UserController');
+    Route::get('/importar/users', 'ImportacionController@importarUsers')->name('users.importar');
+    Route::post('/almacenar/users', 'ImportacionController@almacenarUsers')->name('users.almacenar');
 
 });
 
@@ -44,6 +46,30 @@ Route::group(['prefix' => 'administracion', 'middleware' => ['auth', 'administra
  */
 
 Auth::routes();
+
+/**
+ * ---------------------------------------------------------------------------
+ * Editar perfil.
+ * ---------------------------------------------------------------------------
+ */
+
+Route::get('/editar', 'HomeController@editarPerfil')->name('editar-perfil');
+Route::put('/{user}', 'HomeController@actualizarPerfil')->name('actualizar-perfil');
+
+/**
+ * ---------------------------------------------------------------------------
+ * Estadísticas.
+ * ---------------------------------------------------------------------------
+ */
+
+Route::group(['prefix' => 'estadisticas', 'middleware' => 'asistente'], function() {
+
+    Route::get('estadisticas-local', 'ChartController@index')->name('estadisticas.uno');
+    Route::get('estadisticas-actividad', 'ChartController@porActividad')->name('estadisticas.dos');
+    Route::get('estadisticas-asignatura', 'ChartController@porAsignatura')->name('estadisticas.tres');
+    Route::get('estadisticas-usuario', 'ChartController@porUsuarios')->name('estadisticas.cuatro');
+
+});
 
 /**
  * ---------------------------------------------------------------------------
@@ -128,6 +154,15 @@ Route::group(['prefix' => 'reservaciones', 'middleware' => 'auth'], function() {
         Route::post('/registrar-ciclo', 'ReservacionController@registrarNuevoCiclo')->name('reservaciones.registrar-ciclo');
 
         /**
+         * Reservaciones semanales.
+         */
+
+        Route::get('/paso-uno-semana', 'ReservacionController@createSemana')->name('reservaciones.paso-uno-semana');
+        Route::get('/paso-dos-semana', 'ReservacionController@hacerPasoUnoSemana')->name('reservaciones.paso-dos-semana');
+        Route::get('/paso-tres-semana', 'ReservacionController@hacerPasoDosSemana')->name('reservaciones.paso-tres-semana');
+        Route::post('/almacenar-semana', 'ReservacionController@hacerPasoTresSemana')->name('reservaciones.almacenar-semana');
+
+        /**
          * Importar reservaciones desde Excel.
          */
 
@@ -140,16 +175,7 @@ Route::group(['prefix' => 'reservaciones', 'middleware' => 'auth'], function() {
 
         Route::get('/exportar', 'ExportacionController@exportarReservaciones')->name('reservaciones.exportar');
         Route::post('/recibir', 'ExportacionController@recibirReservaciones')->name('reservaciones.recibir');
-          });
 
-    /**
-     * ---------------------------------------------------------------------------
-     * Estadísticas.
-     * ---------------------------------------------------------------------------
-    */
-       Route::get('estadisticas-local', 'ChartController@index')->name('estadisticas.uno');
-       Route::get('estadisticas-actividad', 'ChartController@porActividad')->name('estadisticas.dos');
-       Route::get('estadisticas-asignatura', 'ChartController@porAsignatura')->name('estadisticas.tres');
-       Route::get('estadisticas-usuario', 'ChartController@porUsuarios')->name('estadisticas.cuatro');
+    });
 
 });

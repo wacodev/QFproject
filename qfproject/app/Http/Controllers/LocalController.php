@@ -84,8 +84,6 @@ class LocalController extends Controller
 
         if ($local->imagen) {
             $local->imagen = $nombre;
-        } else {
-            $local->imagen = 'local_default.jpg';
         }
 
         $local->save();

@@ -32,6 +32,11 @@
                     Reservación por ciclo
                 </a>
             </li>
+            <li>
+                <a href="{{ route('reservaciones.paso-uno-semana') }}">
+                    Reservación semanal
+                </a>
+            </li>
         </ul>
     </div>
 </div>

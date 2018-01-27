@@ -1,20 +1,13 @@
 @extends('layouts.principal')
 
-@section('titulo', 'Usuarios | Editar usuario')
+@section('titulo', 'Editar perfil')
 
-@section('encabezado', 'Usuarios')
-
-@section('subencabezado', 'Editar usuario')
+@section('encabezado', 'Editar perfil')
 
 @section('breadcrumb')
-    <li>
-        <i class="fa fa-users icono-margen"></i>
-        <a href="{{ route('users.index') }}">
-            Usuarios
-        </a>
-    </li>
     <li class="active">
-        Editar usuario
+        <i class="fa fa-users icono-margen"></i>
+        Editar perfil
     </li>
 @endsection
 
@@ -22,11 +15,11 @@
     <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">
-                Editar usuario: {{ $user->name }} {{ $user->lastname }}
+                Editar perfil
             </h3>
         </div>
-            <!-- FORMULARIO PARA EDITAR UN USUARIO -->
-            {!! Form::open(['route' => ['users.update', $user], 'autocomplete' => 'off', 'method' => 'PUT', 'files' => true, 'class' => 'form-horizontal']) !!}
+            <!-- FORMULARIO PARA EDITAR PERFIL DE USUARIO -->
+            {!! Form::open(['route' => ['actualizar-perfil', $user], 'autocomplete' => 'off', 'method' => 'PUT', 'files' => true, 'class' => 'form-horizontal']) !!}
                 <div class="box-body">
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         {!! Form::label('name', 'Nombre', ['class' => 'col-sm-4 control-label']) !!}
@@ -94,22 +87,6 @@
                             {!! Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => 'Confirmar nueva contraseña']) !!}
                         </div>
                     </div>
-                    <div class="form-group{{ $errors->has('tipo') ? ' has-error' : '' }}">
-                        {!! Form::label('tipo', 'Tipo de usuario', ['class' => 'col-sm-4 control-label']) !!}
-                        <div class="col-sm-7">
-                            {!! Form::select('tipo', [
-                                'Administrador' => 'Administrador',
-                                'Asistente'     => 'Asistente',
-                                'Docente'       => 'Docente'
-                                ], $user->tipo, ['class' => 'form-control', 'placeholder' => 'Tipo de usuario', 'required']) !!}
-                            @if ($errors->has('tipo'))
-                                <span class="help-block">
-                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
-                                    {{ $errors->first('tipo') }}
-                                </span>
-                            @endif
-                        </div>
-                    </div>
                     <div class="form-group{{ $errors->has('imagen') ? ' has-error' : '' }}">
                         {!! Form::label('imagen', 'Imagen', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
@@ -122,10 +99,11 @@
                             @endif
                         </div>
                     </div>
+                    {!! Form::hidden('tipo', Auth::user()->tipo) !!}
                 </div>
                 <div class="box-footer">
                     <div class="pull-right">
-                        <a href="{{ route('users.index') }}" class="btn btn-default">
+                        <a href="{{ route('home') }}" class="btn btn-default">
                             Cancelar
                         </a>
                         {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
@@ -136,8 +114,6 @@
 @endsection
 
 @section('sidebar')
-    <!-- MENÚ DE HERRAMIENTAS PARA LA GESTIÓN ADMINISTRATIVA -->
-    @include('administracion.partials.herramientas')
-    <!-- AYUDA DE USUARIOS -->
-    @include('administracion.partials.info-usuarios')
+    <!-- PANEL DEL PERFIL DE USUARIO -->
+    @include('layouts.perfil')
 @endsection

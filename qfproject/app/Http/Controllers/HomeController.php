@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
  */
 
 use Carbon\Carbon;
+use qfproject\Http\Requests\UserRequest;
 use qfproject\Reservacion;
+use qfproject\User;
 
 class HomeController extends Controller
 {
@@ -141,5 +143,85 @@ class HomeController extends Controller
         $notificacion->delete();
 
         return back();
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario para editar el usuario especificado.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function editarPerfil()
+    {
+        $user = User::find(\Auth::user()->id);
+
+        return view('editar-perfil')->with('user', $user);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Actualiza el usuario especificado en la base de datos.
+     * 
+     * @param  qfproject\Http\Requests\UserRequest  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function actualizarPerfil(UserRequest $request, $id)
+    {
+        $user = User::find($id);
+
+        /**
+         * Almacenando nueva imagen.
+         */
+
+        if ($request->file('imagen')) {
+            $file = $request->file('imagen');
+
+            $nombre = 'user_' . time() . '.' . $file->getClientOriginalExtension();
+
+            $path = public_path() . '/images/users/';
+
+            $file->move($path, $nombre);
+
+            /**
+             * Eliminando imagen anterior.
+             */
+
+            if (\File::exists($path . $user->imagen) && $user->imagen != 'user_default.jpg') {
+                \File::delete($path . $user->imagen);
+            }
+
+            /**
+             * Guardando nueva imagen.
+             */
+
+            $user->imagen = $nombre;
+        }
+
+        $user->name = $request->get('name');
+        $user->lastname = $request->get('lastname');
+        $user->carnet = $request->get('carnet');
+        $user->email = $request->get('email');
+        $user->password = $request->get('password');
+
+        $user->save();
+
+        flash('
+            <h4>
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
+            </h4>
+            <p class="check">
+                Tu perfil se ha editado correctamente.
+            </p>
+        ')
+            ->success()
+            ->important();
+
+        return redirect()->route('home');
     }
 }

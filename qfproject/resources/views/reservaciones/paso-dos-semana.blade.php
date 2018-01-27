@@ -1,10 +1,10 @@
 @extends('layouts.principal')
 
-@section('titulo', 'Reservaciones | Nueva reservación')
+@section('titulo', 'Reservaciones | Semanales')
 
 @section('encabezado', 'Reservaciones')
 
-@section('subencabezado', 'Nueva reservación')
+@section('subencabezado', 'Semanales')
 
 @section('breadcrumb')
     <li>
@@ -12,7 +12,7 @@
         Reservaciones
     </li>
     <li class="active">
-        Nueva reservación
+        Reservaciones semanales
     </li>
 @endsection
 
@@ -41,7 +41,7 @@
                 Paso 2: Locales disponibles
             </h3>
         </div>
-        {!! Form::open(['route' => 'reservaciones.paso-tres', 'method' => 'GET']) !!}
+        {!! Form::open(['route' => 'reservaciones.paso-tres-semana', 'method' => 'GET']) !!}
             {{ Form::token() }}
             <div class="box-body">
                 @foreach ($locales_disponibles as $local)
@@ -71,15 +71,16 @@
                             </div>
                         </div>
                     </div>
+                @endforeach                
+                @foreach ($fechas as $fecha)
+                    {!! Form::hidden('fechas[]', $fecha) !!}
                 @endforeach
-                {!! Form::hidden('fecha', $reservacion->fecha) !!}
-                {!! Form::hidden('hora_inicio', $reservacion->hora_inicio) !!}
-                {!! Form::hidden('hora_fin', $reservacion->hora_fin) !!}
-                {!! Form::hidden('tipo', $reservacion->tipo) !!}
+                {!! Form::hidden('hora_inicio', $hora_inicio) !!}
+                {!! Form::hidden('hora_fin', $hora_fin) !!}
             </div>
             <div class="box-footer">
                 <div class="pull-right">
-                    <a href="{{ route('reservaciones.paso-uno') }}" class="btn btn-default">
+                    <a href="{{ route('reservaciones.paso-uno-semana') }}" class="btn btn-default">
                         Cancelar
                     </a>
                     {!! Form::submit('Siguiente', ['class' => 'btn btn-success']) !!}

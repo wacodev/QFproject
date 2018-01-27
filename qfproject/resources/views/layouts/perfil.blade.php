@@ -31,7 +31,7 @@
         <a href="{{ route('reservaciones.paso-uno') }}" class="btn btn-success btn-block">
             Nueva reservación
         </a>
-        <a href="#" class="btn btn-default btn-block">
+        <a href="{{ route('editar-perfil') }}" class="btn btn-default btn-block">
             Editar perfil
         </a>
     </div>

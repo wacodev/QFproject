@@ -24,6 +24,8 @@ use qfproject\User;
 
 class ReservacionController extends Controller
 {
+    /**************************** FUNCIONES BÁSICAS *****************************/
+
     /**
      * ---------------------------------------------------------------------------
      * Muestra una lista de reservaciones.
@@ -54,33 +56,6 @@ class ReservacionController extends Controller
                 ->with('reservaciones', $reservaciones)
                 ->with('searchText', $query);
         }
-    }
-
-    /**
-     * ---------------------------------------------------------------------------
-     * Muestra el formulario del paso uno para crear una nueva reservación.
-     * 
-     * @return \Illuminate\Http\Response
-     * ---------------------------------------------------------------------------
-     */
-
-    public function create()
-    {
-        return view('reservaciones.paso-uno');
-    }
-
-    /**
-     * ---------------------------------------------------------------------------
-     * Almacena una reservación recién creada en la base de datos.
-     * 
-     * @param  \qfproject\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     * ---------------------------------------------------------------------------
-     */
-
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -234,6 +209,21 @@ class ReservacionController extends Controller
         }
     }
 
+    /************************ RESERVACIONES INDIVIDUALES ************************/
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario del paso uno para crear una nueva reservación.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function create()
+    {
+        return view('reservaciones.paso-uno');
+    }
+
     /**
      * ---------------------------------------------------------------------------
      * Valida la fecha, hora de inicio y hora de finalización de la reservación.
@@ -252,7 +242,7 @@ class ReservacionController extends Controller
          */
 
         $this->validate(request(), [
-            'fecha'       => 'date|after_or_equal:' . Carbon::now()->format('Y-m-d'),
+            'fecha'       => 'required|date|after_or_equal:' . Carbon::now()->format('Y-m-d'),
             'hora_inicio' => 'required|after_or_equal:07:00:00|before_or_equal:17:00:00',
             'hora_fin'    => 'required|after:hora_inicio|before_or_equal:18:00:00'
         ]);
@@ -378,7 +368,6 @@ class ReservacionController extends Controller
                 ->with('reservacion', $reservacion)
                 ->with('locales_disponibles', $locales_disponibles);
         }
-        
     }
 
     /**
@@ -497,7 +486,7 @@ class ReservacionController extends Controller
          * Notificando a los usuarios correspondientes la acción realizada.
          */
 
-        if (\Auth::user()->administrador()) {
+        if (!\Auth::user()->administrador()) {
             
             /**
              * Obteniendo usuarios que se les enviará la notificación.
@@ -539,6 +528,327 @@ class ReservacionController extends Controller
             return redirect()->route('reservaciones.index');
         }
     }
+
+    /************************* RESERVACIONES POR SEMANA *************************/
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario del paso uno para crear una nueva reservación
+     * semanal.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function createSemana()
+    {
+        return view('reservaciones.paso-uno-semana');
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Valida la fecha inicial, hora de inicio, hora de finalización de la
+     * reservación y número de semanas a reservar. Obtiene los locales disponibles
+     * para los parámetros anteriores y muestra el formulario del paso dos para
+     * crear una nueva reservación semanal.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function hacerPasoUnoSemana(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'fecha'       => 'required|date|after_or_equal:' . Carbon::now()->format('Y-m-d'),
+            'hora_inicio' => 'required|after_or_equal:07:00:00|before_or_equal:17:00:00',
+            'hora_fin'    => 'required|after:hora_inicio|before_or_equal:18:00:00',
+            'frecuencia'  => 'required',
+            'semana'      => 'required|integer|min:2'
+        ]);
+
+        $frecuencia = $request->get('frecuencia');
+        $semana = $request->get('semana');
+
+        /**
+         * Convirtiendo fecha al formato Y-m-d y horas al formato H:i:s.
+         */
+
+        $fecha = Carbon::parse($request->get('fecha'))->format('Y-m-d');
+        $hora_inicio = Carbon::parse($request->get('hora_inicio'))->format('H:i:s');
+        $hora_fin = Carbon::parse($request->get('hora_fin'))->format('H:i:s');
+        
+        /**
+         * Validando que las horas ingresadas cumplan con las reglas del negocio.
+         */
+        
+        $error = $this->validarHoras($fecha, $hora_inicio, $hora_fin);
+        
+        if ($error[0]) {
+            flash('
+                <h4>
+                    <i class="fa fa-ban icon" aria-hidden="true"></i>
+                    ¡Error en ingreso de datos!
+                </h4>
+                <p class="ban">'
+                    . $error[1] .
+                '</p>
+            ')
+                ->error()
+                ->important();
+            
+            return back();
+        }
+
+        /**
+         * Validando que el número de semanas sea par si la frecuencia de la
+         * reservación es cada dos semanas.
+         */
+
+        if ($frecuencia == 2 && $semana % 2 != 0) {
+            flash('
+                <h4>
+                    <i class="fa fa-ban icon" aria-hidden="true"></i>
+                    ¡Error en ingreso de datos!
+                </h4>
+                <p class="ban">
+                    Si la frecuencia de la reservación es cada dos semanas, el número de semanas debe ser un número par.
+                </p>
+            ')
+                ->error()
+                ->important();
+            
+            return back();
+        }
+
+        /**
+         * Obteniendo fechas y locales disponibles en esas fechas.
+         */
+
+        $f = explode('-', $fecha);
+        $f_carbon = Carbon::create($f[0], $f[1], $f[2], 0); // Fecha inicial como instancia de Carbon.
+
+        $fechas = []; // Arreglo con todas las fechas a reservar.
+
+        $l_disponibles = []; // Arreglo con todos los locales disponibles para la hora y fechas indicadas.
+
+        for ($i = 0; $i < $semana / $frecuencia; $i++) { 
+            $f_almacenar = Carbon::parse($f_carbon)->format('Y-m-d');
+
+            $l_almacenar = $this->obtenerLocalesDisponibles($f_almacenar, $hora_inicio, $hora_fin);
+
+            array_push($fechas, $f_almacenar);
+
+            array_push($l_disponibles, $l_almacenar);
+
+            $f_carbon = $f_carbon->addDays(7);
+        }
+
+        /**
+         * Obteniendo locales cuya disponibilidad coincidan en todas las fechas.
+         */
+
+        $locales_disponibles = []; // Arreglo con los locales disponibles en todas las fechas indicadas.
+
+        for ($i = 0; $i < count($l_disponibles[0]); $i++) { 
+            for ($j = 1; $j < count($l_disponibles); $j++) { 
+                for ($k = 0; $k < count($l_disponibles[$j]); $k++) { 
+                    $disponible = false;
+
+                    if ($l_disponibles[0][$i]->id == $l_disponibles[$j][$k]->id) {
+                        $disponible = true;
+
+                        break;
+                    }
+                }
+
+                if ($disponible == false) {
+                    break;
+                }
+            }
+
+            if ($disponible == true) {
+                array_push($locales_disponibles, $l_disponibles[0][$i]);
+            }
+        }
+
+        if (count($locales_disponibles) <= 0) {
+            flash('
+                <h4>
+                    <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                    ¡No hay locales disponibles!
+                </h4>
+                <p class="exclamation-triangle">
+                    Lo sentimos, no hay ningún local cuya disponibilidad coincida en todas las fechas indicadas.
+                </p>
+            ')
+                ->warning()
+                ->important();
+            
+            return back();
+        } else {
+            return view('reservaciones.paso-dos-semana')
+                ->with('hora_inicio', $hora_inicio)
+                ->with('hora_fin', $hora_fin)
+                ->with('fechas', $fechas)
+                ->with('locales_disponibles', $locales_disponibles);
+        }
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Valida la selección del local y muestra el formulario del paso tres para
+     * crear una nueva reservación semanal.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function hacerPasoDosSemana(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'local_id' => 'required'
+        ]);
+
+        /**
+         * Obteniendo datos necesarios para el paso tres.
+         */
+
+        $fechas = $request->get('fechas');
+        $hora_inicio = $request->get('hora_inicio');
+        $hora_fin = $request->get('hora_fin');
+        $local_id = $request->get('local_id');
+        
+        $asignaturas = Asignatura::orderBy('nombre')->pluck('nombre', 'id');
+        
+        $actividades = Actividad::orderBy('nombre')->pluck('nombre', 'id');
+        
+        return view('reservaciones.paso-tres-semana')
+            ->with('fechas', $fechas)
+            ->with('hora_inicio', $hora_inicio)
+            ->with('hora_fin', $hora_fin)
+            ->with('local_id', $local_id)
+            ->with('asignaturas', $asignaturas)
+            ->with('actividades', $actividades);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Valida la selección de la asignatura y la actividad. Almacena la
+     * reservación semanal recién creada en la base de datos.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function hacerPasoTresSemana(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'asignatura_id' => 'required',
+            'actividad_id'  => 'required'
+        ]);
+
+        $fechas = $request->get('f'); // Arreglo con todas las fechas a reservar.
+
+        $i = 0; // Índice para el código.
+
+        /**
+         * Guardando cada reservación.
+         */
+
+        foreach ($fechas as $fecha) {
+
+            $reservacion = new Reservacion;
+
+            $reservacion->fecha = $fecha;
+            $reservacion->hora_inicio = Carbon::parse($request->get('hora_inicio'))->format('H:i:s');
+            $reservacion->hora_fin = Carbon::parse($request->get('hora_fin'))->format('H:i:s');
+            $reservacion->user_id = \Auth::user()->id;
+            $reservacion->local_id = $request->get('local_id');
+            $reservacion->asignatura_id = $request->get('asignatura_id');
+            $reservacion->actividad_id = $request->get('actividad_id');
+            $reservacion->tema = $request->get('tema');
+            $reservacion->tipo = 'Ordinaria';
+
+            /**
+             * Generando código de comprobación.
+             */
+
+            $cr = str_pad(substr($i, -3, 3), 3, '0', STR_PAD_LEFT);
+            $ca = str_pad(substr($reservacion->asignatura_id, -2, 2), 2, '0', STR_PAD_LEFT);
+            $cl = str_pad(substr($reservacion->local_id, -2, 2), 2, '0', STR_PAD_LEFT);
+            $cu = str_pad(substr($reservacion->user_id, -2, 2), 2, '0', STR_PAD_LEFT);
+
+            $reservacion->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
+
+            /**
+             * Validando que local aún está disponible.
+             */
+
+            $reservaciones = Reservacion::where('fecha', '=', $reservacion->fecha)
+                ->where('hora_inicio', '>=', $reservacion->hora_inicio)
+                ->where('hora_inicio', '<', $reservacion->hora_fin)
+                ->where('local_id', '=', $reservacion->local_id)
+                ->orWhere('fecha', '=', $reservacion->fecha)
+                ->where('hora_fin', '<=', $reservacion->hora_fin)
+                ->where('hora_fin', '>', $reservacion->hora_inicio)
+                ->where('local_id', '=', $reservacion->local_id)
+                ->get();
+
+            if ($reservaciones->count() > 0) {
+                flash('
+                    <h4>
+                        <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                        ¡Algo ha salido mal!
+                    </h4>
+                    <p class="exclamation-triangle">
+                        Otro usuario reservó el local en la fecha ' . $reservacion->fecha . ' mientras tú completabas el formulario.
+                        <strong>
+                            Las reservaciones anteriores a esa se guardaron correctamente.
+                        </strong>
+                    </p>
+                ')
+                ->warning()
+                ->important();
+
+                return redirect()->route('reservaciones.paso-uno-semana');
+            }
+
+            $reservacion->save();
+
+            $i++;
+        }
+
+        flash('
+            <h4>
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
+            </h4>
+            <p class="check">
+                La reservación ha sido guardada correctamente.
+            </p>
+        ')
+            ->success()
+            ->important();
+
+        return redirect()->route('reservaciones.index');
+    }
+
+    /************************* RESERVACIONES POR CICLO **************************/
 
     /**
      * ---------------------------------------------------------------------------
@@ -696,8 +1006,6 @@ class ReservacionController extends Controller
              * fechas futuras.
              */
             
-            // $ra = 0; // Número de reservaciones no registradas por coincidir con un asueto.
-            
             $rr = 0; // Número de reservaciones registradas.
             
             if ($reservaciones->count() > 0) {
@@ -776,6 +1084,8 @@ class ReservacionController extends Controller
         return redirect()->route('reservaciones.index');
     }
 
+    /********************** VALIDACIONES Y OTRAS FUNCIONES **********************/
+
     /**
      * ---------------------------------------------------------------------------
      * Obtiene los locales disponibles para reservar en la fecha y horas
@@ -814,9 +1124,7 @@ class ReservacionController extends Controller
         if ($reservaciones->count() <= 0) {
             return $locales;
         } else {
-            $locales_disponibles = null;
-
-            $i = 0; // Índice del arreglo de locales disponibles.
+            $locales_disponibles = []; // Arreglo con los locales disponibles.
 
             foreach ($locales as $local) {
                 
@@ -831,15 +1139,14 @@ class ReservacionController extends Controller
                 }
                 
                 if ($disponible) {
-                    $locales_disponibles[$i] = $local;
+                    array_push($locales_disponibles, $local);
                 }
-                
-                $i++;
             }
 
             return $locales_disponibles;
         }
     }
+
     /**
      * ---------------------------------------------------------------------------
      * Verifica si la fecha ingresada coincide con un asueto.
