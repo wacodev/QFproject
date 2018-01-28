@@ -109,7 +109,9 @@ Route::get('/', 'HomeController@index');
  */
 
 Route::group(['prefix' => 'reservaciones', 'middleware' => 'auth'], function() {
+Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function() {
 
+});
     /**
      * Opciones básicas para las reservaciones.
      */
@@ -138,6 +140,7 @@ Route::group(['prefix' => 'reservaciones', 'middleware' => 'auth'], function() {
     Route::get('/paso-dos', 'ReservacionController@hacerPasoUno')->name('reservaciones.paso-dos');
     Route::get('/paso-tres', 'ReservacionController@hacerPasoDos')->name('reservaciones.paso-tres');
     Route::post('/store', 'ReservacionController@hacerPasoTres')->name('reservaciones.store');
+
 
     Route::group(['middleware' => 'asistente'], function() {
 
