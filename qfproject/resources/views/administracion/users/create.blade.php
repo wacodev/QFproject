@@ -107,7 +107,8 @@
                             {!! Form::select('tipo', [
                                 'Administrador' => 'Administrador',
                                 'Asistente'     => 'Asistente',
-                                'Docente'       => 'Docente'
+                                'Docente'       => 'Docente',
+                                'Visitante'     => 'Visitante'
                                 ], old('tipo'), ['class' => 'form-control', 'placeholder' => 'Tipo de usuario', 'required']) !!}
                             @if ($errors->has('tipo'))
                                 <span class="help-block">

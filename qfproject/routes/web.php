@@ -84,6 +84,8 @@ Route::group(['prefix' => 'notificaciones', 'middleware' => 'auth'], function() 
 
 });
 
+Route::group(['prefix' => 'estadisticas', 'middleware' => 'asistente'], function() {
+});
 /**
  * ---------------------------------------------------------------------------
  * Página de inicio.
