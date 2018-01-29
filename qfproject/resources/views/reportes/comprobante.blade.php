@@ -35,18 +35,26 @@
             <table class="table table-bordered">
                 <thead>
                     <tr class="active">
-                        <th>Carnet</th>
+                     @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')   
                         <th>Apellidos</th>
                         <th>Nombres</th>
+                     @endif
                         <th>Cargo</th>
+                    @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Visitante')
+                        <th>Responsable de reserva</th>
+                     @endif
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ $reservacion->user->carnet }}</td>
+                    @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')  
                         <td>{{ $reservacion->user->lastname }}</td>
                         <td>{{ $reservacion->user->name }}</td>
+                    @endif
                         <td>{{ $reservacion->user->tipo }}</td>
+                    @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Visitante')
+                        <td>{{ $reservacion->responsable }}</td>
+                    @endif
                     </tr>
                 </tbody>
             </table>

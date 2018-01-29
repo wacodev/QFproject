@@ -33,7 +33,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Carnet</th>
+                              
                                 <th>Nombre</th>
                                 <th>Tipo</th>
                                 <th>Opciones</th>
@@ -45,9 +45,7 @@
                                     <td class="id-size">
                                         {{ $user->id }}
                                     </td>
-                                    <td class="codigo-size">
-                                        {{ $user->carnet }}
-                                    </td>
+                                   
                                     <td>
                                         {{ $user->name }} {{ $user->lastname }}
                                     </td>

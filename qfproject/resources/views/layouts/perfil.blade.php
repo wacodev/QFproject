@@ -11,14 +11,7 @@
             {{ Auth::user()->tipo }}
         </p>
         <ul class="list-group list-group-unbordered">
-            <li class="list-group-item">
-                <strong>
-                    Carnet
-                </strong>
-                <p class="pull-right">
-                    {{ Auth::user()->carnet }}
-                </p>
-            </li>
+           
             <li class="list-group-item">
                 <strong>
                     Correo electrónico

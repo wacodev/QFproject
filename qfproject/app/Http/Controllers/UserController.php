@@ -34,9 +34,8 @@ class UserController extends Controller
 
             $users = User::where('name', 'like', '%' . $query . '%')
                 ->orWhere('lastname', 'like', '%' . $query . '%')
-                ->orWhere('carnet', 'like', '%' . $query . '%')
                 ->orWhere('tipo', 'like', '%' . $query . '%')
-                ->orderBy('carnet', 'asc')
+                ->orderBy('name', 'asc')
                 ->paginate(10);
 
             return view('administracion.users.index')
@@ -200,7 +199,6 @@ class UserController extends Controller
 
         $user->name = $request->get('name');
         $user->lastname = $request->get('lastname');
-        $user->carnet = $request->get('carnet');
         $user->email = $request->get('email');
         $user->password = $request->get('password');
         $user->tipo = $request->get('tipo');

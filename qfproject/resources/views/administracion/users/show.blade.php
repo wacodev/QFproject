@@ -39,14 +39,7 @@
                         {{ $user->id }}
                     </p>
                 </li>
-                <li class="list-group-item">
-                    <strong>
-                        Carnet
-                    </strong>
-                    <p class="pull-right">
-                        {{ $user->carnet }}
-                    </p>
-                </li>
+               
                 <li class="list-group-item">
                     <strong>
                         Correo electrónico

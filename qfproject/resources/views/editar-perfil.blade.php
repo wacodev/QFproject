@@ -45,18 +45,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="form-group{{ $errors->has('carnet') ? ' has-error' : '' }}">
-                        {!! Form::label('carnet', 'Carnet', ['class' => 'col-sm-4 control-label']) !!}
-                        <div class="col-sm-7">
-                            {!! Form::text('carnet', $user->carnet, ['class' => 'form-control', 'placeholder' => 'Carnet del usuario', 'required']) !!}
-                            @if ($errors->has('carnet'))
-                                <span class="help-block">
-                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
-                                    {{ $errors->first('carnet') }}
-                                </span>
-                            @endif
-                        </div>
-                    </div>
+                  
                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                         {!! Form::label('email', 'Correo electrónico', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">

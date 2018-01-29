@@ -23,6 +23,7 @@ class CreateReservacionesTable extends Migration
             $table->time('hora_inicio');
             $table->time('hora_fin');
             $table->string('tema')->nullable();
+            $table->string('responsable')->nullable();
             $table->enum('tipo', ['Ordinaria', 'Extraordinaria']);
             $table->string('codigo')->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

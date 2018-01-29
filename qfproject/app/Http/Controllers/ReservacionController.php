@@ -782,6 +782,7 @@ class ReservacionController extends Controller
             $reservacion->asignatura_id = $request->get('asignatura_id');
             $reservacion->actividad_id = $request->get('actividad_id');
             $reservacion->tema = $request->get('tema');
+             $reservacion->tema = $request->get('responsable');
             $reservacion->tipo = 'Ordinaria';
 
             /**
