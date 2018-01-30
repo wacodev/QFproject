@@ -76,6 +76,12 @@
                                 </p>
                                 <p>
                                     <strong>
+                                        Realizada por:
+                                    </strong>
+                                    {{ $notificacion->data['propietario']['name'] }} {{ $notificacion->data['propietario']['lastname'] }}
+                                </p>
+                                <p>
+                                    <strong>
                                         Local:
                                     </strong>
                                     {{ $notificacion->data['local']['nombre'] }}

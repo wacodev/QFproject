@@ -762,16 +762,15 @@ class ReservacionController extends Controller
             'actividad_id'  => 'required'
         ]);
 
-        $fechas = $request->get('f'); // Arreglo con todas las fechas a reservar.
-
-        $i = 0; // Índice para el código.
-
         /**
          * Guardando cada reservación.
          */
 
-        foreach ($fechas as $fecha) {
+        $fechas = $request->get('f'); // Arreglo con todas las fechas a reservar.
 
+        $i = 0; // Índice para el código.
+
+        foreach ($fechas as $fecha) {
             $reservacion = new Reservacion;
 
             $reservacion->fecha = $fecha;
@@ -782,7 +781,7 @@ class ReservacionController extends Controller
             $reservacion->asignatura_id = $request->get('asignatura_id');
             $reservacion->actividad_id = $request->get('actividad_id');
             $reservacion->tema = $request->get('tema');
-             $reservacion->tema = $request->get('responsable');
+            $reservacion->responsable = $request->get('responsable');
             $reservacion->tipo = 'Ordinaria';
 
             /**
@@ -974,25 +973,6 @@ class ReservacionController extends Controller
             DB::beginTransaction();
             
             /**
-             * Eliminando las reservaciones que se encuentran en el nuevo rango
-             * de fechas.
-             */
-            
-            $reservaciones_eliminar = Reservacion::where('fecha', '>=', $li_nuevo)
-                ->where('fecha', '<=', $ls_nuevo)
-                ->get();
-            
-            $re = 0; // Número de reservaciones eliminadas en el nuevo rango de fechas.
-            
-            if ($reservaciones_eliminar->count() > 0) {
-                foreach ($reservaciones_eliminar as $reservacion_eliminar) {
-                    $reservacion_eliminar->delete();
-                    
-                    $re++;
-                }
-            }
-            
-            /**
              * Obteniendo todas las reservaciones que se encuentren dentro del
              * rango de fechas original.
              */
@@ -1000,6 +980,7 @@ class ReservacionController extends Controller
             $reservaciones = Reservacion::where('fecha', '>=', $rango_fecha[0])
                 ->where('fecha', '<=', $rango_fecha[1])
                 ->where('tipo', '=', 'Ordinaria')
+                ->orderBy('fecha', 'asc')
                 ->get();
             
             /**
@@ -1010,6 +991,11 @@ class ReservacionController extends Controller
             $rr = 0; // Número de reservaciones registradas.
             
             if ($reservaciones->count() > 0) {
+
+                $i = 0; // Índice para el código.
+
+                $reservaciones_p = []; // Arreglo con las reservaciones pendientes por la no disponibilidad del local.
+
                 foreach ($reservaciones as $reservacion) {
 
                     /**
@@ -1033,19 +1019,70 @@ class ReservacionController extends Controller
                     $reservacion_nueva->tipo = 'Ordinaria';
 
                     /**
-                     * Generando código de comprobación.
+                     * Validando que local está disponible.
                      */
 
-                    $cr = str_pad(mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
-                    $ca = str_pad(substr($reservacion_nueva->asignatura_id, 0, 2), 2, '0', STR_PAD_LEFT);
-                    $cl = str_pad(substr($reservacion_nueva->local_id, 0, 2), 2, '0', STR_PAD_LEFT);
-                    $cu = str_pad(substr($reservacion_nueva->user_id, 0, 2), 2, '0', STR_PAD_LEFT);
+                    $reservaciones_v = Reservacion::where('fecha', '=', $reservacion_nueva->fecha)
+                        ->where('hora_inicio', '>=', $reservacion_nueva->hora_inicio)
+                        ->where('hora_inicio', '<', $reservacion_nueva->hora_fin)
+                        ->where('local_id', '=', $reservacion_nueva->local_id)
+                        ->orWhere('fecha', '=', $reservacion_nueva->fecha)
+                        ->where('hora_fin', '<=', $reservacion_nueva->hora_fin)
+                        ->where('hora_fin', '>', $reservacion_nueva->hora_inicio)
+                        ->where('local_id', '=', $reservacion_nueva->local_id)
+                        ->get();
 
-                    $reservacion_nueva->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
+                    /**
+                     * En caso de encontrar reservaciones que chocan con la nueva
+                     * que se quiere registrar, se almacenará en el arreglo
+                     * $reservaciones_p: primero, un arreglo con todos los datos
+                     * de la nueva reservación y segundo, arreglos con los datos
+                     * necesarios de las reservaciones que chocan. En cada
+                     * arreglo el primer elemento es un identificador de posición
+                     * que relacionará la nueva reservación con las
+                     * correspondientes reservaciones con que choca y el segundo
+                     * elemento es un valor booleano que indica si es o no una
+                     * nueva reservación.
+                     */
 
-                    $reservacion_nueva->save();
+                    if ($reservaciones_v->count() > 0) {
+                        $rp = []; // Arreglo temporal con las reservaciones a agregar en $reservaciones_p.
+
+                        //$rp[0] = [count($reservaciones_p), true, $reservacion_nueva->user_id, $reservacion_nueva->local_id, $reservacion_nueva->asignatura_id, $reservacion_nueva->actividad_id, $reservacion_nueva->fecha, $reservacion_nueva->hora_inicio, $reservacion_nueva->hora_fin, $reservacion_nueva->tema, $reservacion_nueva->tipo, $reservacion_nueva->codigo, $reservacion_nueva->local->nombre];
+
+                        $reservacion_nueva->codigo = count($reservaciones_p);
+
+                        $rp[0] = $reservacion_nueva;
+
+                        foreach ($reservaciones_v as $reservacion_v) {
+                            //$agregar = [count($reservaciones_p), false, $reservacion_v->id, $reservacion_v->user->name, $reservacion_v->user->lastname, $reservacion_v->local->nombre, $reservacion_v->fecha, $reservacion_v->hora_inicio, $reservacion_v->hora_fin];
+                            //array_push($rp, $agregar);
+
+                            $reservacion_v->codigo = count($reservaciones_p);
+
+                            array_push($rp, $reservacion_v);
+                        }
+
+                        array_push($reservaciones_p, $rp);
+                    } else {
+
+                        /**
+                         * Generando código de comprobación.
+                         */
+
+                        $cr = str_pad(substr($i, -3, 3), 3, '0', STR_PAD_LEFT);
+                        $ca = str_pad(substr($reservacion_nueva->asignatura_id, -2, 2), 2, '0', STR_PAD_LEFT);
+                        $cl = str_pad(substr($reservacion_nueva->local_id, -2, 2), 2, '0', STR_PAD_LEFT);
+                        $cu = str_pad(substr($reservacion_nueva->user_id, -2, 2), 2, '0', STR_PAD_LEFT);
+
+                        $reservacion_nueva->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
+
+                        $reservacion_nueva->save();
+
+                        $rr++;
+                    }
                     
-                    $rr++;
+                    $i++;
                 }
             }
             DB::commit();
@@ -1067,22 +1104,148 @@ class ReservacionController extends Controller
             return back();
         }
 
-        flash('
-            <h4>
-                <i class="fa fa-info-circle icon" aria-hidden="true"></i>
-                Detalles de la operación
-            </h4>
-            <p class="info-circle">
-                Se registraron ' . $rr . ' reservaciones de un total de ' . $reservaciones->count() . '.
-            </p>
-            <p class="info-circle">
-                Reservaciones antiguas que fueron eliminadas: ' . $re . '.
-            </p>
-        ')
-            ->info()
-            ->important();
+        /**
+         * Si hay reservaciones que chocan mandar a la vista correspondiente
+         * para solucionar ese problema.
+         */
+
+        if (count($reservaciones_p) > 0) {
+            flash('
+                <h4>
+                    <i class="fa fa-info-circle icon" aria-hidden="true"></i>
+                    Detalles de la operación
+                </h4>
+                <p class="info-circle">
+                    Se registraron ' . $rr . ' reservaciones de un total de ' . $reservaciones->count() . '.
+                </p>
+            ')
+                ->info()
+                ->important();
+
+            return view('reservaciones.choques')
+                ->with('reservaciones_p', $reservaciones_p);
+        } else {
+            flash('
+                <h4>
+                    <i class="fa fa-info-circle icon" aria-hidden="true"></i>
+                    Detalles de la operación
+                </h4>
+                <p class="info-circle">
+                    Se registraron ' . $rr . ' reservaciones de un total de ' . $reservaciones->count() . '.
+                </p>
+            ')
+                ->info()
+                ->important();
+            
+            return redirect()->route('reservaciones.index');
+        }
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra un listado de reservaciones que chocan con otras para que el
+     * usuario decida si eliminar o no aquellas que interfieren con la suya.
+     * 
+     * @param  \qfproject\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function verChoquesNuevoCiclo(Request $request)
+    {
+        /**
+         * Arreglo con el identificador de posición donde se decidió registrar la
+         * nueva reservación y eliminar aquellas con que choca.
+         */
+
+        $seleccionadas = $request->get('seleccionadas');
+
+        /**
+         * Arreglo con los datos de todas las reservaciones.
+         */
+
+        $reservaciones = $request->get('r');
+
+        //$rrr = explode(',-:', $reservaciones[0]);
+        //$rrr1 = explode(',-:', $reservaciones[1]);
         
-        return redirect()->route('reservaciones.index');
+        //dd($seleccionadas, $reservaciones, $reservaciones[0], $rrr, $rrr1, $rrr[8]);
+
+        $i = 0; // Índice para el código.
+
+        $rnr = []; // Arreglo con las reservaciones nuevas no registradas.
+
+        $re = []; // Arreglo con las reservaciones eliminadas que chocaban.
+
+        foreach ($reservaciones as $reservacion) {
+            $registrada = false;
+
+            $r = explode(',-:', $reservacion);
+
+            if (count($r) > 2) {
+                $reservacion = new Reservacion;
+                        
+                $reservacion->user_id = $r[1];
+                $reservacion->local_id = $r[2];
+                $reservacion->asignatura_id = $r[3];
+                $reservacion->actividad_id = $r[4];
+                $reservacion->fecha = $r[5];
+                $reservacion->hora_inicio = $r[6];
+                $reservacion->hora_fin = $r[7];
+                $reservacion->tipo = $r[9];
+
+                if ($r[8] == "") {
+                    $reservacion->tema = null;
+                } else {
+                    $reservacion->tema = $r[8];
+                }
+
+                /**
+                 * Generando código de comprobación.
+                 */
+
+                $cr = str_pad(substr($i, -3, 3), 3, '0', STR_PAD_LEFT);
+                $ca = str_pad(substr($reservacion->asignatura_id, -2, 2), 2, '0', STR_PAD_LEFT);
+                $cl = str_pad(substr($reservacion->local_id, -2, 2), 2, '0', STR_PAD_LEFT);
+                $cu = str_pad(substr($reservacion->user_id, -2, 2), 2, '0', STR_PAD_LEFT);
+
+                $reservacion->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
+
+                $i++;
+            }
+
+            foreach ($seleccionadas as $seleccion) {
+                if ($r[0] == $seleccion) {
+                    if (count($r) > 2) {
+                        //$reservacion->save();
+
+                        $registrada = true;
+                    } else {
+                        $reservacion = Reservacion::find($r[1]);
+
+                        //$reservacion->delete();
+
+                        array_push($re, $reservacion);
+                    }
+                    break;
+                }
+            }
+
+            if (!$registrada && count($r) > 2) {
+                array_push($rnr, $reservacion);
+            }
+        }
+
+        $hoy = Carbon::now()->format('d/m/y h:i A');
+
+        $pdf = \PDF::loadView('reportes.reservacion-ciclo', ['rnr' => $rnr, 're' => $re, 'hoy' => $hoy])
+            ->setPaper('letter', 'landscape');
+
+        //$pdf->stream('reservacion-ciclo_' . time() . '.pdf');
+
+        //return redirect()->route('reservaciones.index');
+
+        return $pdf->stream('reservacion-ciclo_' . time() . '.pdf');
     }
 
     /********************** VALIDACIONES Y OTRAS FUNCIONES **********************/

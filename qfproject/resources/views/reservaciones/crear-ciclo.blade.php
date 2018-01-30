@@ -30,7 +30,7 @@
                 Nuevo ciclo
             </h3>
         </div>
-        {!! Form::open(['route' => 'reservaciones.registrar-ciclo', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+        {!! Form::open(['route' => 'reservaciones.registrar-ciclo', 'autocomplete' => 'off', 'method' => 'GET', 'class' => 'form-horizontal']) !!}
             <div class="box-body">
                 <div class="form-group{{ $errors->has('rango_fecha') ? ' has-error' : '' }}">
                     {!! Form::label('rango_fecha', 'Rango de fechas', ['class' => 'col-sm-4 control-label']) !!}

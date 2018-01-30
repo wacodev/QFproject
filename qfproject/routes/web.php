@@ -156,7 +156,8 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
          */
 
         Route::get('/crear-ciclo', 'ReservacionController@crearNuevoCiclo')->name('reservaciones.crear-ciclo');
-        Route::post('/registrar-ciclo', 'ReservacionController@registrarNuevoCiclo')->name('reservaciones.registrar-ciclo');
+        Route::get('/registrar-ciclo', 'ReservacionController@registrarNuevoCiclo')->name('reservaciones.registrar-ciclo');
+        Route::post('/choques', 'ReservacionController@verChoquesNuevoCiclo')->name('reservaciones.choques');
 
         /**
          * Reservaciones semanales.

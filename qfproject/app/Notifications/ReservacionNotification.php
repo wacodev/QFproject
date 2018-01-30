@@ -145,6 +145,7 @@ class ReservacionNotification extends Notification
             'tipo'        => $this->tipo,
             'mensaje'     => $mensaje,
             'user'        => User::find(\Auth::user()->id),
+            'propietario' => User::find($this->reservacion->user_id),
             'local'       => Local::find($this->reservacion->local_id),
             'asignatura'  => Asignatura::find($this->reservacion->asignatura_id),
             'actividad'   => Actividad::find($this->reservacion->actividad_id)
