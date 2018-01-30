@@ -55,18 +55,7 @@
                         </div>
                     </div>
                     <!-- CARNET -->
-                    <div class="form-group{{ $errors->has('carnet') ? ' has-error' : '' }}">
-                        {!! Form::label('carnet', 'Carnet', ['class' => 'col-sm-4 control-label']) !!}
-                        <div class="col-sm-7">
-                            {!! Form::text('carnet', old('carnet'), ['class' => 'form-control', 'placeholder' => 'Carnet del usuario', 'required']) !!}
-                            @if ($errors->has('carnet'))
-                                <span class="help-block">
-                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
-                                    {{ $errors->first('carnet') }}
-                                </span>
-                            @endif
-                        </div>
-                    </div>
+                   
                     <!-- CORREO ELECTRÓNICO -->
                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                         {!! Form::label('email', 'Correo electrónico', ['class' => 'col-sm-4 control-label']) !!}
@@ -107,7 +96,8 @@
                             {!! Form::select('tipo', [
                                 'Administrador' => 'Administrador',
                                 'Asistente'     => 'Asistente',
-                                'Docente'       => 'Docente'
+                                'Docente'       => 'Docente',
+                                'Visitante'     => 'Visitante'
                                 ], old('tipo'), ['class' => 'form-control', 'placeholder' => 'Tipo de usuario', 'required']) !!}
                             @if ($errors->has('tipo'))
                                 <span class="help-block">

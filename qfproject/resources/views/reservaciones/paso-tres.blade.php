@@ -61,6 +61,20 @@
                         @endif
                     </div>
                 </div>
+                @if (Auth::user()->visitante())
+                 <div class="form-group{{ $errors->has('responsable') ? ' has-error' : '' }}">
+                    {!! Form::label('responsable', 'Responsable', ['class' => 'col-sm-4 control-label']) !!}
+                    <div class="col-sm-7">
+                        {!! Form::text('responsable', old('responsable'), ['class' => 'form-control', 'placeholder' => 'Responsable de reserva', 'required']) !!}
+                        @if ($errors->has('responsable'))
+                            <span class="help-block">
+                                <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                                {{ $errors->first('responsable') }}
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                @endif
                 {!! Form::hidden('local_id', $reservacion->local_id) !!}
                 {!! Form::hidden('fecha', $reservacion->fecha) !!}
                 {!! Form::hidden('hora_inicio', $reservacion->hora_inicio) !!}

@@ -33,6 +33,7 @@ class Reservacion extends Model
         'hora_inicio',
         'hora_fin',
         'tema',
+        'responsable',
         'tipo',
         'codigo'
     ];

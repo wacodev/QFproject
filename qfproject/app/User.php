@@ -28,7 +28,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'lastname',
-        'carnet',
         'email',
         'password',
         'tipo',
@@ -115,5 +114,18 @@ class User extends Authenticatable
     public function docente()
     {
         return $this->tipo === 'Docente';
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Indica si el usuario es de tipo Visitante.
+     *
+     * @return bool
+     * ---------------------------------------------------------------------------
+     */
+
+    public function visitante()
+    {
+        return $this->tipo === 'Visitante';
     }
 }

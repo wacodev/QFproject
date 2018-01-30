@@ -172,6 +172,7 @@
                                 </li>
                             </ul>
                         </li>
+                        @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
                         <li class="treeview">
                             <a href="">
                                 <i class="fa fa-file-text"></i>
@@ -213,6 +214,7 @@
                                 </li>
                             </ul>
                         </li>
+                         
                         <li class="treeview">
                             <a href="#"> <!-- Editar -->
                                 <i class="fa fa-bar-chart"></i>
@@ -248,6 +250,7 @@
                                 </li>
                             </ul>
                         </li>
+                        @endif
                         @if (Auth::user()->administrador())
                             <li class="treeview">
                                 <a href="#"> <!-- Editar -->
