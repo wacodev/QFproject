@@ -53,16 +53,6 @@
                             </span>
                         @endif
                     </div>
-                    <!-- CARNET -->
-                    <div class="form-group{{ $errors->has('carnet') ? ' has-error' : '' }} has-feedback">
-                        <input id="carnet" type="text" class="form-control" name="carnet" value="{{ old('carnet') }}" required placeholder="Carnet">
-                        @if ($errors->has('carnet'))
-                            <span class="help-block">
-                                <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
-                                {{ $errors->first('carnet') }}
-                            </span>
-                        @endif
-                    </div>
                     <!-- CORREO ELECTRÓNICO -->
                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} has-feedback">
                         <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required placeholder="Correo electrónico">

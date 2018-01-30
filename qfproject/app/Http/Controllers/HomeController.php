@@ -204,7 +204,6 @@ class HomeController extends Controller
 
         $user->name = $request->get('name');
         $user->lastname = $request->get('lastname');
-        $user->carnet = $request->get('carnet');
         $user->email = $request->get('email');
         $user->password = $request->get('password');
 

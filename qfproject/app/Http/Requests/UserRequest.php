@@ -42,7 +42,6 @@ class UserRequest extends FormRequest
         $rules = array(
             'name'     => 'required|max:190',
             'lastname' => 'required|max:190',
-            'carnet'   => 'nullable',
             'email'    => 'required|max:190|email|unique:users,email,' . $this->route('user'),
             'password' => 'max:190|confirmed',
             'tipo'     => 'required',
