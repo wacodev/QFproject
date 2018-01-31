@@ -63,7 +63,7 @@
                                     {{ $local->capacidad }}
                                 </p>
                                 <div class="seleccionar">
-                                    <input type="radio" name="local_id" value="{{ $local->id }}">
+                                    <input type="checkbox" name="locales[]" value="{{ $local->id }}">
                                     <span>
                                         Seleccionar
                                     </span>
