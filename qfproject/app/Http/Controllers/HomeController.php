@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
  */
 
 use Carbon\Carbon;
+use qfproject\Actividad;
+use qfproject\Asignatura;
+use qfproject\Http\Requests\ActividadRequest;
+use qfproject\Http\Requests\AsignaturaRequest;
 use qfproject\Http\Requests\UserRequest;
 use qfproject\Reservacion;
 use qfproject\User;
@@ -222,5 +226,65 @@ class HomeController extends Controller
             ->important();
 
         return redirect()->route('home');
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Almacena una actividad recién creada en la base de datos.
+     * 
+     * @param  qfproject\Http\Requests\ActividadRequest  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function storeActividad(ActividadRequest $request)
+    {
+        $actividad = new Actividad($request->all());
+        
+        $actividad->save();
+
+        flash('
+            <h4>
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
+            </h4>
+            <p class="check">
+                La actividad "' . $actividad->nombre . '" se ha guardado correctamente.
+            </p>
+        ')
+            ->success()
+            ->important();
+
+        return back();
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Almacena una asignatura recién creada en la base de datos.
+     * 
+     * @param  qfproject\Http\Requests\AsignaturaRequest  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function storeAsignatura(AsignaturaRequest $request)
+    {
+        $asignatura = new Asignatura($request->all());
+        
+        $asignatura->save();
+
+        flash('
+            <h4>
+                <i class="fa fa-check icon" aria-hidden="true"></i>
+                ¡Bien hecho!
+                </h4>
+                <p class="check">
+                    La asignatura "' . $asignatura->nombre . '" se ha guardado correctamente.
+                </p>
+        ')
+            ->success()
+            ->important();
+
+        return back();
     }
 }

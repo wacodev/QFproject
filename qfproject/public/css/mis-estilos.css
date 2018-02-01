@@ -246,6 +246,11 @@ a:hover {
     margin-left: 5px;
 }
 
+.select-margen .input-group {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 /**
  * ---------------------------------------------------------------------------
  * Estilos para los iconos.

@@ -25,10 +25,15 @@
         </div>
         {!! Form::open(['route' => 'reservaciones.store', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
             <div class="box-body">
-                <div class="form-group{{ $errors->has('asignatura_id') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('asignatura_id') ? ' has-error' : '' }} select-margen">
                     {!! Form::label('asignatura_id', 'Asignatura', ['class' => 'col-sm-4 control-label']) !!}
-                    <div class="col-sm-7">
+                    <div class="col-sm-7 input-group">
                         {!! Form::select('asignatura_id', $asignaturas, old('asignatura_id'), ['class' => 'form-control', 'placeholder' => '-- Seleccione una asignatura --', 'required']) !!}
+                        <span class="input-group-btn">
+                            <a href="" data-target="#modal-asignatura" data-toggle="modal" class="btn btn-default">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </span>
                         @if ($errors->has('asignatura_id'))
                             <span class="help-block">
                                 <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -37,10 +42,15 @@
                         @endif
                     </div>
                 </div>
-                <div class="form-group{{ $errors->has('actividad_id') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('actividad_id') ? ' has-error' : '' }} select-margen">
                     {!! Form::label('actividad_id', 'Actividad', ['class' => 'col-sm-4 control-label']) !!}
-                    <div class="col-sm-7">
+                    <div class="col-sm-7 input-group">
                         {!! Form::select('actividad_id', $actividades, old('actividad_id'), ['class' => 'form-control', 'placeholder' => '-- Seleccione una actividad --', 'required']) !!}
+                        <span class="input-group-btn">
+                            <a href="" data-target="#modal-actividad" data-toggle="modal" class="btn btn-default">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </span>
                         @if ($errors->has('actividad_id'))
                             <span class="help-block">
                                 <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -62,7 +72,7 @@
                     </div>
                 </div>
                 @if (Auth::user()->visitante())
-                 <div class="form-group{{ $errors->has('responsable') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('responsable') ? ' has-error' : '' }}">
                     {!! Form::label('responsable', 'Responsable', ['class' => 'col-sm-4 control-label']) !!}
                     <div class="col-sm-7">
                         {!! Form::text('responsable', old('responsable'), ['class' => 'form-control', 'placeholder' => 'Responsable de reserva', 'required']) !!}
@@ -92,6 +102,10 @@
         	    </div>
             </div>
         {!! Form::close() !!}
+        <!-- MODAL PARA AGREGAR UNA ACTIVIDAD -->
+        @include('reservaciones.modal-actividad')
+        <!-- MODAL PARA AGREGAR UNA ASIGNATURA -->
+        @include('reservaciones.modal-asignatura')
     </div>
 @endsection
 

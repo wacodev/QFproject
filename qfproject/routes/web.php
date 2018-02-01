@@ -86,6 +86,7 @@ Route::group(['prefix' => 'notificaciones', 'middleware' => 'auth'], function() 
 
 Route::group(['prefix' => 'estadisticas', 'middleware' => 'asistente'], function() {
 });
+
 /**
  * ---------------------------------------------------------------------------
  * Página de inicio.
@@ -119,6 +120,13 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
     Route::get('/{reservacion}/edit', 'ReservacionController@edit')->name('reservaciones.edit');
     Route::put('/{reservacion}', 'ReservacionController@update')->name('reservaciones.update');
     Route::delete('/{reservacion}', 'ReservacionController@destroy')->name('reservaciones.destroy');
+    
+    /**
+     * Agregar actividades y asignaturas en el formulario de reservaciones.
+     */
+
+    Route::post('/storeActividad', 'HomeController@storeActividad')->name('store-actividad');
+    Route::post('/storeAsignatura', 'HomeController@storeAsignatura')->name('store-asignatura');
 
     /**
      * Comprobante de reservación.
