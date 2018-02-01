@@ -75,7 +75,9 @@
                     </div>
                 </div>
                 @endif
-                {!! Form::hidden('local_id', $reservacion->local_id) !!}
+                @foreach ($locales as $local)
+                    {!! Form::hidden('l[]', $local) !!}
+                @endforeach
                 {!! Form::hidden('fecha', $reservacion->fecha) !!}
                 {!! Form::hidden('hora_inicio', $reservacion->hora_inicio) !!}
                 {!! Form::hidden('hora_fin', $reservacion->hora_fin) !!}

@@ -387,14 +387,21 @@ class ReservacionController extends Controller
          */
 
         $this->validate(request(), [
-            'local_id' => 'required'
+            'locales' => 'required'
         ]);
 
         /**
          * Obteniendo datos necesarios para el paso tres.
          */
 
-        $reservacion = new Reservacion($request->all());
+        $reservacion = new Reservacion;
+
+        $reservacion->fecha = $request->get('fecha');
+        $reservacion->hora_inicio = $request->get('hora_inicio');
+        $reservacion->hora_fin = $request->get('hora_fin');
+        $reservacion->tipo = $request->get('tipo');
+
+        $locales = $request->get('locales');
         
         $asignaturas = Asignatura::orderBy('nombre')->pluck('nombre', 'id');
         
@@ -402,6 +409,7 @@ class ReservacionController extends Controller
         
         return view('reservaciones.paso-tres')
             ->with('reservacion', $reservacion)
+            ->with('locales', $locales)
             ->with('asignaturas', $asignaturas)
             ->with('actividades', $actividades);
     }
@@ -428,99 +436,142 @@ class ReservacionController extends Controller
         ]);
 
         /**
-         * Convirtiendo fecha al formato Y-m-d y horas al formato H:i:s y
-         * guardando todos los datos de la reservación.
+         * Almacenando las reservaciones de cada local.
          */
 
-        $reservacion = new Reservacion($request->all());
+        foreach ($request->l as $local_id) {
 
-        $reservacion->fecha = Carbon::parse($reservacion->fecha)->format('Y-m-d');
-        $reservacion->hora_inicio = Carbon::parse($reservacion->hora_inicio)->format('H:i:s');
-        $reservacion->hora_fin = Carbon::parse($reservacion->hora_fin)->format('H:i:s');
-        $reservacion->user_id = \Auth::user()->id;
+            /**
+             * Convirtiendo fecha al formato Y-m-d y horas al formato H:i:s y
+             * guardando todos los datos de la reservación.
+             */
 
-        /**
-         * Generando código de comprobación.
-         */
+            $reservacion = new Reservacion;
 
-        $cr = str_pad(mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
-        $ca = str_pad(substr($reservacion->asignatura_id, 0, 2), 2, '0', STR_PAD_LEFT);
-        $cl = str_pad(substr($reservacion->local_id, 0, 2), 2, '0', STR_PAD_LEFT);
-        $cu = str_pad(substr($reservacion->user_id, 0, 2), 2, '0', STR_PAD_LEFT);
+            $reservacion->fecha = Carbon::parse($request->fecha)->format('Y-m-d');
+            $reservacion->hora_inicio = Carbon::parse($request->hora_inicio)->format('H:i:s');
+            $reservacion->hora_fin = Carbon::parse($request->hora_fin)->format('H:i:s');
+            $reservacion->tipo = $request->get('tipo');
+            $reservacion->local_id = $local_id;
+            $reservacion->asignatura_id = $request->get('asignatura_id');
+            $reservacion->actividad_id = $request->get('actividad_id');
+            $reservacion->tema = $request->get('tema');
+            $reservacion->user_id = \Auth::user()->id;
 
-        $reservacion->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
+            /**
+             * Generando código de comprobación.
+             */
 
-        /**
-         * Validando que local aún está disponible.
-         */
+            $cr = str_pad(mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
+            $ca = str_pad(substr($reservacion->asignatura_id, 0, 2), 2, '0', STR_PAD_LEFT);
+            $cl = str_pad(substr($reservacion->local_id, 0, 2), 2, '0', STR_PAD_LEFT);
+            $cu = str_pad(substr($reservacion->user_id, 0, 2), 2, '0', STR_PAD_LEFT);
 
-        $reservaciones = Reservacion::where('fecha', '=', $reservacion->fecha)
-            ->where('hora_inicio', '>=', $reservacion->hora_inicio)
-            ->where('hora_inicio', '<', $reservacion->hora_fin)
-            ->where('local_id', '=', $reservacion->local_id)
-            ->orWhere('fecha', '=', $reservacion->fecha)
-            ->where('hora_fin', '<=', $reservacion->hora_fin)
-            ->where('hora_fin', '>', $reservacion->hora_inicio)
-            ->where('local_id', '=', $reservacion->local_id)
-            ->get();
+            $reservacion->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
 
-        if ($reservaciones->count() > 0) {
+            /**
+             * Validando que local aún está disponible.
+             */
+
+            $reservaciones = Reservacion::where('fecha', '=', $reservacion->fecha)
+                ->where('hora_inicio', '>=', $reservacion->hora_inicio)
+                ->where('hora_inicio', '<', $reservacion->hora_fin)
+                ->where('local_id', '=', $reservacion->local_id)
+                ->orWhere('fecha', '=', $reservacion->fecha)
+                ->where('hora_fin', '<=', $reservacion->hora_fin)
+                ->where('hora_fin', '>', $reservacion->hora_inicio)
+                ->where('local_id', '=', $reservacion->local_id)
+                ->get();
+
+            if ($reservaciones->count() > 0) {
+                if (count($request->l) > 1) {
+                    flash('
+                        <h4>
+                            <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                            ¡Algo ha salido mal!
+                        </h4>
+                        <p class="exclamation-triangle">
+                            La reservación en el local ' . $reservacion->local->nombre . ' no pudo ser registrada. Otro usuario reservó el local mientras tú completabas el formulario.
+                            <strong>
+                                Las reservaciones anteriores a esa se registraron correctamente.
+                            </strong>
+                        </p>
+                    ')
+                    ->warning()
+                    ->important();
+                } else {
+                    flash('
+                        <h4>
+                            <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                            ¡Algo ha salido mal!
+                        </h4>
+                        <p class="exclamation-triangle">
+                            La reservación en el local ' . $reservacion->local->nombre . ' no pudo ser registrada. Otro usuario reservó el local mientras tú completabas el formulario.
+                        </p>
+                    ')
+                    ->warning()
+                    ->important();
+                }
+
+                return redirect()->route('reservaciones.paso-uno');
+            }
+
+            $reservacion->save();
+
+            /**
+             * Notificando a los usuarios correspondientes la acción realizada.
+             */
+
+            if (!\Auth::user()->administrador()) {
+                
+                /**
+                 * Obteniendo usuarios que se les enviará la notificación.
+                 */
+
+                if (\Auth::user()->asistente()) {
+                    $users = User::where('tipo', '=', 'Administrador')
+                        ->get();
+                } else {
+                    $users = User::where('tipo', '=', 'Administrador')
+                        ->orWhere('tipo', '=', 'Asistente')
+                        ->get();
+                }
+
+                /**
+                 * Enviando notificaciones.
+                 */
+
+                foreach ($users as $user) {
+                    $user->notify(new ReservacionNotification($reservacion, 'crear', true));
+                }
+            }
+        }
+
+        if (count($request->l) > 1) {
             flash('
                 <h4>
-                    <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
-                    ¡Algo ha salido mal!
+                    <i class="fa fa-check icon" aria-hidden="true"></i>
+                    ¡Bien hecho!
                 </h4>
-                <p class="exclamation-triangle">
-                    La reservación no pudo ser registrada. Otro usuario reservó el local mientras tú completabas el formulario.
+                <p class="check">
+                    Se guardaron ' . count($request->l) . ' reservaciones correctamente.
                 </p>
             ')
-            ->warning()
-            ->important();
-
-            return redirect()->route('reservaciones.paso-uno');
+                ->success()
+                ->important();
+        } else {
+            flash('
+                <h4>
+                    <i class="fa fa-check icon" aria-hidden="true"></i>
+                    ¡Bien hecho!
+                </h4>
+                <p class="check">
+                    La reservación ha sido guardada correctamente.
+                </p>
+            ')
+                ->success()
+                ->important();
         }
-
-        $reservacion->save();
-
-        /**
-         * Notificando a los usuarios correspondientes la acción realizada.
-         */
-
-        if (!\Auth::user()->administrador()) {
-            
-            /**
-             * Obteniendo usuarios que se les enviará la notificación.
-             */
-
-            if (\Auth::user()->asistente()) {
-                $users = User::where('tipo', '=', 'Administrador')
-                    ->get();
-            } else {
-                $users = User::where('tipo', '=', 'Administrador')
-                    ->orWhere('tipo', '=', 'Asistente')
-                    ->get();
-            }
-
-            /**
-             * Enviando notificaciones.
-             */
-
-            foreach ($users as $user) {
-                $user->notify(new ReservacionNotification($reservacion, 'crear', true));
-            }
-        }
-        
-        flash('
-            <h4>
-                <i class="fa fa-check icon" aria-hidden="true"></i>
-                ¡Bien hecho!
-            </h4>
-            <p class="check">
-                La reservación ha sido guardada correctamente.
-            </p>
-        ')
-            ->success()
-            ->important();
 
         if (\Auth::user()->docente()) {
             return redirect()->route('home');
