@@ -15,6 +15,12 @@ use qfproject\Asignatura;
 use Carbon\Carbon;
 use qfproject\Local;
 use qfproject\Reservacion;
+use PDF;
+use DB;
+
+
+
+
 
 class PdfController extends Controller
 {
@@ -41,4 +47,26 @@ class PdfController extends Controller
 
         return $pdf->stream('comprobante_' . $reservacion->codigo . '.pdf');
     }
+
+    /**
+     * Reservas del día siguiente
+     *
+     */
+   public function proximasReservas(){
+
+    $mañana = new Carbon('tomorrow');
+
+    $reservaciones=DB::table('reservaciones')
+    ->join('locales', 'reservaciones.local_id', '=', 'locales.id')
+    ->join('asignaturas', 'reservaciones.asignatura_id', '=', 'asignaturas.id')
+    ->join('actividades', 'reservaciones.actividad_id', '=', 'actividades.id')
+    ->select('reservaciones.*', 'locales.nombre as local', 'asignaturas.nombre', 'actividades.nombre as actividad')
+    ->where('reservaciones.fecha', [$mañana])
+    ->get();
+
+
+    $pdf=PDF::loadView('reportes.reservacion-lista', ['reservaciones'=>$reservaciones]);
+    return $pdf ->download('proximasReservas.pdf');
+
+   }
 }

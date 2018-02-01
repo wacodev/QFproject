@@ -84,6 +84,7 @@ class UserController extends Controller
 
         $user = new User($request->all());
 
+
         if ($user->imagen) {
             $user->imagen = $nombre;
         }

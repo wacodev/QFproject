@@ -170,6 +170,14 @@
                                         Historial
                                     </a>
                                 </li>
+                                @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
+                                <li>
+                                    <a href="{{ route('reportes.reservacion-lista') }}">
+                                        <i class="fa fa-circle-o"></i>
+                                        Reservas del día siguiente
+                                    </a>
+                                </li>
+                                @endif
                             </ul>
                         </li>
                         @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
