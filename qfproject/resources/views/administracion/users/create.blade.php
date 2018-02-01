@@ -73,7 +73,7 @@
                     <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                         {!! Form::label('password', 'Contraseña', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'Contraseña', 'required']) !!}
+                            {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'Nueva contraseña']) !!}
                             @if ($errors->has('password'))
                                 <span class="help-block">
                                     <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -86,7 +86,7 @@
                     <div class="form-group">
                         {!! Form::label('password_confirmation', 'Confirmar contraseña', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => 'Confirmar contraseña', 'required']) !!}
+                            {!! Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => 'Confirmar nueva contraseña']) !!}
                         </div>
                     </div>
                     <!-- TIPO -->

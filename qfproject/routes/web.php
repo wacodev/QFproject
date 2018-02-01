@@ -133,6 +133,11 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
     Route::get('/historial', 'HomeController@verHistorial')->name('reservaciones.historial');
 
     /**
+     * Próximas reservas.
+     */
+     Route::get('/listado_reservas', 'PdfController@proximasReservas')->name('reportes.reservacion-lista');
+
+    /**
      * Reservaciones individuales.
      */
 

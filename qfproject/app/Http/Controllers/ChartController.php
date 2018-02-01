@@ -36,7 +36,7 @@ class ChartController extends Controller
 
      public function porUsuarios()
     {
-      $pastel = DB::select("select count('id') as cantidad, carnet as usuarios from users inner join reservaciones on users.id = reservaciones.user_id group by carnet");
+      $pastel = DB::select("select count('id') as cantidad, name as usuarios from users inner join reservaciones on users.id = reservaciones.user_id group by name");
        return view('statistics.chart-cuatro', ['pastel'=>$pastel]);
         
     }

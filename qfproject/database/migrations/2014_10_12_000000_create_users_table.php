@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
             
+            
             /*
              * ---------------------------------------------------------------------------
              * Agregar luego en caso de usar acceso por medio de Google y permitir que
