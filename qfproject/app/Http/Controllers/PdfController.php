@@ -10,17 +10,13 @@ use Illuminate\Http\Request;
  * ---------------------------------------------------------------------------
  */
 
+use DB;
+use Carbon\Carbon;
+use PDF;
 use qfproject\Actividad;
 use qfproject\Asignatura;
-use Carbon\Carbon;
 use qfproject\Local;
 use qfproject\Reservacion;
-use PDF;
-use DB;
-
-
-
-
 
 class PdfController extends Controller
 {
@@ -69,4 +65,118 @@ class PdfController extends Controller
     return $pdf ->download('proximasReservas.pdf');
 
    }
+
+   /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario para generar horarios.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function exportarHorarios()
+    {
+        $locales = Local::orderBy('nombre')->pluck('nombre', 'id');
+
+        return view('reportes.exportar-horarios')->with('locales', $locales);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Genera un comprobante con todos los datos de la reservación.
+     * 
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function generarHorarios(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'fecha' => 'required|date',
+            'local_id' => 'required'
+        ]);
+
+        /**
+         * Validando que la fecha ingresada sea un día lunes.
+         */
+
+        $fecha = Carbon::parse($request->fecha)->format('Y-m-d');
+
+        if (date('N', strtotime($fecha)) != 1) {
+            flash('
+                <h4>
+                    <i class="fa fa-ban icon" aria-hidden="true"></i>
+                    ¡Error en ingreso de datos!
+                </h4>
+                <p class="ban">
+                    Debes seleccionar un día lunes.
+                </p>
+            ')
+                ->error()
+                ->important();
+            
+            return back();
+        }
+
+        /**
+         * Obteniendo fechas y horas.
+         */
+
+        $f = explode('-', $fecha);
+        $f_carbon = Carbon::create($f[0], $f[1], $f[2], 0); // Fecha inicial como instancia de Carbon.
+
+        $fechas = []; // Arreglo con todas las fechas.
+
+        for ($i = 0; $i < 6; $i++) { 
+            $f_almacenar = Carbon::parse($f_carbon)->format('Y-m-d');
+
+            array_push($fechas, $f_almacenar);
+
+            $f_carbon = $f_carbon->addDays(1);
+        }
+
+        $horas = ['07:00:00', '08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00']; // Arreglo con todas las horas.
+
+        /**
+         * Obteniendo arreglo con las reservaciones para generar los horarios.
+         */
+
+        $tabla = []; // Arreglo con las reservaciones del horario de un local.
+
+        foreach ($horas as $hora) {
+            $fila = []; // Arreglo con las reservaciones de una determinada hora.
+
+            foreach ($fechas as $fecha) {
+                $reservacion = Reservacion::where('local_id', '=', $request->local_id)
+                    ->where('fecha', '=', $fecha)
+                    ->where('hora_inicio', '<=', $hora)
+                    ->where('hora_fin', '>', $hora)
+                    ->first();
+
+                array_push($fila, $reservacion);
+            }
+
+            array_push($tabla, $fila);
+        }
+
+        /**
+         * Generando PDF.
+         */
+
+        $local = Local::find($request->local_id);
+
+        $fecha_inicio = Carbon::parse($fechas[0])->format('d/m/Y');
+
+        $fecha_fin = Carbon::parse($fechas[5])->format('d/m/Y');
+
+        $pdf = \PDF::loadView('reportes.horarios', ['tabla' => $tabla, 'local' => $local, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin])
+            ->setPaper('letter', 'landscape');
+
+        return $pdf->stream('horarios.pdf');
+    }
 }

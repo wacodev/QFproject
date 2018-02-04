@@ -1,10 +1,14 @@
 /**
  * ---------------------------------------------------------------------------
- * Estilos para el comprobante.
+ * Estilos para los reportes.
  * ---------------------------------------------------------------------------
  */
 
 .cero-margen p {
+    margin-bottom: 0;
+}
+
+.cero-margen {
     margin-bottom: 0;
 }
 
@@ -19,6 +23,13 @@
     height: 100px;
     padding-left: 15px;
     width: 100px;
+}
+
+.logo-horarios {
+    float: left;
+    height: 60px;
+    padding-right: 15px;
+    width: 60px;
 }
 
 .margen-arriba-grande {
@@ -142,6 +153,10 @@
 
 .fecha-size {
     width: 100px;
+}
+
+.horario-size {
+    width: 80px;
 }
 
 .id-size {

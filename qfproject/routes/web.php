@@ -105,6 +105,19 @@ Route::get('/', 'HomeController@index');
 
 /**
  * ---------------------------------------------------------------------------
+ * Reportes.
+ * ---------------------------------------------------------------------------
+ */
+
+Route::group(['prefix' => 'reportes', 'middleware' => ['auth', 'asistente']], function() {
+
+    Route::get('/exportar-horarios', 'PdfController@exportarHorarios')->name('reportes.exportar-horarios');
+    Route::post('/horarios', 'PdfController@generarHorarios')->name('reportes.horarios');
+
+});
+
+/**
+ * ---------------------------------------------------------------------------
  * Reservaciones de locales.
  * ---------------------------------------------------------------------------
  */

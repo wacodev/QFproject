@@ -34,6 +34,8 @@
             $apellido = explode(' ', Auth::user()->lastname);
             // Número de notificaciones sin leer.
             $notificaciones_c = Auth::user()->unreadNotifications->count();
+            // Año actual.
+            $anho = \Carbon\Carbon::now()->format('Y');
         ?>
         <div class="wrapper">
             <header class="main-header">
@@ -190,6 +192,12 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+                                <li>
+                                    <a href="{{ route('reportes.exportar-horarios') }}">
+                                        <i class="fa fa-circle-o"></i>
+                                        Horarios
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="#"> <!-- Editar -->
                                         <i class="fa fa-circle-o"></i>
@@ -377,10 +385,10 @@
                 <div class="pull-right hidden-xs">
                     Sistema de reservación de locales
                 </div>
+                &copy; {{ $anho }}
                 <a href="http://www.quimicayfarmacia.ues.edu.sv/" target="_blanck">
                     Facultad de Química y Farmacia
                 </a>
-                &copy; 2017-2018
             </footer>
         </div>    
         <!-- JQUERY 2.1.4 -->    
