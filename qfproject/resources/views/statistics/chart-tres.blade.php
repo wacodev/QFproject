@@ -4,51 +4,62 @@
 
 @section('encabezado', 'Estadísticas')
 
+@section('subencabezado', 'Gráficos Estadísticos')
+
 @section('breadcrumb')
     <li>
         <i class="fa fa-bar-chart"></i>
         Estadísticas
     </li>
-    
+  
 @endsection
+
+@section('estilos')
+    <!-- DATE RANGE PICKER -->
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}" />
+@endsection
+
 @section('contenido')
-<html>
-  <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawStuff);
 
-      function drawStuff() {
-        var data = new google.visualization.arrayToDataTable([
-          ['Asignaturas', 'Cantidad de Reservas'],
-          @foreach ($barra as $barras)
-        ['{{ $barras->asignatura}}', {{$barras->cantidad}}],
-        @endforeach
-          
-        ]);
+  <div class="box box-success">
+    {!! Form::open(['route' => 'ver.asignaturas', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+  <div class="box-body">
+      <div class="form-group{{ $errors->has('fecha') ? ' has-error' : '' }}">
+          {!! Form::label('fecha', 'Rango de fechas', ['class' => 'col-sm-4 control-label']) !!}
+            <div class="col-sm-7">
+                  <input name="fecha" type="text" class="form-control pull-right" id="fechaRango" required="true" placeholder="mm/dd/yyyy - mm/dd/yyyy">
+                  @if ($errors->has('fecha'))
+                  <span class="help-block">
+                  <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                  {{ $errors->first('fecha') }}
+                  </span>
+             @endif
+                    </div>
+                </div>
+                </div>
+                 <div class="box-footer">
+                <div class="pull-right">
+                    {!! Form::submit('Ver Estadísticas', ['class' => 'btn btn-success']) !!}
+                </div>
+                </div>
+                    {!! Form::close() !!}
+            </div>
 
-        var options = {
-          title: 'Estadísticas de Reserva por Asignaturas',
-          width: 700,
-          legend: { position: 'none' },
-          chart: { title: 'Estadísticas de Reserva por Asignaturas' },
-          bars: 'horizontal', 
-          axes: {
-            x: {
-              0: { side: 'top', label: 'Cantidad de Reservas'} 
-            }
-          },
-          bar: { groupWidth: "10%" }
-        };
-
-        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
-        chart.draw(data, options);
-      };
-    </script>
-  </head>
-  <body>
-    <div id="top_x_div" style="width: 900px; height: 500px;"></div>
-  </body>
-</html>
 @endsection
+
+@push('scripts')
+    <!-- DATE RANGE PICKER -->
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ asset('js/daterangepicker.js') }}"></script>
+    <!-- CONTROL PICKER -->
+   
+
+    <script>
+    $(document).ready(function(){
+        $(function(){
+          $("#fechaRango").daterangepicker();
+        });
+    });
+    </script>
+
+@endpush

@@ -5,6 +5,11 @@ namespace qfproject\Http\Controllers;
 use Illuminate\Http\Request;
 use qfproject\Http\Requests;
 use DB;
+use Carbon\Carbon;
+use Laracasts\Flash\Flash;
+use qfproject\Local;
+use qfproject\Reservacion;
+use Storage;
 
 class ChartController extends Controller
 {
@@ -13,32 +18,119 @@ class ChartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+   
     public function index()
     {
-      $pastel = DB::select("select count('id') as cantidad, nombre as local from locales inner join reservaciones on locales.id = reservaciones.local_id group by nombre");
-       return view('statistics.chart-uno', ['pastel'=>$pastel]);
+       return view('statistics.chart-uno');
     }
 
-      public function porActividad()
+       public function locales(Request $request){
+       $this->validate(request(), [
+            'fecha' => 'required'
+        ]);
+
+        $fecha = explode(' - ', $request->fecha);
+
+        $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
+        $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+
+        $pastel =DB::table('reservaciones')
+      ->join('locales', 'reservaciones.local_id', '=', 'locales.id')
+      ->whereBetween('fecha', [$fecha[0], $fecha[1]])
+      ->select('reservaciones.*', 'locales.nombre')
+      ->select(DB::raw("nombre, count(*) as id"))
+      ->groupBy('nombre')
+      ->get();
+  
+      
+       return view('statistics.chart1', ['pastel'=>$pastel]);
+
+    }
+
+    public function porActividad()
     {
-      $pastel = DB::select("select count('id') as cantidad, nombre as actividad from actividades inner join reservaciones on actividades.id = reservaciones.actividad_id group by nombre");
-       return view('statistics.chart-dos', ['pastel'=>$pastel]);
-
+       return view('statistics.chart-dos');
     }
+
+
+      public function actividades(Request $request)
+    {
+
+       $this->validate(request(), [
+            'fecha' => 'required'
+        ]);
+
+        $fecha = explode(' - ', $request->fecha);
+
+        $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
+        $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+
+      $pastel =DB::table('reservaciones')
+      ->join('actividades', 'reservaciones.actividad_id', '=', 'actividades.id')
+      ->whereBetween('fecha', [$fecha[0], $fecha[1]])
+      ->select('reservaciones.*', 'actividades.nombre')
+      ->select(DB::raw("nombre, count(*) as id"))
+      ->groupBy('nombre')
+      ->get();
+       return view('statistics.chart2', ['pastel'=>$pastel]);
+    }
+
 
      public function porAsignatura()
     {
-      $barra = DB::select("select count('id') as cantidad, nombre as asignatura from asignaturas inner join reservaciones on asignaturas.id = reservaciones.asignatura_id group by nombre");
-       return view('statistics.chart-tres', ["barra"=>$barra]);
-     
-
+       return view('statistics.chart-tres');
     }
+
+
+      public function asignaturas(Request $request)
+    {
+
+       $this->validate(request(), [
+            'fecha' => 'required'
+        ]);
+
+        $fecha = explode(' - ', $request->fecha);
+
+        $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
+        $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+
+      $barra =DB::table('reservaciones')
+      ->join('asignaturas', 'reservaciones.asignatura_id', '=', 'asignaturas.id')
+      ->whereBetween('fecha', [$fecha[0], $fecha[1]])
+      ->select('reservaciones.*', 'asignaturas.nombre')
+      ->select(DB::raw("nombre, count(*) as id"))
+      ->groupBy('nombre')
+      ->get();
+       return view('statistics.chart3', ['barra'=>$barra]);
+    }
+
 
      public function porUsuarios()
     {
-      $pastel = DB::select("select count('id') as cantidad, name as usuarios from users inner join reservaciones on users.id = reservaciones.user_id group by name");
-       return view('statistics.chart-cuatro', ['pastel'=>$pastel]);
-        
+       return view('statistics.chart-cuatro');
+    }
+
+
+      public function usuarios(Request $request)
+    {
+
+       $this->validate(request(), [
+            'fecha' => 'required'
+        ]);
+
+        $fecha = explode(' - ', $request->fecha);
+
+        $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
+        $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+
+      $pastel =DB::table('reservaciones')
+      ->join('users', 'reservaciones.user_id', '=', 'users.id')
+      ->whereBetween('fecha', [$fecha[0], $fecha[1]])
+      ->select('reservaciones.*', 'users.name')
+      ->select(DB::raw("name, count(*) as id"))
+      ->groupBy('name')
+      ->get();
+       return view('statistics.chart4', ['pastel'=>$pastel]);
     }
 
 
