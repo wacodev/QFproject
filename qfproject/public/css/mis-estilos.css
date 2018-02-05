@@ -36,6 +36,13 @@
     margin-top: 50px;
 }
 
+.sello {
+    height: 130px;
+    margin-bottom: 10px;
+    margin-right: 75px;
+    width: 130px;
+}
+
 .titulo {
     font-size: 20px;
     margin-bottom: 50px;
