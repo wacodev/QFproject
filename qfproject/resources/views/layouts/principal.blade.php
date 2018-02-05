@@ -199,6 +199,12 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="{{ route('reportes.exportar-lista-actividad') }}">
+                                        <i class="fa fa-circle-o"></i>
+                                        Reservas por actividad
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="#"> <!-- Editar -->
                                         <i class="fa fa-circle-o"></i>
                                         General

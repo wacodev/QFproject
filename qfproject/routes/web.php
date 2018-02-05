@@ -111,8 +111,19 @@ Route::get('/', 'HomeController@index');
 
 Route::group(['prefix' => 'reportes', 'middleware' => ['auth', 'asistente']], function() {
 
+    /**
+     * Horario semanal.
+     */
+
     Route::get('/exportar-horarios', 'PdfController@exportarHorarios')->name('reportes.exportar-horarios');
     Route::post('/horarios', 'PdfController@generarHorarios')->name('reportes.horarios');
+
+    /**
+     * Lista de reservaciones de una asignatura por actividad.
+     */
+
+    Route::get('/exportar-lista-actividad', 'PdfController@exportarListaActividad')->name('reportes.exportar-lista-actividad');
+    Route::post('/lista-actividad', 'PdfController@generarListaActividad')->name('reportes.lista-actividad');
 
 });
 

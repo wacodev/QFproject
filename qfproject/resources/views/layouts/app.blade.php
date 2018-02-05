@@ -12,6 +12,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- BOOTSTRAP 3.3.5 -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
 </head>
 <body>
     <div id="app">

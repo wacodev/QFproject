@@ -20,6 +20,8 @@ use qfproject\Reservacion;
 
 class PdfController extends Controller
 {
+    /************************ COMPROBANTE DE RESERVACIÓN ************************/
+
     /**
      * ---------------------------------------------------------------------------
      * Genera un comprobante con todos los datos de la reservación.
@@ -66,6 +68,8 @@ class PdfController extends Controller
 
    }
 
+   /****************************** HORARIO SEMANAL ******************************/
+
    /**
      * ---------------------------------------------------------------------------
      * Muestra el formulario para generar horarios.
@@ -83,7 +87,7 @@ class PdfController extends Controller
 
     /**
      * ---------------------------------------------------------------------------
-     * Genera un comprobante con todos los datos de la reservación.
+     * Genera un horario semanal de las reservaciones programadas para un local.
      * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -178,5 +182,81 @@ class PdfController extends Controller
             ->setPaper('letter', 'landscape');
 
         return $pdf->stream('horarios.pdf');
+    }
+
+    /****************** LISTADO DE RESERVACIONES POR ACTIVIDAD ******************/
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario para generar el listado de reservaciones por
+     * actividad.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function exportarListaActividad()
+    {
+        $asignaturas = Asignatura::orderBy('nombre')->pluck('nombre', 'id');
+
+        $actividades = Actividad::orderBy('nombre')->pluck('nombre', 'id');
+
+        return view('reportes.exportar-lista-actividad')
+            ->with('asignaturas', $asignaturas)
+            ->with('actividades', $actividades);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Genera un listado con las reservaciones de una asignatura por actividad.
+     * 
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function generarListaActividad(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'fecha' => 'required',
+            'asignatura_id' => 'required',
+            'actividad_id' => 'required'
+        ]);
+
+        /**
+         * Obteniendo datos solicitados por el usuario.
+         */
+
+        $fecha = explode(' - ', $request->fecha);
+
+        $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
+        $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+
+        $reservaciones = Reservacion::where('asignatura_id', '=', $request->asignatura_id)
+            ->where('actividad_id', '=', $request->actividad_id)
+            ->where('fecha', '>=', $fecha[0])
+            ->where('fecha', '<=', $fecha[1])
+            ->orderBy('fecha', 'asc')
+            ->get();
+
+        /**
+         * Generando PDF.
+         */
+
+        $asignatura = Asignatura::find($request->asignatura_id);
+
+        $actividad = Actividad::find($request->actividad_id);
+
+        $fecha_inicio = Carbon::parse($fecha[0])->format('d/m/Y');
+
+        $fecha_fin = Carbon::parse($fecha[1])->format('d/m/Y');
+
+        $pdf = \PDF::loadView('reportes.lista-actividad', ['reservaciones' => $reservaciones, 'asignatura' => $asignatura, 'actividad' => $actividad, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin]);
+
+        return $pdf->stream('listado_actividad.pdf');
     }
 }
