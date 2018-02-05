@@ -22,21 +22,29 @@ class ChartController extends Controller
     public function index()
     {
        return view('statistics.chart-uno');
+
     }
 
        public function locales(Request $request){
        $this->validate(request(), [
             'fecha' => 'required'
+       
         ]);
 
         $fecha = explode(' - ', $request->fecha);
 
+
         $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
         $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+        $hora_inicio = Carbon::parse($request->get('hora_inicio'))->format('H:i:s');
+        $hora_fin = Carbon::parse($request->get('hora_fin'))->format('H:i:s');
+        
 
         $pastel =DB::table('reservaciones')
       ->join('locales', 'reservaciones.local_id', '=', 'locales.id')
       ->whereBetween('fecha', [$fecha[0], $fecha[1]])
+      ->where('hora_inicio', '>=', [$hora_inicio])
+      ->where('hora_fin', '<=', [$hora_fin])
       ->select('reservaciones.*', 'locales.nombre')
       ->select(DB::raw("nombre, count(*) as id"))
       ->groupBy('nombre')
@@ -64,10 +72,14 @@ class ChartController extends Controller
 
         $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
         $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+        $hora_inicio = Carbon::parse($request->get('hora_inicio'))->format('H:i:s');
+        $hora_fin = Carbon::parse($request->get('hora_fin'))->format('H:i:s');
 
       $pastel =DB::table('reservaciones')
       ->join('actividades', 'reservaciones.actividad_id', '=', 'actividades.id')
       ->whereBetween('fecha', [$fecha[0], $fecha[1]])
+      ->where('hora_inicio', '>=', [$hora_inicio])
+      ->where('hora_fin', '<=', [$hora_fin])
       ->select('reservaciones.*', 'actividades.nombre')
       ->select(DB::raw("nombre, count(*) as id"))
       ->groupBy('nombre')
@@ -93,10 +105,14 @@ class ChartController extends Controller
 
         $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
         $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+        $hora_inicio = Carbon::parse($request->get('hora_inicio'))->format('H:i:s');
+        $hora_fin = Carbon::parse($request->get('hora_fin'))->format('H:i:s');
 
       $barra =DB::table('reservaciones')
       ->join('asignaturas', 'reservaciones.asignatura_id', '=', 'asignaturas.id')
       ->whereBetween('fecha', [$fecha[0], $fecha[1]])
+      ->where('hora_inicio', '>=', [$hora_inicio])
+      ->where('hora_fin', '<=', [$hora_fin])
       ->select('reservaciones.*', 'asignaturas.nombre')
       ->select(DB::raw("nombre, count(*) as id"))
       ->groupBy('nombre')
@@ -122,10 +138,15 @@ class ChartController extends Controller
 
         $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
         $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+        $hora_inicio = Carbon::parse($request->get('hora_inicio'))->format('H:i:s');
+        $hora_fin = Carbon::parse($request->get('hora_fin'))->format('H:i:s');
+
 
       $pastel =DB::table('reservaciones')
       ->join('users', 'reservaciones.user_id', '=', 'users.id')
       ->whereBetween('fecha', [$fecha[0], $fecha[1]])
+      ->where('hora_inicio', '>=', [$hora_inicio])
+      ->where('hora_fin', '<=', [$hora_fin])
       ->select('reservaciones.*', 'users.name')
       ->select(DB::raw("name, count(*) as id"))
       ->groupBy('name')
