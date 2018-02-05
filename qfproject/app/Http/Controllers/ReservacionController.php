@@ -374,6 +374,29 @@ class ReservacionController extends Controller
         if ($reservacion->tipo == 'Extraordinaria') {
 
             /**
+             * Validando que la fecha ingresada no sea un día domingo.
+             */
+
+            $error = $this->validarDomingo($reservacion->fecha);
+            
+            if ($error[0])
+            {
+                flash('
+                    <h4>
+                        <i class="fa fa-ban icon" aria-hidden="true"></i>
+                        ¡Error en ingreso de datos!
+                    </h4>
+                    <p class="ban">'
+                        . $error[1] .
+                    '</p>
+                ')
+                    ->error()
+                    ->important();
+                
+                return back();
+            }
+
+            /**
              * Validando que la fecha ingresada no coincide con un asueto.
              */
             
@@ -1642,5 +1665,23 @@ class ReservacionController extends Controller
         }
 
         return $acceso;
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Verifica que la fecha ingresada no sea un día domingo.
+     * 
+     * @param  date  $fecha
+     * @return array
+     * ---------------------------------------------------------------------------
+     */
+
+    public function validarDomingo($fecha)
+    {
+        if (date('N', strtotime($fecha)) == 7) {
+            return [true, 'No puede reservar un día domingo.'];
+        } else {
+            return [false, null];
+        }
     }
 }

@@ -219,11 +219,15 @@ class ImportacionController extends Controller
 
         /**
          * Validando que la fecha, la hora de inicio y la hora de finalización no
-         * coincidan con un asueto o suspensión de actividades. Esto solo para
-         * las reservaciones de tipo Extraordinaria.
+         * coincidan con un asueto, suspensión de actividades o en día domingo.
+         * Esto solo para las reservaciones de tipo Extraordinaria.
          */
 
         if ($fila->tipo == 'Extraordinaria') {
+            if (date('N', strtotime($fila->fecha)) == 7) {
+                return [true, 'No puede reservar un día domingo.'];
+            }
+
             $asuetos = Asueto::all();
 
             $f = explode('-', $fila->fecha);
