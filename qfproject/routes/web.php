@@ -145,7 +145,7 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
 
     Route::get('/{reservacion}/edit', 'ReservacionController@edit')->name('reservaciones.edit');
     Route::put('/{reservacion}', 'ReservacionController@update')->name('reservaciones.update');
-    Route::delete('/{reservacion}', 'ReservacionController@destroy')->name('reservaciones.destroy');
+    Route::get('/{reservacion}/destroy', 'ReservacionController@destroy')->name('reservaciones.destroy');
     
     /**
      * Agregar actividades y asignaturas en el formulario de reservaciones.
@@ -189,6 +189,7 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
 
         Route::get('/', 'ReservacionController@index')->name('reservaciones.index');
         Route::get('/{reservacion}/show', 'ReservacionController@show')->name('reservaciones.show');
+        Route::get('/destroy-multiple', 'ReservacionController@destroyMultiple')->name('reservaciones.destroy-multiple');
 
         /**
          * Reservaciones por ciclo.

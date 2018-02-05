@@ -17,6 +17,24 @@
 @endsection
 
 @section('contenido')
+    <div>
+        @if ($errors->has('seleccion'))
+            <div class="alert alert-error alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">
+                        &times;
+                    </span>
+                </button>
+                <h4>
+                    <i class="fa fa-ban icon" aria-hidden="true"></i>
+                    ¡Error en ingreso de datos!
+                </h4>
+                <p class="ban">
+                    {{ $errors->first('seleccion') }}
+                </p>
+            </div>
+        @endif
+    </div>
     <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">
@@ -40,10 +58,12 @@
             <!-- LISTADO DE RESERVACIONES -->
             @if ($reservaciones->count() > 0)
                 <div class="table-responsive">
-                    <table class="table table-hover tabla-quitar-margen">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>
+                                    <input type="checkbox" onclick="marcar(this);">
+                                </th>
                                 <th>Local</th>
                                 <th>Fecha</th>
                                 <th>Hora</th>
@@ -51,70 +71,77 @@
                                 <th>Opciones</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach($reservaciones as $reservacion)
-                                <tr>
-                                    <td class="id-size">
-                                        {{ $reservacion->id }}
-                                    </td>
-                                    <td>
-                                        {{ $reservacion->local->nombre }}
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }}
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}
-                                    </td>
-                                    <td>
-                                        {{ $reservacion->user->name }} {{ $reservacion->user->lastname }}
-                                    </td>
-                                    <?php
-                                        // Validación de acceso a las opciones.
-                                        $acceso = false;
-                                        switch ($reservacion->user->tipo) {
-                                            case 'Administrador':
-                                                if (Auth::user()->id == $reservacion->user_id) {
+                        {!! Form::open(['route' => 'reservaciones.destroy-multiple', 'method' => 'GET']) !!}
+                            <tbody>
+                                @foreach($reservaciones as $reservacion)
+                                    <tr>
+                                        <?php
+                                            // Validación de acceso a las opciones.
+                                            $acceso = false;
+                                            switch ($reservacion->user->tipo) {
+                                                case 'Administrador':
+                                                    if (Auth::user()->id == $reservacion->user_id) {
+                                                        $acceso = true;
+                                                    }
+                                                    break;
+                                                case 'Asistente':
+                                                    if (Auth::user()->tipo == 'Administrador' || Auth::user()->id == $reservacion->user_id) {
+                                                        $acceso = true;
+                                                    }
+                                                    break;
+                                                case 'Docente':
                                                     $acceso = true;
-                                                }
-                                                break;
-                                            case 'Asistente':
-                                                if (Auth::user()->tipo == 'Administrador' || Auth::user()->id == $reservacion->user_id) {
-                                                    $acceso = true;
-                                                }
-                                                break;
-                                            case 'Docente':
-                                                $acceso = true;
-                                                break;
-                                        }
-                                    ?>
-                                    <td class="opc-size">
-                                        <a href="{{ route('reservaciones.show', $reservacion->id) }}" class="btn btn-default">
-                                            <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                        </a>
-                                        @if($acceso)
-                                            <a href="{{ route('reservaciones.edit', $reservacion->id) }}" class="btn btn-default">
-                                                <i class="fa fa-wrench" aria-hidden="true"></i>
+                                                    break;
+                                            }
+                                        ?>
+                                        <td>
+                                            @if($acceso)
+                                                <input type="checkbox" name="seleccion[]" value="{{ $reservacion->id }}">
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{ $reservacion->local->nombre }}
+                                        </td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }}
+                                        </td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}
+                                        </td>
+                                        <td>
+                                            {{ $reservacion->user->name }} {{ $reservacion->user->lastname }}
+                                        </td>
+                                        <td class="opc-size">
+                                            <a href="{{ route('reservaciones.show', $reservacion->id) }}" class="btn btn-default">
+                                                <i class="fa fa-info-circle" aria-hidden="true"></i>
                                             </a>
-                                            <a href="" data-target="#modal-delete-{{ $reservacion->id }}" data-toggle="modal" class="btn btn-danger">
-                                                <i class="fa fa-trash" aria-hidden="true"></i>
-                                            </a>
-                                        @else
-                                            <a href="#" class="btn btn-default disabled">
-                                                <i class="fa fa-wrench" aria-hidden="true"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-danger disabled">
-                                                <i class="fa fa-trash" aria-hidden="true"></i>
-                                            </a>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <!-- MODAL PARA CONFIRMAR ELIMINACIÓN DE ASIGNATURA -->
-                                @include('reservaciones.modal')
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                                            @if($acceso)
+                                                <a href="{{ route('reservaciones.edit', $reservacion->id) }}" class="btn btn-default">
+                                                    <i class="fa fa-wrench" aria-hidden="true"></i>
+                                                </a>
+                                                <a href="{{ route('reservaciones.destroy', $reservacion->id) }}" class="btn btn-danger" onclick="return confirm('¿Deseas eliminar la reservación?')">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </a>
+                                            @else
+                                                <a href="" class="btn btn-default disabled">
+                                                    <i class="fa fa-wrench" aria-hidden="true"></i>
+                                                </a>
+                                                <a href="" class="btn btn-danger disabled">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Deseas eliminar las reservaciones seleccionadas?')">
+                            Eliminar seleccionadas
+                        </button>
+                    </div>
+                {!! Form::close() !!}
             <!-- MOSTRAR CUANDO NO HAY ASIGNATURAS -->
             @else
                 <div class="text-center">
@@ -140,3 +167,16 @@
     <!-- AYUDA DEL PANEL DE ADMINISTRACIÓN DE RESERVACIONES -->
     @include('reservaciones.partials.info-panel')
 @endsection
+
+@push('scripts')
+    <script type="text/javascript">
+        function marcar(source) {
+            checkboxes = document.getElementsByTagName('input');
+            for (i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == "checkbox") {
+                    checkboxes[i].checked = source.checked;
+                }
+            }
+        }
+    </script>
+@endpush

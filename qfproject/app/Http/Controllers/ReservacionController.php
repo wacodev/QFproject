@@ -209,6 +209,85 @@ class ReservacionController extends Controller
         }
     }
 
+    /**
+     * ---------------------------------------------------------------------------
+     * Elimina las reservaciones especificadas de la base de datos.
+     * 
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function destroyMultiple(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'seleccion' => 'required'
+        ]);
+
+        $seleccion = $request->get('seleccion');
+
+        $i = 0; // Número de reservaciones eliminadas.
+
+        foreach ($seleccion as $s) {
+            $reservacion = Reservacion::find($s);
+
+            /**
+             * Validando acceso para eliminar la reservación especificada.
+             */
+
+            $acceso = $this->acceder($reservacion->user->tipo, $reservacion->user_id);
+
+            if ($acceso) {
+                $reservacion->delete();
+
+                /**
+                 * Notificando a los usuarios correspondientes la acción realizada.
+                 */
+
+                $this->notificar($reservacion, 'eliminar');
+
+                $i++;
+            }
+        }
+
+        if ($i == count($seleccion)) {
+            flash('
+                <h4>
+                    <i class="fa fa-check icon" aria-hidden="true"></i>
+                    ¡Bien hecho!
+                </h4>
+                <p class="check">
+                    Todas las reservaciones han sido eliminadas correctamente.
+                </p>
+            ')
+                ->success()
+                ->important();
+        } else {
+            $j = count($seleccion) - $i; // Número de reservaciones que no fueron eliminadas.
+
+            flash('
+                <h4>
+                    <i class="fa fa-info-circle icon" aria-hidden="true"></i>
+                    Detalles de la operación
+                </h4>
+                <p class="info-circle">
+                    Reservaciones eliminadas correctamente: ' . $i . '.
+                </p>
+                <p>
+                    Reservaciones que no fueron eliminadas por no tener los permisos necesarios: ' . $j . '.
+                </p>
+            ')
+                ->info()
+                ->important();
+        }
+
+        return redirect()->route('reservaciones.index');
+    }
+
     /************************ RESERVACIONES INDIVIDUALES ************************/
 
     /**

@@ -51,7 +51,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="" data-target="#modal-delete-{{ $reservacion->id }}" data-toggle="modal" >
+                                        <a href="{{ route('reservaciones.destroy', $reservacion->id) }}" onclick="return confirm('¿Deseas eliminar la reservación?')">
                                             Eliminar
                                         </a>
                                     </li>
@@ -108,8 +108,6 @@
                             
                         </div>
                     </div>
-                    <!-- MODAL PARA CONFIRMAR ELIMINACIÓN DE ASIGNATURA -->
-                    @include('reservaciones.modal')
                 @endforeach
             @else
                 <div class="text-center">
