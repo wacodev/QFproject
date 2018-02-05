@@ -11,38 +11,55 @@
         <i class="fa fa-bar-chart"></i>
         Estadísticas
     </li>
-    
+  
 @endsection
+
+@section('estilos')
+    <!-- DATE RANGE PICKER -->
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}" />
+@endsection
+
 @section('contenido')
-<html>
-  <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
+  <div class="box box-success">
+    {!! Form::open(['route' => 'ver.locales', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+  <div class="box-body">
+      <div class="form-group{{ $errors->has('fecha') ? ' has-error' : '' }}">
+          {!! Form::label('fecha', 'Rango de fechas', ['class' => 'col-sm-4 control-label']) !!}
+            <div class="col-sm-7">
+                  <input name="fecha" type="text" class="form-control pull-right" id="fechaRango" required="true" placeholder="mm/dd/yyyy - mm/dd/yyyy">
+                  @if ($errors->has('fecha'))
+                  <span class="help-block">
+                  <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                  {{ $errors->first('fecha') }}
+                  </span>
+             @endif
+                    </div>
+                </div>
+                </div>
+                 <div class="box-footer">
+                <div class="pull-right">
+                    {!! Form::submit('Ver Estadísticas', ['class' => 'btn btn-success']) !!}
+                </div>
+                </div>
+                    {!! Form::close() !!}
+            </div>
 
-        var data = google.visualization.arrayToDataTable([
-              ['Task', 'Hours per Day'],
-        @foreach ($pastel as $pastels)
-        ['{{ $pastels->local}}', {{$pastels->cantidad}}],
-        @endforeach
-        ])
-
-
-        var options = {
-          title: 'Estadísticas de Reserva por Locales'
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-        chart.draw(data, options);
-      }
-    </script>
-  </head>
-  <body>
-    <div id="piechart" style="width: 900px; height: 500px;"></div>
-  </body>
-</html>
 @endsection
+
+@push('scripts')
+    <!-- DATE RANGE PICKER -->
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ asset('js/daterangepicker.js') }}"></script>
+    <!-- CONTROL PICKER -->
+   
+
+    <script>
+    $(document).ready(function(){
+        $(function(){
+          $("#fechaRango").daterangepicker();
+        });
+    });
+    </script>
+
+@endpush

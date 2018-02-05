@@ -70,6 +70,13 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'asistente'], function
     Route::get('estadisticas-actividad', 'ChartController@porActividad')->name('estadisticas.dos');
     Route::get('estadisticas-asignatura', 'ChartController@porAsignatura')->name('estadisticas.tres');
     Route::get('estadisticas-usuario', 'ChartController@porUsuarios')->name('estadisticas.cuatro');
+    Route::post('actividades', 'ChartController@actividades')->name('ver.actividades');
+    Route::post('locales', 'ChartController@locales')->name('ver.locales');
+    Route::post('asignaturas', 'ChartController@asignaturas')->name('ver.asignaturas');
+    Route::post('usuarios', 'ChartController@usuarios')->name('ver.usuarios');
+
+
+
 
 });
 
