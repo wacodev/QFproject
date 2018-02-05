@@ -28,6 +28,8 @@ Route::group(['prefix' => 'administracion', 'middleware' => ['auth', 'administra
     Route::resource('asuetos', 'AsuetoController');
     Route::resource('locales', 'LocalController');
     Route::resource('suspensiones', 'SuspensionController');
+    Route::get('/vacaciones', 'AsuetoController@createVacacion')->name('asuetos.create-vacacion');
+    Route::post('/vacaciones/store', 'AsuetoController@storeVacacion')->name('asuetos.store-vacacion');
 
     /**
      * Usuarios.

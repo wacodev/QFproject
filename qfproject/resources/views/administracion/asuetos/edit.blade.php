@@ -57,6 +57,8 @@
 @endsection
 
 @section('sidebar')
+    <!-- MENÚ DE HERRAMIENTAS ADICIONALES PARA ASUETOS -->
+    @include('administracion.partials.herr-asuetos')
     <!-- MENÚ DE HERRAMIENTAS PARA LA GESTIÓN ADMINISTRATIVA -->
     @include('administracion.partials.herramientas')
     <!-- INFORMACIÓN ADICIONAL DE ASUETOS -->

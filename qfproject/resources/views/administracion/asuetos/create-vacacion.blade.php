@@ -1,10 +1,10 @@
 @extends('layouts.principal')
 
-@section('titulo', 'Configuración | Nuevo asueto')
+@section('titulo', 'Configuración | Vacaciones')
 
 @section('estilos')
-    <!-- BOOTSTRAP DATE PICKER -->
-    <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.css') }}" />
+    <!-- DATE RANGE PICKER -->
+    <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}" />
 @endsection
 
 @section('encabezado', 'Configuración')
@@ -22,7 +22,7 @@
         </a>
     </li>
     <li class="active">
-        Nuevo asueto
+        Vacaciones
     </li>
 @endsection
 
@@ -30,16 +30,16 @@
     <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">
-                Nuevo asueto
+                Vacaciones
             </h3>
         </div>
         <!-- FORMULARIO PARA CREAR UN NUEVO ASUETO -->
-        {!! Form::open(['route' => 'asuetos.store', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+        {!! Form::open(['route' => 'asuetos.store-vacacion', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
             <div class="box-body">
                 <div class="form-group{{ $errors->has('nombre') ? ' has-error' : '' }}">
                     {!! Form::label('nombre', 'Nombre', ['class' => 'col-sm-4 control-label']) !!}
                     <div class="col-sm-7">
-                        {!! Form::text('nombre', old('nombre'), ['class' => 'form-control', 'placeholder' => 'Nombre del asueto', 'required']) !!}
+                        {!! Form::text('nombre', old('nombre'), ['class' => 'form-control', 'placeholder' => 'Nombre de la vacación', 'required']) !!}
                         @if ($errors->has('nombre'))
                             <span class="help-block">
                                 <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -49,9 +49,9 @@
                     </div>
                 </div>
                 <div class="form-group{{ $errors->has('fecha') ? ' has-error' : '' }}">
-                    {!! Form::label('fecha', 'Fecha', ['class' => 'col-sm-4 control-label']) !!}
+                    {!! Form::label('fecha', 'Rango de fechas', ['class' => 'col-sm-4 control-label']) !!}
                     <div class="col-sm-7">
-                        <input name="fecha" type="text" class="form-control" id="datepicker" required="true" value="{{ old('fecha') }}" placeholder="mm/dd/yyyy">
+                        <input name="fecha" type="text" class="form-control pull-right" id="reservation" required="true" placeholder="mm/dd/yyyy - mm/dd/yyyy">
                         @if ($errors->has('fecha'))
                             <span class="help-block">
                                 <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -83,18 +83,15 @@
 @endsection
 
 @push('scripts')
-    <!--  BOOTSTRAP DATE PICKER -->
-    <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+    <!-- DATE RANGE PICKER -->
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ asset('js/daterangepicker.js') }}"></script>
     <!-- CONTROL PICKER -->
     <script>
         $(function ()
         {            
-            //Date picker
-            $('#datepicker').datepicker({
-                autoclose: true,
-                daysOfWeekDisabled: [0],
-                language: 'es'
-            })
+            //Date range picker
+            $('#reservation').daterangepicker()
         })
     </script>
 @endpush
