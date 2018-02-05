@@ -42,8 +42,8 @@ class ReservacionController extends Controller
             $reservaciones = Reservacion::where('fecha', 'like', '%' . $query . '%')
                 ->orWhere('hora_inicio', 'like', '%' . $query . '%')
                 ->orWhere('hora_fin', 'like', '%' . $query . '%')
-                ->orderBy('fecha', 'desc')
-                ->paginate(10);
+                ->orderBy('id', 'desc')
+                ->paginate(25);
             
             $reservaciones->each(function($reservaciones) {
                 $reservaciones->user;
@@ -504,16 +504,19 @@ class ReservacionController extends Controller
         $reservacion->tipo = $request->get('tipo');
 
         $locales = $request->get('locales');
-        
+
         $asignaturas = Asignatura::orderBy('nombre')->pluck('nombre', 'id');
-        
+
         $actividades = Actividad::orderBy('nombre')->pluck('nombre', 'id');
-        
+
+        $users = User::orderBy('name')->pluck('name', 'id');
+
         return view('reservaciones.paso-tres')
             ->with('reservacion', $reservacion)
             ->with('locales', $locales)
             ->with('asignaturas', $asignaturas)
-            ->with('actividades', $actividades);
+            ->with('actividades', $actividades)
+            ->with('users', $users);
     }
 
     /**
@@ -558,7 +561,12 @@ class ReservacionController extends Controller
             $reservacion->asignatura_id = $request->get('asignatura_id');
             $reservacion->actividad_id = $request->get('actividad_id');
             $reservacion->tema = $request->get('tema');
-            $reservacion->user_id = \Auth::user()->id;
+
+            if ($request->user_id) {
+                $reservacion->user_id = $request->get('user_id');
+            } else {
+                $reservacion->user_id = \Auth::user()->id;
+            }
 
             /**
              * Generando código de comprobación.
@@ -880,10 +888,12 @@ class ReservacionController extends Controller
         $hora_inicio = $request->get('hora_inicio');
         $hora_fin = $request->get('hora_fin');
         $local_id = $request->get('local_id');
-        
+
         $asignaturas = Asignatura::orderBy('nombre')->pluck('nombre', 'id');
-        
+
         $actividades = Actividad::orderBy('nombre')->pluck('nombre', 'id');
+
+        $users = User::orderBy('name')->pluck('name', 'id');
         
         return view('reservaciones.paso-tres-semana')
             ->with('fechas', $fechas)
@@ -891,7 +901,8 @@ class ReservacionController extends Controller
             ->with('hora_fin', $hora_fin)
             ->with('local_id', $local_id)
             ->with('asignaturas', $asignaturas)
-            ->with('actividades', $actividades);
+            ->with('actividades', $actividades)
+            ->with('users', $users);
     }
 
     /**
@@ -929,13 +940,18 @@ class ReservacionController extends Controller
             $reservacion->fecha = $fecha;
             $reservacion->hora_inicio = Carbon::parse($request->get('hora_inicio'))->format('H:i:s');
             $reservacion->hora_fin = Carbon::parse($request->get('hora_fin'))->format('H:i:s');
-            $reservacion->user_id = \Auth::user()->id;
             $reservacion->local_id = $request->get('local_id');
             $reservacion->asignatura_id = $request->get('asignatura_id');
             $reservacion->actividad_id = $request->get('actividad_id');
             $reservacion->tema = $request->get('tema');
             $reservacion->responsable = $request->get('responsable');
             $reservacion->tipo = 'Ordinaria';
+
+            if ($request->user_id) {
+                $reservacion->user_id = $request->get('user_id');
+            } else {
+                $reservacion->user_id = \Auth::user()->id;
+            }
 
             /**
              * Generando código de comprobación.

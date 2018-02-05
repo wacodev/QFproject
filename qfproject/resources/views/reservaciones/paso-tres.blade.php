@@ -71,6 +71,20 @@
                         @endif
                     </div>
                 </div>
+                @if (Auth::user()->administrador() || Auth::user()->asistente())
+                    <div class="form-group{{ $errors->has('user_id') ? ' has-error' : '' }}">
+                        {!! Form::label('user_id', 'Asignar a', ['class' => 'col-sm-4 control-label']) !!}
+                        <div class="col-sm-7">
+                            {!! Form::select('user_id', $users, old('user_id'), ['class' => 'form-control', 'placeholder' => '-- Seleccione un usuario --']) !!}
+                            @if ($errors->has('user_id'))
+                                <span class="help-block">
+                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                                    {{ $errors->first('user_id') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                @endif
                 @if (Auth::user()->visitante())
                 <div class="form-group{{ $errors->has('responsable') ? ' has-error' : '' }}">
                     {!! Form::label('responsable', 'Responsable', ['class' => 'col-sm-4 control-label']) !!}

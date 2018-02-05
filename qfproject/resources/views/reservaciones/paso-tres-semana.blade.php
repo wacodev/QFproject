@@ -25,10 +25,15 @@
         </div>
         {!! Form::open(['route' => 'reservaciones.almacenar-semana', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
             <div class="box-body">
-                <div class="form-group{{ $errors->has('asignatura_id') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('asignatura_id') ? ' has-error' : '' }} select-margen">
                     {!! Form::label('asignatura_id', 'Asignatura', ['class' => 'col-sm-4 control-label']) !!}
-                    <div class="col-sm-7">
+                    <div class="col-sm-7 input-group">
                         {!! Form::select('asignatura_id', $asignaturas, old('asignatura_id'), ['class' => 'form-control', 'placeholder' => '-- Seleccione una asignatura --', 'required']) !!}
+                        <span class="input-group-btn">
+                            <a href="" data-target="#modal-asignatura" data-toggle="modal" class="btn btn-default">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </span>
                         @if ($errors->has('asignatura_id'))
                             <span class="help-block">
                                 <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -37,10 +42,15 @@
                         @endif
                     </div>
                 </div>
-                <div class="form-group{{ $errors->has('actividad_id') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('actividad_id') ? ' has-error' : '' }} select-margen">
                     {!! Form::label('actividad_id', 'Actividad', ['class' => 'col-sm-4 control-label']) !!}
-                    <div class="col-sm-7">
+                    <div class="col-sm-7 input-group">
                         {!! Form::select('actividad_id', $actividades, old('actividad_id'), ['class' => 'form-control', 'placeholder' => '-- Seleccione una actividad --', 'required']) !!}
+                        <span class="input-group-btn">
+                            <a href="" data-target="#modal-actividad" data-toggle="modal" class="btn btn-default">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </span>
                         @if ($errors->has('actividad_id'))
                             <span class="help-block">
                                 <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -61,6 +71,20 @@
                         @endif
                     </div>
                 </div>
+                @if (Auth::user()->administrador() || Auth::user()->asistente())
+                    <div class="form-group{{ $errors->has('user_id') ? ' has-error' : '' }}">
+                        {!! Form::label('user_id', 'Asignar a', ['class' => 'col-sm-4 control-label']) !!}
+                        <div class="col-sm-7">
+                            {!! Form::select('user_id', $users, old('user_id'), ['class' => 'form-control', 'placeholder' => '-- Seleccione un usuario --']) !!}
+                            @if ($errors->has('user_id'))
+                                <span class="help-block">
+                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                                    {{ $errors->first('user_id') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                @endif
                 {!! Form::hidden('hora_inicio', $hora_inicio) !!}
                 {!! Form::hidden('hora_fin', $hora_fin) !!}
                 {!! Form::hidden('local_id', $local_id) !!}
@@ -77,6 +101,10 @@
         	    </div>
             </div>
         {!! Form::close() !!}
+        <!-- MODAL PARA AGREGAR UNA ACTIVIDAD -->
+        @include('reservaciones.modal-actividad')
+        <!-- MODAL PARA AGREGAR UNA ASIGNATURA -->
+        @include('reservaciones.modal-asignatura')
     </div>
 @endsection
 
