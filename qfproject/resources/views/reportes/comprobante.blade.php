@@ -30,31 +30,23 @@
             <p class="titulo">COMPROBANTE DE RESERVACIÓN DE LOCAL</p>
         </div>
         <!-- DATOS DEL USUARIO -->
-        <p><strong>DATOS DEL USUARIO</strong></p>
+        <p><strong>RESPONSABLE DE LA RESERVACIÓN</strong></p>
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
                     <tr class="active">
-                     @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')   
-                        <th>Apellidos</th>
-                        <th>Nombres</th>
-                     @endif
-                        <th>Cargo</th>
-                    @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Visitante')
-                        <th>Responsable de reserva</th>
-                     @endif
+                        <th>Nombre</th>
+                        <th>Rol</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                    @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')  
-                        <td>{{ $reservacion->user->lastname }}</td>
-                        <td>{{ $reservacion->user->name }}</td>
-                    @endif
+                        @if ($reservacion->responsable)
+                            <td>{{ $reservacion->responsable }}</td>
+                        @else
+                            <td>{{ $reservacion->user->name }} {{ $reservacion->user->lastname }}</td>
+                        @endif
                         <td>{{ $reservacion->user->tipo }}</td>
-                    @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Visitante')
-                        <td>{{ $reservacion->responsable }}</td>
-                    @endif
                     </tr>
                 </tbody>
             </table>
@@ -83,13 +75,26 @@
         </div>
         <!-- DETALLES DE LA RESERVACIÓN -->
         <p class="margen-arriba-grande">
-            Se autoriza a {{ $reservacion->user->name }} {{ $reservacion->user->lastname }} hacer uso del local {{ $reservacion->local->nombre }} el día {{ $reservacion->fecha }} de {{ $reservacion->hora_inicio }} a {{ $reservacion->hora_fin }} para realizar:
+            Se autoriza a
+            @if ($reservacion->responsable)
+                {{ $reservacion->responsable }}
+            @else
+                {{ $reservacion->user->name }} {{ $reservacion->user->lastname }}
+            @endif
+            hacer uso del local {{ $reservacion->local->nombre }} el día {{ $reservacion->fecha }} de {{ $reservacion->hora_inicio }} a {{ $reservacion->hora_fin }} para realizar:
         </p>
         <ul>
-            <li><strong>Actividad:</strong> {{ $reservacion->actividad->nombre }}.</li>
-            <li><strong>Asignatura:</strong> [{{ $reservacion->asignatura->codigo }}] {{ $reservacion->asignatura->nombre }}.</li>
-            <li><strong>Tema a desarrollar:</strong>
-                @if ($reservacion->tema != null)
+            <li>
+                <strong>Actividad:</strong>
+                {{ $reservacion->actividad->nombre }}.
+            </li>
+            <li>
+                <strong>Asignatura:</strong>
+                {{ $reservacion->asignatura->codigo }} &nbsp;-&nbsp; {{ $reservacion->asignatura->nombre }}.
+            </li>
+            <li>
+                <strong>Tema a desarrollar:</strong>
+                @if ($reservacion->tema)
                     {{ $reservacion->tema }}.
                 @else
                     Sin definir.
@@ -97,6 +102,11 @@
             </li>
         </ul>
         <!-- FECHA Y HORA DE EMISIÓN DEL DOCUMENTO -->
-        <p class="footer-pagina">Fecha y hora de emisión: {{ $hoy }}</p>
+        <div class="footer-pagina text-right">
+            <img src="images/sistema/sello.png"  alt="Logo de la Facultad de Química y Farmacia" class="sello">
+            <p>
+                Fecha y hora de emisión: {{ $hoy }}
+            </p>
+        </div>
     </body>
 </html>
