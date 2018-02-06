@@ -33,7 +33,9 @@
             $nombre = explode(' ', Auth::user()->name);
             $apellido = explode(' ', Auth::user()->lastname);
             // Número de notificaciones sin leer.
-            $notificaciones_c = Auth::user()->unreadNotifications->count();
+            $notificaciones_c = Auth::user()->unreadNotifications->where('type', '=', 'qfproject\Notifications\ReservacionNotification')->count();
+            // Número de acciones realizadas sin leer.
+            $acciones_c = Auth::user()->unreadNotifications->where('type', '=', 'qfproject\Notifications\TareaNotification')->count();
             // Año actual.
             $anho = \Carbon\Carbon::now()->format('Y');
         ?>
@@ -72,6 +74,19 @@
                                     @endif
                                 </a>
                             </li>
+                            @if (Auth::user()->administrador() || Auth::user()->asistente())
+                                <!-- ACCIONES REALIZADAS -->
+                                <li>
+                                    <a href="{{ route('acciones') }}">
+                                        <i class="fa fa-flag"></i>
+                                        @if ($acciones_c > 0)
+                                            <span class="badge label-danger">
+                                                {{ $acciones_c }}
+                                            </span>
+                                        @endif
+                                    </a>
+                                </li>
+                            @endif
                             <!-- CUENTA DE USUARIO -->
                             <li class="dropdown user user-menu">
                                 <a href="" class="dropdown-toggle" data-toggle="dropdown">

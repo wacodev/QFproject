@@ -18,6 +18,7 @@ use qfproject\Asignatura;
 use qfproject\Asueto;
 use qfproject\Local;
 use qfproject\Notifications\ReservacionNotification;
+use qfproject\Notifications\TareaNotification;
 use qfproject\Reservacion;
 use qfproject\Suspension;
 use qfproject\User;
@@ -152,7 +153,7 @@ class ReservacionController extends Controller
             ->success()
             ->important();
 
-        if (\Auth::user()->docente()) {
+        if (\Auth::user()->docente() || \Auth::user()->visitante()) {
             return redirect()->route('home');
         } else {
             return redirect()->route('reservaciones.index');
@@ -199,7 +200,7 @@ class ReservacionController extends Controller
                 ->success()
                 ->important();
 
-            if (\Auth::user()->docente()) {
+            if (\Auth::user()->docente() || \Auth::user()->visitante()) {
                 return redirect()->route('home');
             } else {
                 return redirect()->route('reservaciones.index');
@@ -509,7 +510,16 @@ class ReservacionController extends Controller
 
         $actividades = Actividad::orderBy('nombre')->pluck('nombre', 'id');
 
-        $users = User::orderBy('name')->pluck('name', 'id');
+        if (\Auth::user()->administrador()) {
+            $users = User::where('tipo', '!=', 'Administrador')
+                ->orderBy('name')
+                ->pluck('name', 'id');
+        } else {
+            $users = User::where('tipo', '!=', 'Administrador')
+                ->where('tipo', '!=', 'Asistente')
+                ->orderBy('name')
+                ->pluck('name', 'id');
+        }
 
         return view('reservaciones.paso-tres')
             ->with('reservacion', $reservacion)
@@ -535,10 +545,18 @@ class ReservacionController extends Controller
          * Validando datos de entrada.
          */
 
-        $this->validate(request(), [
-            'asignatura_id' => 'required',
-            'actividad_id'  => 'required'
-        ]);
+        if ($request->responsable) {
+            $this->validate(request(), [
+                'asignatura_id' => 'required',
+                'actividad_id'  => 'required',
+                'responsable'   => 'required|max:190'
+            ]);
+        } else {
+            $this->validate(request(), [
+                'asignatura_id' => 'required',
+                'actividad_id'  => 'required'
+            ]);
+        }
 
         /**
          * Almacenando las reservaciones de cada local.
@@ -561,6 +579,7 @@ class ReservacionController extends Controller
             $reservacion->asignatura_id = $request->get('asignatura_id');
             $reservacion->actividad_id = $request->get('actividad_id');
             $reservacion->tema = $request->get('tema');
+            $reservacion->responsable = $request->get('responsable');
 
             if ($request->user_id) {
                 $reservacion->user_id = $request->get('user_id');
@@ -632,29 +651,7 @@ class ReservacionController extends Controller
              * Notificando a los usuarios correspondientes la acción realizada.
              */
 
-            if (!\Auth::user()->administrador()) {
-                
-                /**
-                 * Obteniendo usuarios que se les enviará la notificación.
-                 */
-
-                if (\Auth::user()->asistente()) {
-                    $users = User::where('tipo', '=', 'Administrador')
-                        ->get();
-                } else {
-                    $users = User::where('tipo', '=', 'Administrador')
-                        ->orWhere('tipo', '=', 'Asistente')
-                        ->get();
-                }
-
-                /**
-                 * Enviando notificaciones.
-                 */
-
-                foreach ($users as $user) {
-                    $user->notify(new ReservacionNotification($reservacion, 'crear', true));
-                }
-            }
+            $this->notificar($reservacion, 'crear');
         }
 
         if (count($request->l) > 1) {
@@ -683,7 +680,7 @@ class ReservacionController extends Controller
                 ->important();
         }
 
-        if (\Auth::user()->docente()) {
+        if (\Auth::user()->docente() || \Auth::user()->visitante()) {
             return redirect()->route('home');
         } else {
             return redirect()->route('reservaciones.index');
@@ -893,7 +890,16 @@ class ReservacionController extends Controller
 
         $actividades = Actividad::orderBy('nombre')->pluck('nombre', 'id');
 
-        $users = User::orderBy('name')->pluck('name', 'id');
+        if (\Auth::user()->administrador()) {
+            $users = User::where('tipo', '!=', 'Administrador')
+                ->orderBy('name')
+                ->pluck('name', 'id');
+        } else {
+            $users = User::where('tipo', '!=', 'Administrador')
+                ->where('tipo', '!=', 'Asistente')
+                ->orderBy('name')
+                ->pluck('name', 'id');
+        }
         
         return view('reservaciones.paso-tres-semana')
             ->with('fechas', $fechas)
@@ -933,6 +939,10 @@ class ReservacionController extends Controller
         $fechas = $request->get('f'); // Arreglo con todas las fechas a reservar.
 
         $i = 0; // Índice para el código.
+
+        $rr = 0; // Número de reservaciones que fueron registradas.
+
+        $rnr = 0; // Número de reservaciones que no fueron registradas.
 
         foreach ($fechas as $fecha) {
             $reservacion = new Reservacion;
@@ -979,40 +989,59 @@ class ReservacionController extends Controller
                 ->get();
 
             if ($reservaciones->count() > 0) {
-                flash('
-                    <h4>
-                        <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
-                        ¡Algo ha salido mal!
-                    </h4>
-                    <p class="exclamation-triangle">
-                        Otro usuario reservó el local en la fecha ' . $reservacion->fecha . ' mientras tú completabas el formulario.
-                        <strong>
-                            Las reservaciones anteriores a esa se guardaron correctamente.
-                        </strong>
-                    </p>
-                ')
-                ->warning()
-                ->important();
+                \Auth::user()->notify(new TareaNotification($reservacion, 'no-registro'));
 
-                return redirect()->route('reservaciones.paso-uno-semana');
+                $rnr++;
+            } else {
+                $reservacion->save();
+
+                /**
+                 * Notificando a los usuarios correspondientes la acción realizada.
+                 */
+
+                $this->notificar($reservacion, 'crear');
+
+                $rr++;
             }
 
-            $reservacion->save();
 
             $i++;
         }
 
-        flash('
-            <h4>
-                <i class="fa fa-check icon" aria-hidden="true"></i>
-                ¡Bien hecho!
-            </h4>
-            <p class="check">
-                La reservación ha sido guardada correctamente.
-            </p>
-        ')
-            ->success()
-            ->important();
+        if ($rnr > 0) {
+            flash('
+                <h4>
+                    <i class="fa fa-info-circle icon" aria-hidden="true"></i>
+                    Detalles de la operación
+                </h4>
+                <p class="info-circle">
+                    Reservaciones guardadas correctamente: ' . $rr . '.
+                </p>
+                <p class="info-circle">
+                    Reservaciones que no fueron registradas porque otro usuario reservó el local mientras llenabas el formulario: ' . $rnr . '.
+                </p>
+                <p class="info-circle">
+                    <strong>
+                        Consulta en tus acciones las reservaciones que no pudieron ser registradas.
+                    </strong>
+                </p>
+            ')
+                ->info()
+                ->important();
+        } else {
+            flash('
+                <h4>
+                    <i class="fa fa-check icon" aria-hidden="true"></i>
+                    ¡Bien hecho!
+                </h4>
+                <p class="check">
+                    Las reservaciones han sido guardadas correctamente.
+                </p>
+            ')
+                ->success()
+                ->important();
+        }
+
 
         return redirect()->route('reservaciones.index');
     }
@@ -1051,7 +1080,8 @@ class ReservacionController extends Controller
         
         $this->validate(request(), [
             'fecha'       => 'required|date|after_or_equal:' . Carbon::now()->format('Y-m-d'),
-            'rango_fecha' => 'required'
+            'rango_fecha' => 'required',
+            'propiedad'   => 'required'
         ]);
         
         /**
@@ -1114,24 +1144,14 @@ class ReservacionController extends Controller
          * Obteniendo diferencia, en días, entre el limite inferior del rango de
          * fechas y la fecha de inicio de ciclo.
          */
-        
+
         $li = explode('-', $rango_fecha[0]);
         $li_carbon = Carbon::create($li[0], $li[1], $li[2], 0);
-        
+
         $f = explode('-', $fecha);
         $f_carbon = Carbon::create($f[0], $f[1], $f[2], 0);
-        
+
         $diferencia = $li_carbon->diffInDays($f_carbon);
-        
-        /**
-         * Obteniendo nuevo rango de fechas.
-         */
-        
-        $li_nuevo = Carbon::parse($li_carbon->addDays($diferencia))->format('Y-m-d');
-        
-        $ls = explode('-', $rango_fecha[1]);
-        $ls_carbon = Carbon::create($ls[0], $ls[1], $ls[2], 0);
-        $ls_nuevo = Carbon::parse($ls_carbon->addDays($diferencia))->format('Y-m-d');
         
         /**
          * En caso de ocurrir un problema en algún registro toda la operación es
@@ -1140,25 +1160,25 @@ class ReservacionController extends Controller
         
         try {
             DB::beginTransaction();
-            
+
             /**
              * Obteniendo todas las reservaciones que se encuentren dentro del
              * rango de fechas original.
              */
-            
+
             $reservaciones = Reservacion::where('fecha', '>=', $rango_fecha[0])
                 ->where('fecha', '<=', $rango_fecha[1])
                 ->where('tipo', '=', 'Ordinaria')
                 ->orderBy('fecha', 'asc')
                 ->get();
-            
+
             /**
              * Registrando las reservaciones anteriores en sus correspondientes
              * fechas futuras.
              */
-            
+
             $rr = 0; // Número de reservaciones registradas.
-            
+
             if ($reservaciones->count() > 0) {
 
                 $i = 0; // Índice para el código.
@@ -1176,8 +1196,7 @@ class ReservacionController extends Controller
                     $fecha_nueva = Carbon::parse($fn_carbon->addDays($diferencia))->format('Y-m-d');
 
                     $reservacion_nueva = new Reservacion;
-                        
-                    $reservacion_nueva->user_id = \Auth::user()->id;
+
                     $reservacion_nueva->local_id = $reservacion->local_id;
                     $reservacion_nueva->asignatura_id = $reservacion->asignatura_id;
                     $reservacion_nueva->actividad_id = $reservacion->actividad_id;
@@ -1186,6 +1205,12 @@ class ReservacionController extends Controller
                     $reservacion_nueva->hora_fin = $reservacion->hora_fin;
                     $reservacion_nueva->tema = $reservacion->tema;
                     $reservacion_nueva->tipo = 'Ordinaria';
+
+                    if ($request->propiedad) {
+                        $reservacion_nueva->user_id = \Auth::user()->id;
+                    } else {
+                        $reservacion_nueva->user_id = $reservacion->user_id;
+                    }
 
                     /**
                      * Validando que local está disponible.
@@ -1204,29 +1229,21 @@ class ReservacionController extends Controller
                     /**
                      * En caso de encontrar reservaciones que chocan con la nueva
                      * que se quiere registrar, se almacenará en el arreglo
-                     * $reservaciones_p: primero, un arreglo con todos los datos
-                     * de la nueva reservación y segundo, arreglos con los datos
-                     * necesarios de las reservaciones que chocan. En cada
-                     * arreglo el primer elemento es un identificador de posición
-                     * que relacionará la nueva reservación con las
-                     * correspondientes reservaciones con que choca y el segundo
-                     * elemento es un valor booleano que indica si es o no una
-                     * nueva reservación.
+                     * $reservaciones_p lo siguiente: el primer elemento es la
+                     * nueva reservación y los posteriores son las reservaciones
+                     * con que choca. El código en cada reservación es sustituido
+                     * por la posición que tienen en el arreglo $reservaciones_p
+                     * para que luego sirva como elemento que las relacione.
                      */
 
                     if ($reservaciones_v->count() > 0) {
                         $rp = []; // Arreglo temporal con las reservaciones a agregar en $reservaciones_p.
-
-                        //$rp[0] = [count($reservaciones_p), true, $reservacion_nueva->user_id, $reservacion_nueva->local_id, $reservacion_nueva->asignatura_id, $reservacion_nueva->actividad_id, $reservacion_nueva->fecha, $reservacion_nueva->hora_inicio, $reservacion_nueva->hora_fin, $reservacion_nueva->tema, $reservacion_nueva->tipo, $reservacion_nueva->codigo, $reservacion_nueva->local->nombre];
 
                         $reservacion_nueva->codigo = count($reservaciones_p);
 
                         $rp[0] = $reservacion_nueva;
 
                         foreach ($reservaciones_v as $reservacion_v) {
-                            //$agregar = [count($reservaciones_p), false, $reservacion_v->id, $reservacion_v->user->name, $reservacion_v->user->lastname, $reservacion_v->local->nombre, $reservacion_v->fecha, $reservacion_v->hora_inicio, $reservacion_v->hora_fin];
-                            //array_push($rp, $agregar);
-
                             $reservacion_v->codigo = count($reservaciones_p);
 
                             array_push($rp, $reservacion_v);
@@ -1247,6 +1264,12 @@ class ReservacionController extends Controller
                         $reservacion_nueva->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
 
                         $reservacion_nueva->save();
+
+                        /**
+                         * Notificando a los usuarios correspondientes la acción realizada.
+                         */
+
+                        $this->notificar($reservacion_nueva, 'crear');
 
                         $rr++;
                     }
@@ -1296,14 +1319,14 @@ class ReservacionController extends Controller
         } else {
             flash('
                 <h4>
-                    <i class="fa fa-info-circle icon" aria-hidden="true"></i>
-                    Detalles de la operación
+                    <i class="fa fa-check icon" aria-hidden="true"></i>
+                    ¡Bien hecho!
                 </h4>
-                <p class="info-circle">
-                    Se registraron ' . $rr . ' reservaciones de un total de ' . $reservaciones->count() . '.
+                <p class="check">
+                    Todas las reservaciones se guardaron correctamente.
                 </p>
             ')
-                ->info()
+                ->success()
                 ->important();
             
             return redirect()->route('reservaciones.index');
@@ -1335,21 +1358,27 @@ class ReservacionController extends Controller
 
         $reservaciones = $request->get('r');
 
-        //$rrr = explode(',-:', $reservaciones[0]);
-        //$rrr1 = explode(',-:', $reservaciones[1]);
-        
-        //dd($seleccionadas, $reservaciones, $reservaciones[0], $rrr, $rrr1, $rrr[8]);
-
         $i = 0; // Índice para el código.
 
-        $rnr = []; // Arreglo con las reservaciones nuevas no registradas.
+        $rnr = 0; // Número de reservaciones nuevas no registradas.
 
-        $re = []; // Arreglo con las reservaciones eliminadas que chocaban.
+        $re = 0; // Número de reservaciones eliminadas que chocaban.
+
+        /**
+         * Guardando o eliminando reservaciones según sea el caso.
+         */
 
         foreach ($reservaciones as $reservacion) {
-            $registrada = false;
+            $registrada = false; // Variable para indicar si la reservación nueva ha sido registrada en la base de datos.
 
             $r = explode(',-:', $reservacion);
+
+            /**
+             * Si el arreglo posee más de dos elementos significa que es una nueva
+             * reservación que aún no ha sido registrada. Se extrae cada uno de
+             * los elementos del arreglo y se crea una instancia de Reservación
+             * con ellos.
+             */
 
             if (count($r) > 2) {
                 $reservacion = new Reservacion;
@@ -1361,13 +1390,8 @@ class ReservacionController extends Controller
                 $reservacion->fecha = $r[5];
                 $reservacion->hora_inicio = $r[6];
                 $reservacion->hora_fin = $r[7];
+                $reservacion->tema = $r[8];
                 $reservacion->tipo = $r[9];
-
-                if ($r[8] == "") {
-                    $reservacion->tema = null;
-                } else {
-                    $reservacion->tema = $r[8];
-                }
 
                 /**
                  * Generando código de comprobación.
@@ -1383,38 +1407,72 @@ class ReservacionController extends Controller
                 $i++;
             }
 
+            /**
+             * Si la reservación ha sido seleccionada se procede de la siguiente
+             * manera: Las reservaciones nuevas se guardan y las reservaciones
+             * que provocaban el choque son eliminadas.
+             */
+
             foreach ($seleccionadas as $seleccion) {
                 if ($r[0] == $seleccion) {
                     if (count($r) > 2) {
-                        //$reservacion->save();
+                        $reservacion->save();
+
+                        /**
+                         * Notificando a los usuarios correspondientes la acción realizada.
+                         */
+
+                        $this->notificar($reservacion, 'crear');                        
 
                         $registrada = true;
                     } else {
                         $reservacion = Reservacion::find($r[1]);
 
-                        //$reservacion->delete();
+                        $reservacion->delete();
 
-                        array_push($re, $reservacion);
+                        /**
+                         * Notificando a los usuarios correspondientes la acción realizada.
+                         */
+
+                        $this->notificar($reservacion, 'eliminar');
+
+                        \Auth::user()->notify(new TareaNotification($reservacion, 'eliminar'));
+
+                        $re++;
                     }
+
                     break;
                 }
             }
 
             if (!$registrada && count($r) > 2) {
-                array_push($rnr, $reservacion);
+                $rnr++;
+
+                \Auth::user()->notify(new TareaNotification($reservacion, 'no-registro'));
             }
         }
 
-        $hoy = Carbon::now()->format('d/m/y h:i A');
+        flash('
+            <h4>
+                <i class="fa fa-info-circle icon" aria-hidden="true"></i>
+                Detalles de la operación
+            </h4>
+            <p class="info-circle">
+                Reservaciones nuevas que no fueron registradas: ' . $rnr . '.
+            </p>
+            <p class="info-circle">
+                Reservaciones que fueron eliminadas: ' . $re . '.
+            </p>
+            <p class="info-circle">
+                <strong>
+                    Consulta en tus acciones las reservaciones que has eliminado y aquellas que no pudieron ser registradas.
+                </strong>
+            </p>
+        ')
+            ->info()
+            ->important();
 
-        $pdf = \PDF::loadView('reportes.reservacion-ciclo', ['rnr' => $rnr, 're' => $re, 'hoy' => $hoy])
-            ->setPaper('letter', 'landscape');
-
-        //$pdf->stream('reservacion-ciclo_' . time() . '.pdf');
-
-        //return redirect()->route('reservaciones.index');
-
-        return $pdf->stream('reservacion-ciclo_' . time() . '.pdf');
+        return redirect()->route('reservaciones.index');
     }
 
     /********************** VALIDACIONES Y OTRAS FUNCIONES **********************/
@@ -1673,6 +1731,13 @@ class ReservacionController extends Controller
                 break;
             
             case 'Docente':
+                if (\Auth::user()->administrador() || \Auth::user()->asistente() || \Auth::user()->id == $propietario) {
+                    $acceso = true;
+                }
+                
+                break;
+
+            case 'visitante':
                 if (\Auth::user()->administrador() || \Auth::user()->asistente() || \Auth::user()->id == $propietario) {
                     $acceso = true;
                 }

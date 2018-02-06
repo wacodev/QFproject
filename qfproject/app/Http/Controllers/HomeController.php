@@ -58,7 +58,7 @@ class HomeController extends Controller
                 ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
                 ->where('fecha', 'like', '%' . $query . '%')
                 ->orderBy('fecha', 'desc')
-                ->paginate(5);
+                ->paginate(15);
 
             $reservaciones->each(function($reservaciones) {
                 $reservaciones->user;
@@ -95,7 +95,7 @@ class HomeController extends Controller
                 ->orWhere('user_id', '=', \Auth::user()->id)
                 ->where('fecha', 'like', '%' . $query . '%')
                 ->orderBy('fecha', 'desc')
-                ->paginate(5);
+                ->paginate(15);
 
             $reservaciones->each(function($reservaciones) {
                 $reservaciones->user;
@@ -123,7 +123,8 @@ class HomeController extends Controller
     {
         $notificaciones = \Auth::user()
             ->notifications()
-            ->paginate(5);
+            ->where('type', '=', 'qfproject\Notifications\ReservacionNotification')
+            ->paginate(15);
 
         return view('notificaciones')
             ->with('notificaciones', $notificaciones);
@@ -286,5 +287,25 @@ class HomeController extends Controller
             ->important();
 
         return back();
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra una lista de notificaciones de las acciones hechas por el usuario.
+     *
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function verAcciones()
+    {
+        $acciones = \Auth::user()
+            ->notifications()
+            ->where('type', '=', 'qfproject\Notifications\TareaNotification')
+            ->orderBy('created_at', 'desc')
+            ->paginate(25);
+
+        return view('acciones')
+            ->with('acciones', $acciones);
     }
 }
