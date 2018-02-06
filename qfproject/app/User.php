@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 
 use Illuminate\Support\Facades\Hash;
+use qfproject\Notifications\MyResetPassword;
 
 class User extends Authenticatable
 {
@@ -76,6 +77,16 @@ class User extends Authenticatable
             $this->attributes['password'] = Hash::make($value);
         }
     }
+
+
+   
+
+    
+    public function sendPasswordResetNotification($token)
+    {
+    $this->notify(new MyResetPassword($token));
+    }
+
 
     /**
      * ---------------------------------------------------------------------------
