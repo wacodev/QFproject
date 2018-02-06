@@ -80,7 +80,7 @@
                 <!-- RECUPERAR CONTRASEÑA Y REGISTRAR NUEVO USUARIO -->
                 <div class="text-center">
                     <a href="{{ route('password.request') }}">No recuerdo mi contraseña</a><br>
-                    <a href="{{ route('register') }}">Registrarme</a>
+                  
                 </div>
             </div>
         </div>

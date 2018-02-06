@@ -18,6 +18,7 @@
                 Mis reservaciones
             </h3>
         </div>
+   
         <div class="box-body">
             {!! Form::open(array('url' => 'home', 'method' => 'GET', 'autocomplete' => 'off', 'role' => 'search')) !!}
                 <div class="form-group">
