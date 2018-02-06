@@ -325,7 +325,7 @@
                             </li>
                         @endif
                         <li>
-                            <a href="#"> <!-- Editar -->
+                            <a href="#" data-toggle="modal" data-target="#create">
                                 <i class="fa fa-info-circle"></i>
                                 <span>
                                     Acerca de
@@ -377,6 +377,7 @@
                             @include('flash::message')
                             <!-- CONTENIDO PRINCIPAL -->
                             @yield('contenido')
+                            @include('administracion.partials.acercaDe')
                             <hr>
                             <br><br><br>
                             <br>
