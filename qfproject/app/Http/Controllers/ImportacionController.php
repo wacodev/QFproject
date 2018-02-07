@@ -17,6 +17,7 @@ use qfproject\Actividad;
 use qfproject\Asignatura;
 use qfproject\Asueto;
 use qfproject\Local;
+use qfproject\Notifications\ReservacionNotification;
 use qfproject\Reservacion;
 use qfproject\Suspension;
 use qfproject\User;
@@ -128,6 +129,12 @@ class ImportacionController extends Controller
                     $reservacion->codigo = $cr . '-' . time() . '-' . $ca . '-' . $cl . '-' . $cu;
 
                     $reservacion->save();
+
+                    /**
+                     * Notificando a los usuarios correspondientes la acción realizada.
+                     */
+
+                    $this->notificar($reservacion, 'crear');
 
                     $i++;
 
@@ -366,7 +373,7 @@ class ImportacionController extends Controller
                     $user->lastname = $fila->lastname;
                     $user->carnet = $fila->carnet;
                     $user->email = $fila->email;
-                    $user->password = bcrypt($fila->password);
+                    $user->password = $fila->password;
                     $user->tipo = $fila->tipo;
 
                     $user->save();
@@ -438,5 +445,66 @@ class ImportacionController extends Controller
          */
 
         return [false, null];
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Crea y envia notificaciones de las acciones de editar y eliminar
+     * reservaciones a los usuarios correspondientes.
+     * 
+     * @param  \qfproject\Reservacion  $reservacion
+     * @param  string  $tipo
+     * @return void
+     * ---------------------------------------------------------------------------
+     */
+
+    public function notificar($reservacion, $tipo)
+    {
+        if (\Auth::user()->id == $reservacion->user_id) {
+
+            /**
+             * Cuando la acción fue realizada por el propietario de la
+             * reservación.
+             */
+
+            if (!\Auth::user()->administrador()) {
+                if (\Auth::user()->asistente()) {
+                    $users = User::where('tipo', '=', 'Administrador')
+                        ->get();
+                } else {
+                    $users = User::where('tipo', '=', 'Administrador')
+                        ->orWhere('tipo', '=', 'Asistente')
+                        ->get();
+                }
+
+                foreach ($users as $user) {
+                    $user->notify(new ReservacionNotification($reservacion, $tipo, true));
+                }
+            }
+        } else {
+
+            /**
+             * Cuando la acción no fue realizada por el propietario de la
+             * reservación.
+             */
+
+            if (\Auth::user()->administrador()) {
+                $user = User::where('id', '=', $reservacion->user_id)->first();
+
+                $user->notify(new ReservacionNotification($reservacion, $tipo, false));
+            } else {
+                $users = User::where('tipo', '=', 'Administrador')
+                    ->orWhere('id', '=', $reservacion->user_id)
+                    ->get();
+
+                foreach ($users as $user) {
+                    if ($user->administrador()) {
+                        $user->notify(new ReservacionNotification($reservacion, $tipo, true));
+                    } else {
+                        $user->notify(new ReservacionNotification($reservacion, $tipo, false));
+                    }
+                }
+            }
+        }
     }
 }

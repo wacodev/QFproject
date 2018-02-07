@@ -92,6 +92,9 @@
                                                 case 'Docente':
                                                     $acceso = true;
                                                     break;
+                                                case 'Visitante':
+                                                    $acceso = true;
+                                                    break;
                                             }
                                         ?>
                                         <td>

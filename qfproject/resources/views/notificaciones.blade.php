@@ -130,7 +130,7 @@
     <?php
         // Marcar como leídas las notificaciones.
         $user = Auth::user();
-        $user->unreadNotifications->markAsRead();
+        $user->unreadNotifications->where('type', '=', 'qfproject\Notifications\ReservacionNotification')->markAsRead();
     ?>
 @endsection
 

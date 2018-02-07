@@ -93,6 +93,19 @@ Route::group(['prefix' => 'notificaciones', 'middleware' => 'auth'], function() 
 
 });
 
+/**
+ * ---------------------------------------------------------------------------
+ * Notificaciones de las acciones realizadas.
+ * ---------------------------------------------------------------------------
+ */
+
+Route::group(['prefix' => 'acciones', 'middleware' => 'asistente'], function() {
+
+    Route::get('/', 'HomeController@verAcciones')->name('acciones');
+    //Route::get('/{accion}/destroy', 'HomeController@eliminarNotificacion')->name('notificaciones.destroy');
+
+});
+
 Route::group(['prefix' => 'estadisticas', 'middleware' => 'asistente'], function() {
 });
 
