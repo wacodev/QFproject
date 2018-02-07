@@ -78,14 +78,14 @@
                                         <?php
                                             // Validación de acceso a las opciones.
                                             $acceso = false;
-                                            switch ($reservacion->user->tipo) {
+                                            switch ($reservacion->tipo) {
                                                 case 'Administrador':
                                                     if (Auth::user()->id == $reservacion->user_id) {
                                                         $acceso = true;
                                                     }
                                                     break;
                                                 case 'Asistente':
-                                                    if (Auth::user()->tipo == 'Administrador' || Auth::user()->id == $reservacion->user_id) {
+                                                    if (Auth::user()->tipo == 'Administrador' || Auth::user()->user == $reservacion->user_id) {
                                                         $acceso = true;
                                                     }
                                                     break;
@@ -100,7 +100,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            {{ $reservacion->local->nombre }}
+                                            {{ $reservacion->local }}
                                         </td>
                                         <td>
                                             {{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }}
@@ -109,7 +109,7 @@
                                             {{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}
                                         </td>
                                         <td>
-                                            {{ $reservacion->user->name }} {{ $reservacion->user->lastname }}
+                                            {{ $reservacion->user }} {{ $reservacion->last }}
                                         </td>
                                         <td class="opc-size">
                                             <a href="{{ route('reservaciones.show', $reservacion->id) }}" class="btn btn-default">

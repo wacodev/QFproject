@@ -54,6 +54,8 @@ class PdfController extends Controller
 
     $mañana = new Carbon('tomorrow');
 
+    $hoy = Carbon::now()->format('d/m/y h:i A');
+
     $reservaciones=DB::table('reservaciones')
     ->join('locales', 'reservaciones.local_id', '=', 'locales.id')
     ->join('asignaturas', 'reservaciones.asignatura_id', '=', 'asignaturas.id')
@@ -63,8 +65,8 @@ class PdfController extends Controller
     ->get();
 
 
-    $pdf=PDF::loadView('reportes.reservacion-lista', ['reservaciones'=>$reservaciones]);
-    return $pdf ->download('proximasReservas.pdf');
+    $pdf=PDF::loadView('reportes.reservacion-lista', ['reservaciones'=>$reservaciones, 'hoy' => $hoy]);
+    return $pdf ->stream('proximasReservas.pdf');
 
    }
 

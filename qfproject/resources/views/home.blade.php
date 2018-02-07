@@ -59,14 +59,14 @@
                                 </ul>
                             </div>
                             <div class="pull-left">
-                                <a href="{{ url('images/locales/' . $reservacion->local->imagen) }}" target="_blanck">
-                                    <img src="{{ asset('images/locales/' . $reservacion->local->imagen) }}" class="img-circle img-miniatura" alt="Imagen del local">
+                                <a href="{{ url('images/locales/' . $reservacion->img) }}" target="_blanck">
+                                    <img src="{{ asset('images/locales/' . $reservacion->img) }}" class="img-circle img-miniatura" alt="Imagen del local">
                                 </a>
                             </div>
                             <span class="text-muted pull-right">
                                 <small>
                                     <i class="fa fa-clock-o icono-margen" aria-hidden="true"></i>
-                                    {{ $reservacion->created_at->diffForHumans() }}
+                                    {{ $reservacion->created_at }}
                                 </small>
                             </span>
                             <h4 class="encabezado-notificacion">
@@ -82,7 +82,7 @@
                                     <strong>
                                         Local:
                                     </strong>
-                                    {{ $reservacion->local->nombre }}
+                                    {{ $reservacion->local }}
                                 </p>
                                 <p>
                                     <strong>
@@ -94,13 +94,13 @@
                                     <strong>
                                         Asignatura:
                                     </strong>
-                                    {{ $reservacion->asignatura->nombre }} &nbsp;-&nbsp; ({{ $reservacion->asignatura->codigo }})
+                                    {{ $reservacion->asignatura }} &nbsp;-&nbsp; ({{ $reservacion->cod }})
                                 </p>
                                 <p>
                                     <strong>
                                         Actividad:
                                     </strong>
-                                    {{ $reservacion->actividad->nombre }}
+                                    {{ $reservacion->actividad }}
                                     @if ($reservacion->tema != null)
                                         &nbsp;-&nbsp; {{ $reservacion->tema }}
                                     @endif
