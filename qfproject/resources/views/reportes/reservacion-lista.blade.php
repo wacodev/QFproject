@@ -70,11 +70,5 @@
                 </div>
                 <hr>
             @endif
-
-             <div class="footer-pagina text-right">
-            <p>
-                Fecha y hora de emisión: {{ $hoy }}
-            </p>
-        </div>
     </body>
 </html>

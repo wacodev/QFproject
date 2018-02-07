@@ -18,7 +18,6 @@ use qfproject\Http\Requests\AsignaturaRequest;
 use qfproject\Http\Requests\UserRequest;
 use qfproject\Reservacion;
 use qfproject\User;
-use DB;
 
 class HomeController extends Controller
 {
@@ -52,7 +51,6 @@ class HomeController extends Controller
 
             $hoy = Carbon::now();
 
-
            $reservaciones=DB::table('reservaciones')
             ->join('locales', 'reservaciones.local_id', 'locales.id')
             ->join('asignaturas', 'reservaciones.asignatura_id', 'asignaturas.id')
@@ -77,12 +75,9 @@ class HomeController extends Controller
             ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
             ->where('user_id', '=', \Auth::user()->id)
             ->where('responsable', 'like', '%' . $query . '%')
-
-
-
-            
             ->orderBy('fecha', 'desc')
             ->paginate(5);
+
 
             $reservaciones->each(function($reservaciones) {
                 $reservaciones->user;
@@ -96,8 +91,6 @@ class HomeController extends Controller
                 ->with('searchText', $query);
         }
     }
-
-    
 
     /**
      * ---------------------------------------------------------------------------

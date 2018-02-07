@@ -187,7 +187,6 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        MaddHatter\LaravelFullcalendar\ServiceProvider::class,
 
     ],
 
@@ -244,13 +243,11 @@ return [
          * ---------------------------------------------------------------------------
          */
 
-        'Excel'    => Maatwebsite\Excel\Facades\Excel::class,
-        'Flash'    => Laracasts\Flash\Flash::class,
-        'Form'     => Collective\Html\FormFacade::class,
-        'Html'     => Collective\Html\HtmlFacade::class,
-        'PDF'      => Barryvdh\DomPDF\Facade::class,
-        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
-
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Flash' => Laracasts\Flash\Flash::class,
+        'Form'  => Collective\Html\FormFacade::class,
+        'Html'  => Collective\Html\HtmlFacade::class,
+        'PDF'   => Barryvdh\DomPDF\Facade::class,
 
     ],
 

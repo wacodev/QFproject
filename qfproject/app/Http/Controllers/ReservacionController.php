@@ -40,6 +40,7 @@ class ReservacionController extends Controller
         if ($request) {
             $query = trim($request->get('searchText'));
             
+
             $reservaciones=DB::table('reservaciones')
             ->join('locales', 'reservaciones.local_id', 'locales.id')
             ->join('asignaturas', 'reservaciones.asignatura_id', 'asignaturas.id')
@@ -63,12 +64,11 @@ class ReservacionController extends Controller
                 $reservaciones->actividad;
             });
 
-           
             return view('reservaciones.index')
                 ->with('reservaciones', $reservaciones)
                 ->with('searchText', $query);
+        }
     }
-}
 
     /**
      * ---------------------------------------------------------------------------
