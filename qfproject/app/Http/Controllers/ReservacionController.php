@@ -45,7 +45,7 @@ class ReservacionController extends Controller
             ->join('asignaturas', 'reservaciones.asignatura_id', 'asignaturas.id')
             ->join('users', 'reservaciones.user_id', 'users.id')
             ->join('actividades', 'reservaciones.actividad_id', 'actividades.id')
-            ->select('reservaciones.*', 'locales.nombre as local', 'asignaturas.nombre as asignatura', 'users.name as user', 'users.lastname as last', 'actividades.nombre as actividad')
+            ->select('reservaciones.*', 'locales.nombre as local', 'asignaturas.nombre as asignatura', 'users.name as user', 'users.lastname as last', 'users.tipo as t', 'actividades.nombre as actividad')
             ->where('asignaturas.nombre', 'like', '%' .$query .'%')
             ->orWhere('locales.nombre', 'like', '%' .$query .'%')
             ->orWhere('users.name', 'like', '%' .$query .'%') 

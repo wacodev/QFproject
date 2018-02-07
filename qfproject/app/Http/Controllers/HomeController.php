@@ -59,15 +59,28 @@ class HomeController extends Controller
             ->join('users', 'reservaciones.user_id', 'users.id')
             ->join('actividades', 'reservaciones.actividad_id', 'actividades.id')
             ->select('reservaciones.*', 'locales.nombre as local', 'locales.imagen as img', 'asignaturas.nombre as asignatura', 'asignaturas.codigo as cod', 'users.name as user', 'users.lastname as last', 'actividades.nombre as actividad')
-            ->where('user_id', '=', \Auth::user()->id)
             ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
-            ->where('fecha', 'like', '%' . $query . '%')
-            ->orWhere('asignaturas.nombre', 'like', '%' .$query .'%')
-            ->orWhere('locales.nombre', 'like', '%' .$query .'%')
-            ->orWhere('users.name', 'like', '%' .$query .'%') 
-            ->orWhere('actividades.nombre', 'like', '%' .$query .'%')
-            ->orWhere('hora_inicio', 'like', '%' .$query .'%')
-            ->orWhere('hora_fin', 'like', '%' .$query .'%')
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('asignaturas.nombre', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('locales.nombre', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('actividades.nombre', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('hora_inicio', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('hora_fin', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('responsable', 'like', '%' . $query . '%')
+
+
+
+            
             ->orderBy('fecha', 'desc')
             ->paginate(5);
 

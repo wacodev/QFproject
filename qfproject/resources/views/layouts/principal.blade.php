@@ -350,7 +350,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#"> <!-- Editar -->
+                            <a href="{{ route('mostrar-ayuda') }}">
                                 <i class="fa fa-question-circle"></i>
                                 <span>
                                     Ayuda
