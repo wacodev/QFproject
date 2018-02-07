@@ -244,6 +244,5 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
 
     });
 
- 
 
 });
