@@ -108,7 +108,7 @@ class ChartController extends Controller
         $hora_inicio = Carbon::parse($request->get('hora_inicio'))->format('H:i:s');
         $hora_fin = Carbon::parse($request->get('hora_fin'))->format('H:i:s');
 
-      $barra =DB::table('reservaciones')
+      $pastel =DB::table('reservaciones')
       ->join('asignaturas', 'reservaciones.asignatura_id', '=', 'asignaturas.id')
       ->whereBetween('fecha', [$fecha[0], $fecha[1]])
       ->where('hora_inicio', '>=', [$hora_inicio])
@@ -117,7 +117,7 @@ class ChartController extends Controller
       ->select(DB::raw("nombre, count(*) as id"))
       ->groupBy('nombre')
       ->get();
-       return view('statistics.chart3', ['barra'=>$barra]);
+       return view('statistics.chart3', ['pastel'=>$pastel]);
     }
 
 

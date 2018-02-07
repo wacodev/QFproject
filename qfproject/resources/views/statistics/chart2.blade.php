@@ -20,9 +20,11 @@
     <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
+      google.charts.load('current', {'packages':['bar']});
+
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-             ['Task', 'Hours per Day'],
+             ['Actividad', 'Reservas'],
          @foreach ($pastel as $pastels)
         ['{{ $pastels->nombre}}', {{$pastels->id}}],
         @endforeach
@@ -33,11 +35,60 @@
         };
         var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
         chart.draw(data, options);
-      }
+
+
+        var data = google.visualization.arrayToDataTable([
+        ['Actividad', ' Reservas'],
+         @foreach ($pastel as $pastels)
+        ['{{ $pastels->nombre}}', {{$pastels->id}}],
+        @endforeach
+        ]);
+
+        var options = {
+          hAxis: {title: 'Actividad', minValue: 0, maxValue: 15},
+          vAxis: {title: 'Reservas', minValue: 0, maxValue: 15},
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+
+  
+        var data = new google.visualization.arrayToDataTable([
+         ['Actividad', 'Cantidad de Reservas'],
+         @foreach ($pastel as $pastels)
+        ['{{ $pastels->nombre}}', {{$pastels->id}}],
+        @endforeach
+        ]);
+
+        var options = {
+ 
+          width: 1000,
+          height: 200,
+          legend: { position: 'none' },
+          chart: { title: '' },
+          bars: 'horizontal', 
+          axes: {
+            x: {
+              0: { side: 'top', label: 'Reservas'} 
+            }
+          },
+          bar: { groupWidth: "10%" }
+        };
+        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+        chart.draw(data, options);
+      };
     </script>
   </head>
   <body>
-    <div id="donutchart" style="width: 900px; height: 500px;"></div>
+    <div id="donutchart" style="width: 1000px; height: 400px;"></div>
+    <hr>
+    <div id="chart_div" style="width: 1000px; height: 400px;"></div>
+    <hr>
+    <div id="top_x_div" style="width: 1000px; height: 300px;"></div>
+    
+   
   </body>
 </html>
 @endsection

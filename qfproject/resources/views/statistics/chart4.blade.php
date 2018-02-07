@@ -19,7 +19,9 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
+      google.charts.load('current', {'packages':['bar']});
       google.charts.setOnLoadCallback(drawChart);
+
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
         ['Asignaturas', 'Cantidad de Reservas'],
@@ -33,11 +35,62 @@
         };
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
         chart.draw(data, options);
+
+
+        var data = google.visualization.arrayToDataTable([
+        ['Local', 'Reserva'],
+         @foreach ($pastel as $pastels)
+        ['{{ $pastels->name}}', {{$pastels->id}}],
+        @endforeach
+        ]);
+
+        var options = {
+          title: '',
+          hAxis: {title: 'Usuarios', minValue: 0, maxValue: 2000},
+          vAxis: {title: 'Reservas', minValue: 0, maxValue: 2000},
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+
+
+         var data = new google.visualization.arrayToDataTable([
+         ['Usuario', 'Cantidad de Reservas'],
+         @foreach ($pastel as $pastels)
+        ['{{ $pastels->name}}', {{$pastels->id}}],
+        @endforeach
+        ]);
+
+        var options = {
+ 
+          width: 1000,
+          height: 200,
+          legend: { position: 'none' },
+          chart: { title: '' },
+          bars: 'horizontal', 
+          axes: {
+            x: {
+              0: { side: 'top', label: 'Reservas'} 
+            }
+          },
+          bar: { groupWidth: "10%" }
+        };
+        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+        chart.draw(data, options);
+      
+
       }
     </script>
   </head>
   <body>
-    <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+    <div id="piechart_3d" style="width: 1000px; height: 400px;"></div>
+    <hr>
+    <div id="chart_div" style="width: 1000px; height: 400px;"></div>
+    <hr>
+    <div id="top_x_div" style="width: 1000px; height: 300px;"></div>
+
   </body>
 </html>
 @endsection
