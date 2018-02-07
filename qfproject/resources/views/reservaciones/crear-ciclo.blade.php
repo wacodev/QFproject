@@ -56,6 +56,21 @@
                         @endif
                     </div>
                 </div>
+                <div class="form-group{{ $errors->has('propiedad') ? ' has-error' : '' }}">
+                    {!! Form::label('propiedad', 'Reservar como propias', ['class' => 'col-sm-4 control-label']) !!}
+                    <div class="col-sm-7">
+                        {!! Form::select('propiedad', [
+                            true => 'Si',
+                            false => 'No'
+                            ], old('propiedad'), ['class' => 'form-control', 'placeholder' => '-- Seleccione una respuesta --', 'required']) !!}
+                        @if ($errors->has('propiedad'))
+                            <span class="help-block">
+                                <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                                {{ $errors->first('propiedad') }}
+                            </span>
+                        @endif
+                    </div>
+                </div>
             </div>
             <div class="box-footer">
                 <div class="pull-right">

@@ -19,7 +19,7 @@ use qfproject\Local;
 use qfproject\Reservacion;
 use qfproject\User;
 
-class ReservacionNotification extends Notification
+class TareaNotification extends Notification
 {
     use Queueable;
 
@@ -45,29 +45,17 @@ class ReservacionNotification extends Notification
 
     /**
      * ---------------------------------------------------------------------------
-     * Indica si el usuario que hizo la acción es propietario de la reservación.
-     *
-     * @var bool
-     * ---------------------------------------------------------------------------
-     */
-
-    protected $propietario;
-
-    /**
-     * ---------------------------------------------------------------------------
      * Crea una nueva instancia de notificación.
      *
      * @return void
      * ---------------------------------------------------------------------------
      */
 
-    public function __construct($reservacion, $tipo, $propietario)
+    public function __construct($reservacion, $tipo)
     {
         $this->reservacion = $reservacion;
 
         $this->tipo = $tipo;
-
-        $this->propietario = $propietario;
     }
 
     /**
@@ -95,60 +83,9 @@ class ReservacionNotification extends Notification
 
     public function toDatabase($notifiable)
     {
-        switch ($this->tipo) {
-            case 'crear':
-                if ($this->propietario) {
-                    $mensaje = 'Ha realizado una nueva reservación';
-                } else {
-                    $mensaje = 'Ha realizado una nueva reservación para ti';
-                }
-
-                break;
-
-            case 'editar':
-                if ($this->propietario) {
-                    $mensaje = 'Ha editado una reservación';
-                } else {
-                    $mensaje = 'Ha editado tu reservación';
-                }
-
-                break;
-
-            case 'eliminar':
-                if ($this->propietario) {
-                    $mensaje = 'Ha eliminado una reservación';
-                } else {
-                    $mensaje = 'Ha eliminado tu reservación';
-                }
-
-                break;
-
-            case 'suspension':
-                $mensaje = 'Ha eliminado tu reservación por coincidar con una suspensión de actividades';
-
-                break;
-
-            case 'actividad':
-                $mensaje = 'Ha eliminado tu reservación porque la actividad asignada ya no existe';
-
-                break;
-
-            case 'asignatura':
-                $mensaje = 'Ha eliminado tu reservación porque la asignatura asignada ya no existe';
-
-                break;
-
-            case 'local':
-                $mensaje = 'Ha eliminado tu reservación porque el local asignado ya no existe';
-
-                break;
-        }
-
         return [
             'reservacion' => $this->reservacion,
             'tipo'        => $this->tipo,
-            'mensaje'     => $mensaje,
-            'user'        => User::find(\Auth::user()->id),
             'propietario' => User::find($this->reservacion->user_id),
             'local'       => Local::find($this->reservacion->local_id),
             'asignatura'  => Asignatura::find($this->reservacion->asignatura_id),
