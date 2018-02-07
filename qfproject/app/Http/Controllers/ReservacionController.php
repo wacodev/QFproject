@@ -40,22 +40,12 @@ class ReservacionController extends Controller
         if ($request) {
             $query = trim($request->get('searchText'));
             
-            $reservaciones=DB::table('reservaciones')
-            ->join('locales', 'reservaciones.local_id', 'locales.id')
-            ->join('asignaturas', 'reservaciones.asignatura_id', 'asignaturas.id')
-            ->join('users', 'reservaciones.user_id', 'users.id')
-            ->join('actividades', 'reservaciones.actividad_id', 'actividades.id')
-            ->select('reservaciones.*', 'locales.nombre as local', 'asignaturas.nombre as asignatura', 'users.name as user', 'users.lastname as last', 'actividades.nombre as actividad')
-            ->where('asignaturas.nombre', 'like', '%' .$query .'%')
-            ->orWhere('locales.nombre', 'like', '%' .$query .'%')
-            ->orWhere('users.name', 'like', '%' .$query .'%') 
-            ->orWhere('actividades.nombre', 'like', '%' .$query .'%')
-            ->orWhere('fecha', 'like', '%' .$query .'%')
-            ->orWhere('hora_inicio', 'like', '%' .$query .'%')
-            ->orWhere('hora_fin', 'like', '%' .$query .'%')
-            ->orderBy('fecha', 'desc')
-            ->paginate(25);
-
+            $reservaciones = Reservacion::where('fecha', 'like', '%' . $query . '%')
+                ->orWhere('hora_inicio', 'like', '%' . $query . '%')
+                ->orWhere('hora_fin', 'like', '%' . $query . '%')
+                ->orderBy('id', 'desc')
+                ->paginate(25);
+            
             $reservaciones->each(function($reservaciones) {
                 $reservaciones->user;
                 $reservaciones->local;
@@ -63,12 +53,11 @@ class ReservacionController extends Controller
                 $reservaciones->actividad;
             });
 
-           
             return view('reservaciones.index')
                 ->with('reservaciones', $reservaciones)
                 ->with('searchText', $query);
+        }
     }
-}
 
     /**
      * ---------------------------------------------------------------------------

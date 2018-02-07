@@ -18,7 +18,6 @@ use qfproject\Http\Requests\AsignaturaRequest;
 use qfproject\Http\Requests\UserRequest;
 use qfproject\Reservacion;
 use qfproject\User;
-use DB;
 
 class HomeController extends Controller
 {
@@ -52,24 +51,14 @@ class HomeController extends Controller
 
             $hoy = Carbon::now();
 
-
-           $reservaciones=DB::table('reservaciones')
-            ->join('locales', 'reservaciones.local_id', 'locales.id')
-            ->join('asignaturas', 'reservaciones.asignatura_id', 'asignaturas.id')
-            ->join('users', 'reservaciones.user_id', 'users.id')
-            ->join('actividades', 'reservaciones.actividad_id', 'actividades.id')
-            ->select('reservaciones.*', 'locales.nombre as local', 'locales.imagen as img', 'asignaturas.nombre as asignatura', 'asignaturas.codigo as cod', 'users.name as user', 'users.lastname as last', 'actividades.nombre as actividad')
-            ->where('user_id', '=', \Auth::user()->id)
-            ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
-            ->where('fecha', 'like', '%' . $query . '%')
-            ->orWhere('asignaturas.nombre', 'like', '%' .$query .'%')
-            ->orWhere('locales.nombre', 'like', '%' .$query .'%')
-            ->orWhere('users.name', 'like', '%' .$query .'%') 
-            ->orWhere('actividades.nombre', 'like', '%' .$query .'%')
-            ->orWhere('hora_inicio', 'like', '%' .$query .'%')
-            ->orWhere('hora_fin', 'like', '%' .$query .'%')
-            ->orderBy('fecha', 'desc')
-            ->paginate(5);
+            $reservaciones = Reservacion::where('user_id', '=', \Auth::user()->id)
+                ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+                ->where('codigo', 'like', '%' . $query . '%')
+                ->orWhere('user_id', '=', \Auth::user()->id)
+                ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+                ->where('fecha', 'like', '%' . $query . '%')
+                ->orderBy('fecha', 'desc')
+                ->paginate(15);
 
             $reservaciones->each(function($reservaciones) {
                 $reservaciones->user;
@@ -83,8 +72,6 @@ class HomeController extends Controller
                 ->with('searchText', $query);
         }
     }
-
-    
 
     /**
      * ---------------------------------------------------------------------------
