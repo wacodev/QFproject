@@ -16,6 +16,7 @@
                 <strong>
                     Correo electrónico
                 </strong>
+                
                 <p class="pull-right">
                     {{ Auth::user()->email }}
                 </p>

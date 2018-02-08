@@ -40,7 +40,7 @@
                         <th>Fecha</th>
                         <th>Hora</th>
                         <th>Local</th>
-                        <th>Materia</th>
+                        <th>Asignatura</th>
                         <th>Actividad</th>
                     </tr>
                 </thead>

@@ -139,7 +139,12 @@
     </div>
 @endsection
 
+@if (Auth::user()->administrador() || Auth::user()->asistente() || Auth::user()->docente())
 @section('sidebar')
     <!-- PANEL DEL PERFIL DE USUARIO -->
     @include('layouts.perfil')
+@endsection
+@endif
+@section('sidebar')
+@include('layouts.visitante')
 @endsection

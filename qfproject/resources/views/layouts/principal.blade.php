@@ -12,6 +12,7 @@
             @yield('titulo', 'Química y Farmacia')
         </title>
         <!-- BOOTSTRAP 3.3.5 -->
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
         <!-- FONT AWESOME -->
         <link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}" />
@@ -21,7 +22,8 @@
         <link rel="stylesheet" href="{{ asset('css/skin-green.min.css') }}" />
         <!-- MIS ESTILOS -->
         <link rel="stylesheet" href="{{ asset('css/mis-estilos.css') }}" />
-        <link href="http://demo.expertphp.in/css/jquery.ui.autocomplete.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/ayuda.css') }}" />
+       
         <!-- SECCIÓN PARA AGREGAR ESTILOS -->
         @yield('estilos')
         <!-- FAVICON -->
@@ -192,8 +194,8 @@
                                 @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
                                 <li>
                                     <a href="{{ route('reportes.reservacion-lista') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Reservas del día siguiente
+                                        <i class="fa fa-circle-o"></i><small class="label pull-right bg-red">PDF</small>
+                                        Reservas próximas
                                     </a>
                                 </li>
                                 @endif
@@ -350,11 +352,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('mostrar-ayuda') }}">
-                                <i class="fa fa-question-circle"></i>
-                                <span>
+                            <a href="{{ route('mostrar-ayuda') }}"> <i class="fa fa-question-circle"></i><span>
                                     Ayuda
-                                </span>
+                                </span></a>   
                             </a>
                         </li>                        
                         <li>
