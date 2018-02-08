@@ -31,6 +31,7 @@ class ReservacionController extends Controller
      * ---------------------------------------------------------------------------
      * Muestra una lista de reservaciones.
      * 
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -123,7 +124,7 @@ class ReservacionController extends Controller
      * ---------------------------------------------------------------------------
      * Actualiza la reservación especificada en la base de datos.
      * 
-     * @param  \qfproject\Http\Requests\SuspensionRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
@@ -225,7 +226,7 @@ class ReservacionController extends Controller
      * ---------------------------------------------------------------------------
      * Elimina las reservaciones especificadas de la base de datos.
      * 
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -556,7 +557,7 @@ class ReservacionController extends Controller
          * Validando datos de entrada.
          */
 
-        if ($request->responsable) {
+        if (\Auth::user()->visitante()) {
             $this->validate(request(), [
                 'asignatura_id' => 'required',
                 'actividad_id'  => 'required',
@@ -572,6 +573,8 @@ class ReservacionController extends Controller
         /**
          * Almacenando las reservaciones de cada local.
          */
+
+        $rc = []; // Arreglo con los id de las reservaciones a colocar en el comprobante.
 
         foreach ($request->l as $local_id) {
 
@@ -625,20 +628,38 @@ class ReservacionController extends Controller
 
             if ($reservaciones->count() > 0) {
                 if (count($request->l) > 1) {
-                    flash('
-                        <h4>
-                            <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
-                            ¡Algo ha salido mal!
-                        </h4>
-                        <p class="exclamation-triangle">
-                            La reservación en el local ' . $reservacion->local->nombre . ' no pudo ser registrada. Otro usuario reservó el local mientras tú completabas el formulario.
-                            <strong>
-                                Las reservaciones anteriores a esa se registraron correctamente.
-                            </strong>
-                        </p>
-                    ')
-                    ->warning()
-                    ->important();
+                    if (count($rc) > 0) {
+                        flash('
+                            <h4>
+                                <i class="fa fa-info-circle icon" aria-hidden="true"></i>
+                                Detalles de la operación
+                            </h4>
+                            <p class="info-circle">
+                                La reservación en el local ' . $reservacion->local->nombre . ' no pudo ser registrada. Otro usuario reservó el local mientras tú completabas el formulario.
+                                <strong>
+                                    Las reservaciones anteriores a esa se registraron correctamente.
+                                </strong>
+                            </p>
+                        ')
+                            ->info()
+                            ->important();
+
+                        return view('reservaciones.comprobante')->with('rc', $rc);
+                    } else {
+                        flash('
+                            <h4>
+                                <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                                ¡Algo ha salido mal!
+                            </h4>
+                            <p class="exclamation-triangle">
+                                No se pudo registrar ninguna reservación. Intenta nuevamente.
+                            </p>
+                        ')
+                            ->warning()
+                            ->important();
+
+                        return redirect()->route('reservaciones.paso-uno');
+                    }
                 } else {
                     flash('
                         <h4>
@@ -651,12 +672,14 @@ class ReservacionController extends Controller
                     ')
                     ->warning()
                     ->important();
-                }
 
-                return redirect()->route('reservaciones.paso-uno');
+                    return redirect()->route('reservaciones.paso-uno');
+                }
             }
 
             $reservacion->save();
+
+            array_push($rc, $reservacion->id);
 
             /**
              * Notificando a los usuarios correspondientes la acción realizada.
@@ -691,11 +714,15 @@ class ReservacionController extends Controller
                 ->important();
         }
 
+        return view('reservaciones.comprobante')->with('rc', $rc);
+
+        /*
         if (\Auth::user()->docente() || \Auth::user()->visitante()) {
             return redirect()->route('home');
         } else {
             return redirect()->route('reservaciones.index');
         }
+        */
     }
 
     /************************* RESERVACIONES POR SEMANA *************************/

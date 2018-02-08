@@ -23,7 +23,8 @@
                 Paso 3: Detalles
             </h3>
         </div>
-        {!! Form::open(['route' => 'reservaciones.store', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+        {!! Form::open(['route' => 'reservaciones.store', 'autocomplete' => 'off', 'method' => 'GET', 'class' => 'form-horizontal']) !!}
+            {{ Form::token() }}
             <div class="box-body">
                 <div class="form-group{{ $errors->has('asignatura_id') ? ' has-error' : '' }} select-margen">
                     {!! Form::label('asignatura_id', 'Asignatura', ['class' => 'col-sm-4 control-label']) !!}
@@ -122,7 +123,3 @@
         @include('reservaciones.modal-asignatura')
     </div>
 @endsection
-
-@push('scripts')
-    <script src="{{ asset('js/pickers-control.js') }}"></script>
-@endpush

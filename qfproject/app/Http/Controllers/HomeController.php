@@ -78,7 +78,6 @@ class HomeController extends Controller
             ->orderBy('fecha', 'desc')
             ->paginate(5);
 
-
             $reservaciones->each(function($reservaciones) {
                 $reservaciones->user;
                 $reservaciones->local;
