@@ -42,6 +42,7 @@ class HomeController extends Controller
      * Muestra una lista de reservaciones vigentes hechas por el usuario y un
      * panel con los datos del mismo.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -100,6 +101,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Muestra una lista de todas las reservaciones hechas por el usuario.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -160,7 +162,7 @@ class HomeController extends Controller
      * Elimina la notificación especificada de la base de datos.
      *
      * @param  int  $id
-     * @return void
+     * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
 
@@ -179,7 +181,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Elimina las notificaciones del usuario de la base de datos.
      *
-     * @return void
+     * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
 
@@ -213,7 +215,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Actualiza el usuario especificado en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\UserRequest  $request
+     * @param  \qfproject\Http\Requests\UserRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
@@ -277,7 +279,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Almacena una actividad recién creada en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\ActividadRequest  $request
+     * @param  \qfproject\Http\Requests\ActividadRequest  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -307,7 +309,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Almacena una asignatura recién creada en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\AsignaturaRequest  $request
+     * @param  \qfproject\Http\Requests\AsignaturaRequest  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -357,7 +359,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Elimina las notificaciones de acción de la base de datos.
      *
-     * @return void
+     * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
 

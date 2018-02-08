@@ -24,6 +24,7 @@ class SuspensionController extends Controller
      * ---------------------------------------------------------------------------
      * Muestra una lista de suspensiones.
      * 
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -62,7 +63,7 @@ class SuspensionController extends Controller
      * ---------------------------------------------------------------------------
      * Almacena una suspensión recién creada en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\SuspensionRequest  $request
+     * @param  \qfproject\Http\Requests\SuspensionRequest  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -149,49 +150,6 @@ class SuspensionController extends Controller
 
     /**
      * ---------------------------------------------------------------------------
-     * Muestra la suspensión especificada.
-     * 
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     * ---------------------------------------------------------------------------
-     */
-
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * ---------------------------------------------------------------------------
-     * Muestra el formulario para editar la suspensión especificada.
-     * 
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     * ---------------------------------------------------------------------------
-     */
-
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * ---------------------------------------------------------------------------
-     * Actualiza la suspensión especificada en la base de datos.
-     * 
-     * @param  qfproject\Http\Requests\SuspensionRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     * ---------------------------------------------------------------------------
-     */
-
-    public function update(SuspensionRequest $request, $id)
-    {
-        //
-    }
-
-    /**
-     * ---------------------------------------------------------------------------
      * Elimina la suspensión especificada de la base de datos.
      * 
      * @param  int  $id
@@ -202,6 +160,10 @@ class SuspensionController extends Controller
     public function destroy($id)
     {
         $suspension = Suspension::find($id);
+
+        if (!$suspension) {
+            abort(404);
+        }
 
         $suspension->delete();
 

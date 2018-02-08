@@ -21,6 +21,7 @@ class AsuetoController extends Controller
      * ---------------------------------------------------------------------------
      * Muestra una lista de asuetos.
      * 
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -95,20 +96,6 @@ class AsuetoController extends Controller
 
     /**
      * ---------------------------------------------------------------------------
-     * Muestra el asueto especificado.
-     * 
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     * ---------------------------------------------------------------------------
-     */
-
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * ---------------------------------------------------------------------------
      * Muestra el formulario para editar el asueto especificado.
      * 
      * @param  int  $id
@@ -120,6 +107,10 @@ class AsuetoController extends Controller
     {
         $asueto = Asueto::find($id);
 
+        if (!$asignatura) {
+            abort(404);
+        }
+
         return view('administracion.asuetos.edit')->with('asueto', $asueto);
     }
 
@@ -127,7 +118,7 @@ class AsuetoController extends Controller
      * ---------------------------------------------------------------------------
      * Actualiza el asueto especificado en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\AsuetoRequest  $request
+     * @param  \qfproject\Http\Requests\AsuetoRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
@@ -136,6 +127,10 @@ class AsuetoController extends Controller
     public function update(AsuetoRequest $request, $id)
     {
         $asueto = Asueto::find($id);
+
+        if (!$asignatura) {
+            abort(404);
+        }
 
         $asueto->fill($request->all());
 
@@ -168,6 +163,10 @@ class AsuetoController extends Controller
     public function destroy($id)
     {
         $asueto = Asueto::find($id);
+
+        if (!$asignatura) {
+            abort(404);
+        }
 
         $asueto->delete();
 

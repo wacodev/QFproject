@@ -79,6 +79,10 @@ class ReservacionController extends Controller
     {   
         $reservacion = Reservacion::find($id);
 
+        if (!$reservacion) {
+            abort(404);
+        }
+
         return view('reservaciones.show')->with('reservacion', $reservacion);
     }
 
@@ -94,6 +98,10 @@ class ReservacionController extends Controller
     public function edit($id)
     {
         $reservacion = Reservacion::find($id);
+
+        if (!$reservacion) {
+            abort(404);
+        }
 
         /**
          * Validando acceso para editar la reservación especificada.
@@ -138,6 +146,10 @@ class ReservacionController extends Controller
         ]);
 
         $reservacion = Reservacion::find($id);
+
+        if (!$reservacion) {
+            abort(404);
+        }
         
         $reservacion->fill($request->all());
         
@@ -180,6 +192,10 @@ class ReservacionController extends Controller
     public function destroy($id)
     {
         $reservacion = Reservacion::find($id);
+
+        if (!$reservacion) {
+            abort(404);
+        }
 
         /**
          * Validando acceso para eliminar la reservación especificada.
@@ -711,14 +727,6 @@ class ReservacionController extends Controller
         }
 
         return view('reservaciones.comprobante')->with('rc', $rc);
-
-        /*
-        if (\Auth::user()->docente() || \Auth::user()->visitante()) {
-            return redirect()->route('home');
-        } else {
-            return redirect()->route('reservaciones.index');
-        }
-        */
     }
 
     /************************* RESERVACIONES POR SEMANA *************************/
@@ -1038,7 +1046,6 @@ class ReservacionController extends Controller
                 $rr++;
             }
 
-
             $i++;
         }
 
@@ -1101,7 +1108,7 @@ class ReservacionController extends Controller
      * Almacena un conjunto de reservaciones en la base de datos. Utilizado para
      * el registro de reservaciones por ciclo.
      * 
-     * @param  \qfproject\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -1372,7 +1379,7 @@ class ReservacionController extends Controller
      * Muestra un listado de reservaciones que chocan con otras para que el
      * usuario decida si eliminar o no aquellas que interfieren con la suya.
      * 
-     * @param  \qfproject\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -1651,6 +1658,8 @@ class ReservacionController extends Controller
      * de actividades.
      * 
      * @param  date  $fecha
+     * @param  time  $hora_inicio
+     * @param  time  $hora_fin
      * @return array
      * ---------------------------------------------------------------------------
      */

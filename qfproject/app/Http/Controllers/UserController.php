@@ -23,6 +23,7 @@ class UserController extends Controller
      * ---------------------------------------------------------------------------
      * Muestra una lista de usuarios.
      * 
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -61,7 +62,7 @@ class UserController extends Controller
      * ---------------------------------------------------------------------------
      * Almacena un usuario recién creado en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\UserRequest  $request
+     * @param  \qfproject\Http\Requests\UserRequest  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -119,6 +120,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
+        if (!$user) {
+            abort(404);
+        }
+
         $hoy = Carbon::now();
 
         $reservaciones = Reservacion::where('user_id', '=', $user->id)
@@ -151,6 +156,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
+        if (!$user) {
+            abort(404);
+        }
+
         return view('administracion.users.edit')->with('user', $user);
     }
 
@@ -158,7 +167,7 @@ class UserController extends Controller
      * ---------------------------------------------------------------------------
      * Actualiza el usuario especificado en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\UserRequest  $request
+     * @param  \qfproject\Http\Requests\UserRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
@@ -167,6 +176,10 @@ class UserController extends Controller
     public function update(UserRequest $request, $id)
     {
         $user = User::find($id);
+
+        if (!$user) {
+            abort(404);
+        }
 
         /**
          * Almacenando nueva imagen.
@@ -231,6 +244,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
+
+        if (!$user) {
+            abort(404);
+        }
 
         $user->delete();
 
