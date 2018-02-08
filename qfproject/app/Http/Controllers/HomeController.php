@@ -18,6 +18,8 @@ use qfproject\Http\Requests\AsignaturaRequest;
 use qfproject\Http\Requests\UserRequest;
 use qfproject\Reservacion;
 use qfproject\User;
+use DB;
+use Laracasts\Flash\Flash;
 
 class HomeController extends Controller
 {
