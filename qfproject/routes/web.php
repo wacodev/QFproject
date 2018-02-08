@@ -179,6 +179,8 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
      */
 
     Route::get('/{reservacion}/comprobante', 'PdfController@generarComprobante')->name('reservacion.comprobante');
+    Route::get('/formulario-comprobante', 'PdfController@formularComprobante')->name('reservaciones.formulario-comprobante');
+    Route::post('/descargar-comprobante', 'PdfController@exportarComprobante')->name('reservaciones.descargar-comprobante');
 
     /**
      * Historial de reservaciones.
@@ -198,8 +200,8 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
     Route::get('/paso-uno', 'ReservacionController@create')->name('reservaciones.paso-uno');
     Route::get('/paso-dos', 'ReservacionController@hacerPasoUno')->name('reservaciones.paso-dos');
     Route::get('/paso-tres', 'ReservacionController@hacerPasoDos')->name('reservaciones.paso-tres');
-    Route::post('/store', 'ReservacionController@hacerPasoTres')->name('reservaciones.store');
-
+    Route::get('/store', 'ReservacionController@hacerPasoTres')->name('reservaciones.store');
+    Route::get('/comprobante', 'PdfController@descargarComprobante')->name('reservaciones.comprobante');
 
     Route::group(['middleware' => 'asistente'], function() {
 
@@ -250,6 +252,5 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
        
   
 
- 
 
 });

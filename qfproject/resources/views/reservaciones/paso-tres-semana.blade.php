@@ -107,7 +107,3 @@
         @include('reservaciones.modal-asignatura')
     </div>
 @endsection
-
-@push('scripts')
-    <script src="{{ asset('js/pickers-control.js') }}"></script>
-@endpush

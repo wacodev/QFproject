@@ -47,14 +47,125 @@ class PdfController extends Controller
     }
 
     /**
+     * ---------------------------------------------------------------------------
+     * Genera un comprobante con todos los datos de las reservaciones.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function descargarComprobante(Request $request)
+    {
+        $reservaciones = []; // Arreglo con las reservaciones a mostrar en el comprobante.
+
+        foreach ($request->reservaciones as $id) {
+            $reservacion = Reservacion::find($id);
+
+            array_push($reservaciones, $reservacion);
+        }
+
+        $hoy = Carbon::now()->format('d/m/y h:i A');
+
+        if (count($reservaciones) > 1) {
+            $pdf = \PDF::loadView('reportes.comprobante-multiple', ['reservaciones' => $reservaciones, 'hoy' => $hoy]);
+        } else {
+            $pdf = \PDF::loadView('reportes.comprobante', ['reservacion' => $reservaciones[0], 'hoy' => $hoy]); 
+        }
+
+        return $pdf->stream('comprobante.pdf');
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario para descargar un comprobante.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function formularComprobante()
+    {
+        $asignaturas = Asignatura::orderBy('nombre')->pluck('nombre', 'id');
+
+        $actividades = Actividad::orderBy('nombre')->pluck('nombre', 'id');
+
+        return view('reportes.exportar-comprobante')
+            ->with('asignaturas', $asignaturas)
+            ->with('actividades', $actividades);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Genera un comprobante con todos los datos de las reservaciones.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function exportarComprobante(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'fecha'         => 'required|date|after_or_equal:' . Carbon::now()->format('Y-m-d'),
+            'hora_inicio'   => 'required|after_or_equal:07:00:00|before_or_equal:17:00:00',
+            'hora_fin'      => 'required|after:hora_inicio|before_or_equal:18:00:00',
+            'asignatura_id' => 'required',
+            'actividad_id'  => 'required'
+        ]);
+
+        /**
+         * Convirtiendo fecha al formato Y-m-d y horas al formato H:i:s.
+         */
+        
+        $fecha = Carbon::parse($request->fecha)->format('Y-m-d');
+        $hora_inicio = Carbon::parse($request->hora_inicio)->format('H:i:s');
+        $hora_fin = Carbon::parse($request->hora_fin)->format('H:i:s');
+
+        $reservaciones = Reservacion::where('user_id', '=', \Auth::user()->id)
+            ->where('fecha', '=', $fecha)
+            ->where('hora_inicio', '=', $hora_inicio)
+            ->where('hora_fin', '=', $hora_fin)
+            ->where('asignatura_id', '=', $request->asignatura_id)
+            ->where('actividad_id', '=', $request->actividad_id)
+            ->get();
+
+        $hoy = Carbon::now()->format('d/m/y h:i A');
+
+        if (count($reservaciones) == 0) {
+            flash('
+                <h4>
+                    <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                    ¡No hay ninguna reservación!
+                </h4>
+                <p class="exclamation-triangle">
+                    Para los datos ingresados no se encontró ninguna reservación registrada.
+                </p>
+            ')
+                ->warning()
+                ->important();
+
+            return back();
+        } elseif (count($reservaciones) > 1) {
+            $pdf = \PDF::loadView('reportes.comprobante-multiple', ['reservaciones' => $reservaciones, 'hoy' => $hoy]);
+        } else {
+            $pdf = \PDF::loadView('reportes.comprobante', ['reservacion' => $reservaciones[0], 'hoy' => $hoy]); 
+        }
+
+        return $pdf->stream('comprobante.pdf');
+    }
+
+    /**
      * Reservas del día siguiente
      *
      */
    public function proximasReservas(){
 
     $mañana = new Carbon('tomorrow');
-
-    $hoy = Carbon::now()->format('d/m/y h:i A');
 
     $reservaciones=DB::table('reservaciones')
     ->join('locales', 'reservaciones.local_id', '=', 'locales.id')
@@ -65,7 +176,7 @@ class PdfController extends Controller
     ->get();
 
 
-    $pdf=PDF::loadView('reportes.reservacion-lista', ['reservaciones'=>$reservaciones, 'hoy' => $hoy]);
+    $pdf=PDF::loadView('reportes.reservacion-lista', ['reservaciones'=>$reservaciones]);
     return $pdf ->stream('proximasReservas.pdf');
 
    }

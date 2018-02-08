@@ -1,3 +1,4 @@
+
 @extends('layouts.principal')
 
 @section('titulo', 'Inicio')
@@ -78,6 +79,14 @@
                                 </small>
                             </p>
                             <div class="well well-sm well-panel well-parrafo">
+                                @if (Auth::user()->visitante())
+                                    <p>
+                                        <strong>
+                                            Responsable:
+                                        </strong>
+                                        {{ $reservacion->responsable }}
+                                    </p>
+                                @endif
                                 <p>
                                     <strong>
                                         Local:
@@ -126,12 +135,8 @@
         </div>
     </div>
 @endsection
-@if (Auth::user()->administrador() || Auth::user()->asistente() || Auth::user()->docente())
+
 @section('sidebar')
     <!-- PANEL DEL PERFIL DE USUARIO -->
     @include('layouts.perfil')
-@endsection
-@endif
-@section('sidebar')
-@include('layouts.visitante')
 @endsection

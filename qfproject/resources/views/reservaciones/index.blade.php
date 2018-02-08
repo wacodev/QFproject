@@ -78,7 +78,7 @@
                                         <?php
                                             // Validación de acceso a las opciones.
                                             $acceso = false;
-                                            switch ($reservacion->t) { 
+                                            switch ($reservacion->t) {
                                                 case 'Administrador':
                                                     if (Auth::user()->id == $reservacion->user_id) {
                                                         $acceso = true;

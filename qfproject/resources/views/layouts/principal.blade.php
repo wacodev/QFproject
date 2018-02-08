@@ -24,6 +24,7 @@
         <link rel="stylesheet" href="{{ asset('css/mis-estilos.css') }}" />
         <link rel="stylesheet" href="{{ asset('css/ayuda.css') }}" />
        
+
         <!-- SECCIÓN PARA AGREGAR ESTILOS -->
         @yield('estilos')
         <!-- FAVICON -->
@@ -185,12 +186,17 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="{{ route('reservaciones.formulario-comprobante') }}">
+                                        <i class="fa fa-circle-o"></i>
+                                        Comprobante
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{ route('reservaciones.historial') }}">
                                         <i class="fa fa-circle-o"></i>
                                         Historial
                                     </a>
                                 </li>
-                               
                                 @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
                                 <li>
                                     <a href="{{ route('reportes.reservacion-lista') }}">
@@ -388,18 +394,17 @@
                 </section>
                 <div class="row">
                     <!-- CONTENIDO -->
-                      @include('administracion.partials.acercaDe')
                     <div class="content">
                         <div class="col-md-8">
                             <!-- MENSAJES FLASH -->
                             @include('flash::message')
                             <!-- CONTENIDO PRINCIPAL -->
                             @yield('contenido')
-                           
+                            @include('administracion.partials.acercaDe')
                             <hr>
                             <br><br><br>
                             <br>
-                        
+                            @yield('estadisticas')
                         </div>
                         <!-- SIDEBAR -->
                         <div class="col-md-4">
@@ -428,7 +433,8 @@
         <script src="{{ asset('js/app.min.js') }}"></script>
         <!-- HORA Y FECHA -->    
         <script src="{{ asset('js/hora-y-fecha.js') }}"></script>
-       
+        <!-- ESTADÍSTICAS -->
+    
         
         <!-- SECCIÓN PARA AGREGAR SCRIPTS -->
         @stack('scripts')

@@ -76,7 +76,7 @@
                                 </p>
                                 <p>
                                     <strong>
-                                        Realizada por:
+                                        Responsable:
                                     </strong>
                                     {{ $notificacion->data['propietario']['name'] }} {{ $notificacion->data['propietario']['lastname'] }}
                                 </p>
