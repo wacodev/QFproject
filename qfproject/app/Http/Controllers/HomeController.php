@@ -51,14 +51,32 @@ class HomeController extends Controller
 
             $hoy = Carbon::now();
 
-            $reservaciones = Reservacion::where('user_id', '=', \Auth::user()->id)
-                ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
-                ->where('codigo', 'like', '%' . $query . '%')
-                ->orWhere('user_id', '=', \Auth::user()->id)
-                ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
-                ->where('fecha', 'like', '%' . $query . '%')
-                ->orderBy('id', 'desc')
-                ->paginate(15);
+           $reservaciones=DB::table('reservaciones')
+            ->join('locales', 'reservaciones.local_id', 'locales.id')
+            ->join('asignaturas', 'reservaciones.asignatura_id', 'asignaturas.id')
+            ->join('users', 'reservaciones.user_id', 'users.id')
+            ->join('actividades', 'reservaciones.actividad_id', 'actividades.id')
+            ->select('reservaciones.*', 'locales.nombre as local', 'locales.imagen as img', 'asignaturas.nombre as asignatura', 'asignaturas.codigo as cod', 'users.name as user', 'users.lastname as last', 'actividades.nombre as actividad')
+            ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('asignaturas.nombre', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('locales.nombre', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('actividades.nombre', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('hora_inicio', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('hora_fin', 'like', '%' . $query . '%')
+            ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
+            ->where('user_id', '=', \Auth::user()->id)
+            ->where('responsable', 'like', '%' . $query . '%')
+            ->orderBy('fecha', 'desc')
+            ->paginate(5);
 
             $reservaciones->each(function($reservaciones) {
                 $reservaciones->user;
