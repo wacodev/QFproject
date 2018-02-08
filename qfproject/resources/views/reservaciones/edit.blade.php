@@ -66,7 +66,7 @@
                         {!! Form::select('tipo', [
                             'Ordinaria' => 'Ordinaria',
                             'Extraordinaria'     => 'Extraordinaria'
-                            ], $reservacion->tipo, ['class' => 'form-control', 'placeholder' => '-- Seleccione el tipo de reservación --']) !!}
+                            ], $reservacion->tipo, ['class' => 'form-control', 'placeholder' => '-- Seleccione el tipo de reservación --', 'required']) !!}
                         @if ($errors->has('tipo'))
                             <span class="help-block">
                                 <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>

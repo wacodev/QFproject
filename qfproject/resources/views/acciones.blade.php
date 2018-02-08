@@ -11,19 +11,22 @@
     </li>
 @endsection
 
-@section('contenido')
+@section('contenido-fila')
     <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">
-                Acciones
+                Registro de acciones
             </h3>
         </div>
         <div class="box-body">
             @if ($acciones->count() > 0)
                 <div class="table-responsive">
-                    <table class="table table-hover tabla-quitar-margen">
+                    <table class="table table-hover table-condensed">
                         <thead>
                             <tr>
+                                <th>
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </th>
                                 <th>Usuario</th>
                                 <th>Tipo</th>
                                 <th>Local</th>
@@ -41,6 +44,13 @@
                                 @elseif ($accion->data['tipo'] == 'eliminar')
                                     <tr class="danger">
                                 @endif
+                                    <td>
+                                        <a href="{{ route('acciones.destroy', $accion->id) }}" type="button" class="btn btn-box-tool">
+                                            <span aria-hidden="true">
+                                                <i class="fa fa-close" aria-hidden="true"></i>
+                                            </span>
+                                        </a>
+                                    </td>
                                     <td>
                                         {{ $accion->data['propietario']['name'] }} {{ $accion->data['propietario']['lastname'] }}
                                     </td>
@@ -70,6 +80,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="text-center">
+                    <a href="{{ route('acciones.destroy-multiple') }}" class="btn btn-danger" onclick="return confirm('¿Deseas eliminar todos los registros de tus acciones?')">
+                        Eliminar todos los registros
+                    </a>
+                </div>
             @else
                 <div class="text-center">
                     <i class="fa fa-flag fa-5x verde-claro" aria-hidden="true"></i>
@@ -90,9 +105,4 @@
         $user = Auth::user();
         $user->unreadNotifications->where('type', '=', 'qfproject\Notifications\TareaNotification')->markAsRead();
     ?>
-@endsection
-
-@section('sidebar')
-    <!-- PANEL DEL PERFIL DE USUARIO -->
-    @include('layouts.perfil')
 @endsection

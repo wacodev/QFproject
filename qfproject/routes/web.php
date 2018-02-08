@@ -90,6 +90,7 @@ Route::group(['prefix' => 'notificaciones', 'middleware' => 'auth'], function() 
 
     Route::get('/', 'HomeController@verNotificaciones')->name('notificaciones');
     Route::get('/{notificacion}/destroy', 'HomeController@eliminarNotificacion')->name('notificaciones.destroy');
+    Route::get('/destroy-multiple', 'HomeController@eliminarNotificaciones')->name('notificaciones.destroy-multiple');
 
 });
 
@@ -102,7 +103,8 @@ Route::group(['prefix' => 'notificaciones', 'middleware' => 'auth'], function() 
 Route::group(['prefix' => 'acciones', 'middleware' => 'asistente'], function() {
 
     Route::get('/', 'HomeController@verAcciones')->name('acciones');
-    //Route::get('/{accion}/destroy', 'HomeController@eliminarNotificacion')->name('notificaciones.destroy');
+    Route::get('/{accion}/destroy', 'HomeController@eliminarNotificacion')->name('acciones.destroy');
+    Route::get('/destroy-multiple', 'HomeController@eliminarAcciones')->name('acciones.destroy-multiple');
 
 });
 

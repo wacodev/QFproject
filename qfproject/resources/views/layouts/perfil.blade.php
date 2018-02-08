@@ -10,22 +10,25 @@
         <p class="text-muted text-center">
             {{ Auth::user()->tipo }}
         </p>
-        <ul class="list-group list-group-unbordered">
-           
-            <li class="list-group-item">
-                <strong>
-                    Correo electrónico
-                </strong>
-                <p class="pull-right">
-                    {{ Auth::user()->email }}
-                </p>
-            </li>
-        </ul>
+        @if (!Auth::user()->visitante())
+            <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                    <strong>
+                        Correo electrónico
+                    </strong>
+                    <p class="pull-right">
+                        {{ Auth::user()->email }}
+                    </p>
+                </li>
+            </ul>
+        @endif
         <a href="{{ route('reservaciones.paso-uno') }}" class="btn btn-success btn-block">
             Nueva reservación
         </a>
-        <a href="{{ route('editar-perfil') }}" class="btn btn-default btn-block">
-            Editar perfil
-        </a>
+        @if (!Auth::user()->visitante())
+            <a href="{{ route('editar-perfil') }}" class="btn btn-default btn-block">
+                Editar perfil
+            </a>
+        @endif
     </div>
 </div>

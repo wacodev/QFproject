@@ -78,6 +78,14 @@
                                 </small>
                             </p>
                             <div class="well well-sm well-panel well-parrafo">
+                                @if (Auth::user()->visitante())
+                                    <p>
+                                        <strong>
+                                            Responsable:
+                                        </strong>
+                                        {{ $reservacion->responsable }}
+                                    </p>
+                                @endif
                                 <p>
                                     <strong>
                                         Local:

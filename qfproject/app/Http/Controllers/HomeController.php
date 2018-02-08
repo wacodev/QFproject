@@ -117,6 +117,8 @@ class HomeController extends Controller
                 ->where('codigo', 'like', '%' . $query . '%')
                 ->orWhere('user_id', '=', \Auth::user()->id)
                 ->where('fecha', 'like', '%' . $query . '%')
+                ->orWhere('user_id', '=', \Auth::user()->id)
+                ->where('responsable', 'like', '%' . $query . '%')
                 ->orderBy('fecha', 'desc')
                 ->paginate(15);
 
@@ -169,6 +171,25 @@ class HomeController extends Controller
             ->where('id', '=', $id);
 
         $notificacion->delete();
+
+        return back();
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Elimina las notificaciones del usuario de la base de datos.
+     *
+     * @return void
+     * ---------------------------------------------------------------------------
+     */
+
+    public function eliminarNotificaciones()
+    {
+        $notificaciones = \Auth::user()
+            ->notifications()
+            ->where('type', '=', 'qfproject\Notifications\ReservacionNotification');
+
+        $notificaciones->delete();
 
         return back();
     }
@@ -330,5 +351,24 @@ class HomeController extends Controller
 
         return view('acciones')
             ->with('acciones', $acciones);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Elimina las notificaciones de acción de la base de datos.
+     *
+     * @return void
+     * ---------------------------------------------------------------------------
+     */
+
+    public function eliminarAcciones()
+    {
+        $acciones = \Auth::user()
+            ->notifications()
+            ->where('type', '=', 'qfproject\Notifications\TareaNotification');
+
+        $acciones->delete();
+
+        return back();
     }
 }

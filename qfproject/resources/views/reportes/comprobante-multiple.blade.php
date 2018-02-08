@@ -32,7 +32,7 @@
         <!-- DATOS DEL USUARIO -->
         <p><strong>RESPONSABLE DE LA RESERVACIÓN</strong></p>
         <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-bordered table-condensed">
                 <thead>
                     <tr class="active">
                         <th>Nombre</th>
@@ -54,7 +54,7 @@
         <!-- DATOS DE LA RESERVACIÓN -->
         <p><strong>DATOS DE LA RESERVACIÓN</strong></p>
         <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-bordered table-condensed">
                 <thead>
                     <tr class="active">
                         <th>Tipo</th>

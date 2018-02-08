@@ -53,6 +53,7 @@ class ReservacionController extends Controller
             ->orWhere('users.name', 'like', '%' .$query .'%')
             ->orWhere('users.lastname', 'like', '%' .$query .'%')
             ->orWhere('actividades.nombre', 'like', '%' .$query .'%')
+            ->orWhere('responsable', 'like', '%' .$query .'%')
             ->orWhere('fecha', 'like', '%' .$query .'%')
             ->orWhere('hora_inicio', 'like', '%' .$query .'%')
             ->orWhere('hora_fin', 'like', '%' .$query .'%')
@@ -132,7 +133,8 @@ class ReservacionController extends Controller
 
         $this->validate(request(), [
             'asignatura_id' => 'required',
-            'actividad_id'  => 'required'
+            'actividad_id'  => 'required',
+            'tipo'          => 'required'
         ]);
 
         $reservacion = Reservacion::find($id);
