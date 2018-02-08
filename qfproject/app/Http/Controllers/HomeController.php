@@ -57,7 +57,7 @@ class HomeController extends Controller
                 ->orWhere('user_id', '=', \Auth::user()->id)
                 ->where('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
                 ->where('fecha', 'like', '%' . $query . '%')
-                ->orderBy('fecha', 'desc')
+                ->orderBy('id', 'desc')
                 ->paginate(15);
 
             $reservaciones->each(function($reservaciones) {

@@ -59,7 +59,7 @@ class ActividadController extends Controller
      * ---------------------------------------------------------------------------
      * Almacena una actividad recién creada en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\ActividadRequest  $request
+     * @param  \qfproject\Http\Requests\ActividadRequest  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */

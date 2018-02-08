@@ -182,6 +182,12 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="{{ route('reservaciones.formulario-comprobante') }}">
+                                        <i class="fa fa-circle-o"></i>
+                                        Comprobante
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{ route('reservaciones.historial') }}">
                                         <i class="fa fa-circle-o"></i>
                                         Historial

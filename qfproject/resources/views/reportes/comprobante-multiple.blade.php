@@ -41,12 +41,12 @@
                 </thead>
                 <tbody>
                     <tr>
-                        @if ($reservacion->responsable)
-                            <td>{{ $reservacion->responsable }}</td>
+                        @if ($reservaciones[0]->responsable)
+                            <td>{{ $reservaciones[0]->responsable }}</td>
                         @else
-                            <td>{{ $reservacion->user->name }} {{ $reservacion->user->lastname }}</td>
+                            <td>{{ $reservaciones[0]->user->name }} {{ $reservaciones[0]->user->lastname }}</td>
                         @endif
-                        <td>{{ $reservacion->user->tipo }}</td>
+                        <td>{{ $reservaciones[0]->user->tipo }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -60,46 +60,51 @@
                         <th>Tipo</th>
                         <th>Fecha</th>
                         <th>Hora</th>
-                        <th>Local</th>
-                        <th>Código de comprobación</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ $reservacion->tipo }}</td>
-                        <td>{{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }}</td>
+                        <td>{{ $reservaciones[0]->tipo }}</td>
+                        <td>{{ \Carbon\Carbon::parse($reservaciones[0]->fecha)->format('d/m/Y') }}</td>
                         <td>
-                            {{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}
+                            {{ \Carbon\Carbon::parse($reservaciones[0]->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservaciones[0]->hora_fin)->format('h:i A') }}
                         </td>
-                        <td>{{ substr($reservacion->local->nombre, 0, 22) }}</td>
-                        <td>{{ $reservacion->codigo }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <!-- LISTA DE LOCALES -->
+        <p><strong>LOCALES</strong></p>
+        <ul>
+            @foreach ($reservaciones as $reservacion)
+                <li>
+                    {{ $reservacion->codigo }} &nbsp;-&nbsp; {{ $reservacion->local->nombre }}
+                </li>
+            @endforeach
+        </ul>
         <!-- DETALLES DE LA RESERVACIÓN -->
-        <p class="margen-arriba-grande">
+        <p>
             Se autoriza a
-            @if ($reservacion->responsable)
-                {{ $reservacion->responsable }}
+            @if ($reservaciones[0]->responsable)
+                {{ $reservaciones[0]->responsable }}
             @else
-                {{ $reservacion->user->name }} {{ $reservacion->user->lastname }}
+                {{ $reservaciones[0]->user->name }} {{ $reservaciones[0]->user->lastname }}
             @endif
-            hacer uso del local {{ $reservacion->local->nombre }} el día {{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }} de {{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} a {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }} para realizar:
+            hacer uso de los locales el día {{ \Carbon\Carbon::parse($reservaciones[0]->fecha)->format('d/m/Y') }} de {{ \Carbon\Carbon::parse($reservaciones[0]->hora_inicio)->format('h:i A') }} a {{ \Carbon\Carbon::parse($reservaciones[0]->hora_fin)->format('h:i A') }} para realizar:
         </p>
         <ul>
             <li>
                 <strong>Asignatura:</strong>
-                {{ $reservacion->asignatura->codigo }} &nbsp;-&nbsp; {{ $reservacion->asignatura->nombre }}.
+                {{ $reservaciones[0]->asignatura->codigo }} &nbsp;-&nbsp; {{ $reservaciones[0]->asignatura->nombre }}.
             </li>
             <li>
                 <strong>Actividad:</strong>
-                {{ $reservacion->actividad->nombre }}.
+                {{ $reservaciones[0]->actividad->nombre }}.
             </li>
             <li>
                 <strong>Tema a desarrollar:</strong>
-                @if ($reservacion->tema)
-                    {{ $reservacion->tema }}.
+                @if ($reservaciones[0]->tema)
+                    {{ $reservaciones[0]->tema }}.
                 @else
                     Sin definir.
                 @endif
