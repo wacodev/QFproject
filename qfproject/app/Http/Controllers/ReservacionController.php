@@ -50,20 +50,14 @@ class ReservacionController extends Controller
             ->select('reservaciones.*', 'locales.nombre as local', 'asignaturas.nombre as asignatura', 'users.name as user', 'users.lastname as last', 'users.tipo as t', 'actividades.nombre as actividad')
             ->where('asignaturas.nombre', 'like', '%' .$query .'%')
             ->orWhere('locales.nombre', 'like', '%' .$query .'%')
-            ->orWhere('users.name', 'like', '%' .$query .'%') 
+            ->orWhere('users.name', 'like', '%' .$query .'%')
+            ->orWhere('users.lastname', 'like', '%' .$query .'%')
             ->orWhere('actividades.nombre', 'like', '%' .$query .'%')
             ->orWhere('fecha', 'like', '%' .$query .'%')
             ->orWhere('hora_inicio', 'like', '%' .$query .'%')
             ->orWhere('hora_fin', 'like', '%' .$query .'%')
-            ->orderBy('fecha', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(25);
-
-            $reservaciones->each(function($reservaciones) {
-                $reservaciones->user;
-                $reservaciones->local;
-                $reservaciones->asignatura;
-                $reservaciones->actividad;
-            });
 
             return view('reservaciones.index')
                 ->with('reservaciones', $reservaciones)

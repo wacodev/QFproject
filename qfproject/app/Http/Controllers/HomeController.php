@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
  */
 
 use Carbon\Carbon;
+use DB;
+use Laracasts\Flash\Flash;
 use qfproject\Actividad;
 use qfproject\Asignatura;
 use qfproject\Http\Requests\ActividadRequest;
@@ -18,8 +20,6 @@ use qfproject\Http\Requests\AsignaturaRequest;
 use qfproject\Http\Requests\UserRequest;
 use qfproject\Reservacion;
 use qfproject\User;
-use DB;
-use Laracasts\Flash\Flash;
 
 class HomeController extends Controller
 {
@@ -77,15 +77,18 @@ class HomeController extends Controller
             ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
             ->where('user_id', '=', \Auth::user()->id)
             ->where('responsable', 'like', '%' . $query . '%')
-            ->orderBy('fecha', 'desc')
-            ->paginate(5);
+            ->orderBy('id', 'desc')
+            ->paginate(15);
 
-            $reservaciones->each(function($reservaciones) {
-                $reservaciones->user;
-                $reservaciones->local;
-                $reservaciones->asignatura;
-                $reservaciones->actividad;
-            });
+            foreach ($reservaciones as $reservacion) {
+                $ft = explode(' ', $reservacion->created_at);
+                $f = explode('-', $ft[0]);
+                $t = explode(':', $ft[1]);
+
+                $f_carbon = Carbon::create($f[0], $f[1], $f[2], $t[0], $t[1], $t[2]);
+
+                $reservacion->created_at = $f_carbon->diffForHumans();
+            }
 
             return view('home')
                 ->with('reservaciones', $reservaciones)
