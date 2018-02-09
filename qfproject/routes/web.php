@@ -245,13 +245,14 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
 
         Route::get('/exportar', 'ExportacionController@exportarReservaciones')->name('reservaciones.exportar');
         Route::post('/recibir', 'ExportacionController@recibirReservaciones')->name('reservaciones.recibir');
-
+        });
+    
         /**
         * Ayuda.
         */
-        Route::get('/ayuda', 'AyudaController@mostrar')->name('mostrar-ayuda');
-
-    });
+        Route::get('ayuda', 'AyudaController@mostrar')->name('mostrar-ayuda');
+       
+  
 
 
 });

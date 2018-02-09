@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 class AyudaController extends Controller
 {
     public function mostrar(){
-     return view('Ayuda.manual');
+     return view('ayuda.manual');
     }
+
+    
+
 }

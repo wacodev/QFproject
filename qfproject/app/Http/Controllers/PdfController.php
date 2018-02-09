@@ -181,7 +181,7 @@ class PdfController extends Controller
 
 
     $pdf=PDF::loadView('reportes.reservacion-lista', ['reservaciones'=>$reservaciones]);
-    return $pdf ->download('proximasReservas.pdf');
+    return $pdf ->stream('proximasReservas.pdf');
 
    }
 

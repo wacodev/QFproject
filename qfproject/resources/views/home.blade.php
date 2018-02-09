@@ -1,3 +1,4 @@
+
 @extends('layouts.principal')
 
 @section('titulo', 'Inicio')
