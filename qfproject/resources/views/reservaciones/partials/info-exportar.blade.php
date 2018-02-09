@@ -12,11 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Esta herramienta le permite exportar a un archivo de Excel todas las reservaciones efectuadas en un periodo determinado. Ingrese
-            <a href="#">
-                aquí
-            </a>
-            para más información sobre cómo exportar reservaciones a Excel.
+            Esta herramienta le permite exportar a un archivo de Excel todas las reservaciones efectuadas en un periodo determinado.
         </p>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<!-- AYUDA DE ASIGNATURAS -->
+<!-- AYUDA DE EDITAR USUARIO -->
 <div class="box box-success">
     <div class="box-header with-border">
         <h3 class="box-title">
@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Defina todas las asignaturas que se imparten en la facultad.
+            Panel para editar tu perfil. Si no vas a editar tu contraseña deja el campo vacío al igual que el de confirmar contraseña, así seguirá siendo la misma que tenías.
         </p>
     </div>
 </div>

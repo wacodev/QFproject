@@ -12,11 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Defina y mantenga actualizada la información de todos los locales con que cuenta la facultad. Ingrese
-            <a href="#">
-                aquí
-            </a>
-            para más información sobre los locales.
+            Defina y mantenga actualizada la información de todos los locales con que cuenta la facultad.
         </p>
     </div>
 </div>

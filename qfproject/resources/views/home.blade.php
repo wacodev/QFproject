@@ -75,7 +75,7 @@
                             </h4>
                             <p>
                                 <small>
-                                Código: {{ $reservacion->codigo }}
+                                    Código: {{ $reservacion->codigo }}
                                 </small>
                             </p>
                             <div class="well well-sm well-panel well-parrafo">
@@ -139,4 +139,6 @@
 @section('sidebar')
     <!-- PANEL DEL PERFIL DE USUARIO -->
     @include('layouts.perfil')
+    <!-- AYUDA DE INICIO -->
+    @include('layouts.partials.info-inicio')
 @endsection

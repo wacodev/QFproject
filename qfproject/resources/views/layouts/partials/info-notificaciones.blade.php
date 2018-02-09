@@ -1,4 +1,4 @@
-<!-- AYUDA DE ASIGNATURAS -->
+<!-- AYUDA DE NOTIFICACIONES -->
 <div class="box box-success">
     <div class="box-header with-border">
         <h3 class="box-title">
@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Defina todas las asignaturas que se imparten en la facultad.
+            Cualquier actividad relevante entorno a tus reservaciones será notificada en este panel.
         </p>
     </div>
 </div>

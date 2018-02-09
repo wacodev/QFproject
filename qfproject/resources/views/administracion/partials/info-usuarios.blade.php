@@ -12,11 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Mantenga el control de todos los usuarios que acceden al sistema. Ingrese
-            <a href="#">
-                aquí
-            </a>
-            para más información sobre los usuarios.
+            Mantenga el control de todos los usuarios que acceden al sistema.
         </p>
     </div>
 </div>

@@ -15,11 +15,19 @@
     <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">
-                Registro de acciones
+                Registro de tus acciones
             </h3>
         </div>
         <div class="box-body">
             @if ($acciones->count() > 0)
+            <p>
+                <i class="fa fa-square icono-margen amarillo"></i>
+                Reservaciones que no pudieron ser registradas
+            </p>
+            <p>
+                <i class="fa fa-square icono-margen rojo"></i>
+                Reservaciones que fueron eliminadas durante alguna acción que realizaste
+            </p>
                 <div class="table-responsive">
                     <table class="table table-hover table-condensed">
                         <thead>

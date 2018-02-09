@@ -105,4 +105,6 @@
 @section('sidebar')
     <!-- PANEL DEL PERFIL DE USUARIO -->
     @include('layouts.perfil')
+    <!-- AYUDA DE EDITAR PERFIL -->
+    @include('layouts.partials.info-editar-perfil')
 @endsection

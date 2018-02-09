@@ -107,7 +107,7 @@ class AsuetoController extends Controller
     {
         $asueto = Asueto::find($id);
 
-        if (!$asignatura) {
+        if (!$asueto) {
             abort(404);
         }
 
@@ -128,7 +128,7 @@ class AsuetoController extends Controller
     {
         $asueto = Asueto::find($id);
 
-        if (!$asignatura) {
+        if (!$asueto) {
             abort(404);
         }
 
@@ -164,7 +164,7 @@ class AsuetoController extends Controller
     {
         $asueto = Asueto::find($id);
 
-        if (!$asignatura) {
+        if (!$asueto) {
             abort(404);
         }
 

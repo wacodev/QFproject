@@ -23,8 +23,6 @@
         <!-- MIS ESTILOS -->
         <link rel="stylesheet" href="{{ asset('css/mis-estilos.css') }}" />
         <link rel="stylesheet" href="{{ asset('css/ayuda.css') }}" />
-       
-
         <!-- SECCIÓN PARA AGREGAR ESTILOS -->
         @yield('estilos')
         <!-- FAVICON -->
@@ -197,14 +195,6 @@
                                         Historial
                                     </a>
                                 </li>
-                                @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
-                                <li>
-                                    <a href="{{ route('reportes.reservacion-lista') }}">
-                                        <i class="fa fa-circle-o"></i><small class="label pull-right bg-red">PDF</small>
-                                        Reservas próximas
-                                    </a>
-                                </li>
-                                @endif
                             </ul>
                         </li>
                         @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
@@ -217,6 +207,12 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+                                <li>
+                                    <a href="{{ route('reportes.reservacion-lista') }}">
+                                        <i class="fa fa-circle-o"></i><small class="label pull-right bg-red">PDF</small>
+                                        Reservas próximas
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="{{ route('reportes.exportar-horarios') }}">
                                         <i class="fa fa-circle-o"></i>
@@ -364,13 +360,13 @@
                             </a>
                         </li>                        
                         <li>
-                            <a href="#"> <!-- Editar -->
+                            <a href="">
                                 <i class="fa fa-clock-o"></i>
                                 <span id="clock"></span>
                             </a>
                         </li>
                         <li>
-                            <a href="#"> <!-- Editar -->
+                            <a href="">
                                 <i class="fa fa-calendar"></i>
                                 <span id="date"></span>
                             </a>
@@ -395,8 +391,10 @@
                 <div class="row">
                     <!-- CONTENIDO -->
                     <div class="content">
-                        <!-- CONTENIDO PRINCIPAL OCUPANDO TODA LA PANTALLA -->
-                        @yield('contenido-fila')
+                        <div class="col-md-12">
+                            <!-- CONTENIDO PRINCIPAL OCUPANDO TODA LA PANTALLA -->
+                            @yield('contenido-fila')
+                        </div>
                         <div class="col-md-8">
                             <!-- MENSAJES FLASH -->
                             @include('flash::message')
@@ -435,9 +433,6 @@
         <script src="{{ asset('js/app.min.js') }}"></script>
         <!-- HORA Y FECHA -->    
         <script src="{{ asset('js/hora-y-fecha.js') }}"></script>
-        <!-- ESTADÍSTICAS -->
-    
-        
         <!-- SECCIÓN PARA AGREGAR SCRIPTS -->
         @stack('scripts')
         <script>

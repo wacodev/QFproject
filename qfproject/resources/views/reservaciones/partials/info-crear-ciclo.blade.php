@@ -12,11 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Esta herramienta le permite registrar todas las reservaciones ordinarias de un ciclo anterior en uno nuevo. Tenga en cuenta que al reservar por este método, todas aquellas reservaciones registradas dentro del nuevo ciclo serán eliminadas. Ingrese
-            <a href="#">
-                aquí
-            </a>
-            para más información sobre la reservación por ciclo.
+            Esta herramienta le permite registrar todas las reservaciones ordinarias de un ciclo anterior en uno nuevo.
         </p>
     </div>
 </div>

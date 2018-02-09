@@ -12,11 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Definir suspensiones de actividades extraordinarias permite tener el control para que los demás usuarios no puedan realizar reservaciones en dichas fechas. Ingrese
-            <a href="#">
-                aquí
-            </a>
-            para más información sobre las suspensiones.
+            Definir suspensiones extraordinarias de actividades permite tener el control para que los demás usuarios no puedan realizar reservaciones en dichas fechas.
         </p>
     </div>
 </div>

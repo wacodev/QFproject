@@ -1,4 +1,4 @@
-<!-- AYUDA DE ASIGNATURAS -->
+<!-- AYUDA DE INICIO -->
 <div class="box box-success">
     <div class="box-header with-border">
         <h3 class="box-title">
@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Defina todas las asignaturas que se imparten en la facultad.
+            Panel de inicio con el listado de tus reservaciones vigentes. Edita, elimina y descarga el comprobante de tus reservaciones de forma rápida y sencilla en el menú desplegable al lado de la imagen del local reservado.
         </p>
     </div>
 </div>

@@ -157,6 +157,8 @@
 @endsection
 
 @section('sidebar')
+    <!-- MENÚ DE HERRAMIENTAS ADICIONALES PARA USUARIOS -->
+    @include('administracion.partials.herr-usuarios')
     <!-- MENÚ DE HERRAMIENTAS PARA LA GESTIÓN ADMINISTRATIVA -->
     @include('administracion.partials.herramientas')
     <!-- INFORMACIÓN ADICIONAL DE USUARIOS -->

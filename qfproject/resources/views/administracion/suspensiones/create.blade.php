@@ -109,7 +109,6 @@
             //Date picker
             $('#datepicker').datepicker({
                 autoclose: true,
-                daysOfWeekDisabled: [0],
                 language: 'es'
             })
             //Timepicker

@@ -23,6 +23,11 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('reservaciones.index') }}">
+                    Panel de administración
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('reservaciones.paso-uno') }}">
                     Reservación individual
                 </a>

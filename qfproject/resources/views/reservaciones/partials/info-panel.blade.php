@@ -12,11 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            En el panel de administración puede encontrar todas las reservaciones hechas por los usuarios y puede modifar aquellas en las cuales tenga los permisos correspondientes. Ingrese
-            <a href="#">
-                aquí
-            </a>
-            para más información sobre el panel de administración.
+            En el panel de administración puede encontrar todas las reservaciones hechas por los usuarios y puede modifar aquellas en las cuales tenga los permisos correspondientes.
         </p>
     </div>
 </div>
