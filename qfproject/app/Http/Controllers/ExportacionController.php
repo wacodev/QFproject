@@ -39,7 +39,7 @@ class ExportacionController extends Controller
      * Exporta las reservaciones almacenadas en la base de datos a un archivo de
      * Excel.
      * 
-     * @param  qfproject\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return void
      * ---------------------------------------------------------------------------
      */

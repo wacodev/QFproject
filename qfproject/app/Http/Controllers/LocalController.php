@@ -23,6 +23,7 @@ class LocalController extends Controller
      * ---------------------------------------------------------------------------
      * Muestra una lista de locales.
      * 
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -59,7 +60,7 @@ class LocalController extends Controller
      * ---------------------------------------------------------------------------
      * Almacena un local recién creado en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\LocalRequest  $request
+     * @param  \qfproject\Http\Requests\LocalRequest  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -105,20 +106,6 @@ class LocalController extends Controller
 
     /**
      * ---------------------------------------------------------------------------
-     * Muestra el local especificado.
-     * 
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     * ---------------------------------------------------------------------------
-     */
-
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * ---------------------------------------------------------------------------
      * Muestra el formulario para editar el local especificado.
      * 
      * @param  int  $id
@@ -130,6 +117,10 @@ class LocalController extends Controller
     {
         $local = Local::find($id);
 
+        if (!$local) {
+            abort(404);
+        }
+
         return view('administracion.locales.edit')->with('local', $local);
     }
 
@@ -137,7 +128,7 @@ class LocalController extends Controller
      * ---------------------------------------------------------------------------
      * Actualiza el local especificado en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\LocalRequest  $request
+     * @param  \qfproject\Http\Requests\LocalRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
@@ -147,6 +138,10 @@ class LocalController extends Controller
     {
 
         $local = Local::find($id);
+
+        if (!$local) {
+            abort(404);
+        }
 
         /**
          * Almacenando nueva imagen.
@@ -208,6 +203,10 @@ class LocalController extends Controller
     public function destroy($id)
     {
         $local = Local::find($id);
+
+        if (!$local) {
+            abort(404);
+        }
 
         /**
          * Eliminando reservaciones registradas anteriormente con el local

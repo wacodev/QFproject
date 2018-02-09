@@ -234,11 +234,24 @@ a:hover {
  */
 
 .help-block {
-    color: #e20000;
+    color: #d73925;
 }
 
 .margen-campo-imagen {
     padding-top: 7px;
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+    z-index: 3;
+    color: #fff;
+    cursor: default;
+    background-color: #00a65a;
+    border-color: #00a65a;
 }
 
 .seleccionar {

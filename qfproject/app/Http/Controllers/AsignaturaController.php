@@ -23,6 +23,7 @@ class AsignaturaController extends Controller
      * ---------------------------------------------------------------------------
      * Muestra una lista de asignaturas.
      * 
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -88,20 +89,6 @@ class AsignaturaController extends Controller
 
     /**
      * ---------------------------------------------------------------------------
-     * Muestra la asignatura especificada.
-     * 
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     * ---------------------------------------------------------------------------
-     */
-
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * ---------------------------------------------------------------------------
      * Muestra el formulario para editar la asignatura especificada.
      * 
      * @param  int  $id
@@ -113,6 +100,10 @@ class AsignaturaController extends Controller
     {
         $asignatura = Asignatura::find($id);
 
+        if (!$asignatura) {
+            abort(404);
+        }
+
         return view('administracion.asignaturas.edit')->with('asignatura', $asignatura);
     }
 
@@ -120,7 +111,7 @@ class AsignaturaController extends Controller
      * ---------------------------------------------------------------------------
      * Actualiza la asignatura especificada en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\AsignaturaRequest  $request
+     * @param  \qfproject\Http\Requests\AsignaturaRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
@@ -129,6 +120,10 @@ class AsignaturaController extends Controller
     public function update(AsignaturaRequest $request, $id)
     {
         $asignatura = Asignatura::find($id);
+
+        if (!$asignatura) {
+            abort(404);
+        }
         
         $asignatura->fill($request->all());
         
@@ -161,6 +156,10 @@ class AsignaturaController extends Controller
     public function destroy($id)
     {
         $asignatura = Asignatura::find($id);
+
+        if (!$asignatura) {
+            abort(404);
+        }
 
         /**
          * Eliminando reservaciones registradas anteriormente con la asignatura

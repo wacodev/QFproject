@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
  */
 
 use Carbon\Carbon;
+use DB;
+use Laracasts\Flash\Flash;
 use qfproject\Actividad;
 use qfproject\Asignatura;
 use qfproject\Http\Requests\ActividadRequest;
@@ -41,6 +43,7 @@ class HomeController extends Controller
      * Muestra una lista de reservaciones vigentes hechas por el usuario y un
      * panel con los datos del mismo.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -76,15 +79,18 @@ class HomeController extends Controller
             ->orWhere('fecha', '>=', Carbon::parse($hoy)->format('Y-m-d'))
             ->where('user_id', '=', \Auth::user()->id)
             ->where('responsable', 'like', '%' . $query . '%')
-            ->orderBy('fecha', 'desc')
-            ->paginate(5);
+            ->orderBy('id', 'desc')
+            ->paginate(15);
 
-            $reservaciones->each(function($reservaciones) {
-                $reservaciones->user;
-                $reservaciones->local;
-                $reservaciones->asignatura;
-                $reservaciones->actividad;
-            });
+            foreach ($reservaciones as $reservacion) {
+                $ft = explode(' ', $reservacion->created_at);
+                $f = explode('-', $ft[0]);
+                $t = explode(':', $ft[1]);
+
+                $f_carbon = Carbon::create($f[0], $f[1], $f[2], $t[0], $t[1], $t[2]);
+
+                $reservacion->created_at = $f_carbon->diffForHumans();
+            }
 
             return view('home')
                 ->with('reservaciones', $reservaciones)
@@ -96,6 +102,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Muestra una lista de todas las reservaciones hechas por el usuario.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -113,6 +120,8 @@ class HomeController extends Controller
                 ->where('codigo', 'like', '%' . $query . '%')
                 ->orWhere('user_id', '=', \Auth::user()->id)
                 ->where('fecha', 'like', '%' . $query . '%')
+                ->orWhere('user_id', '=', \Auth::user()->id)
+                ->where('responsable', 'like', '%' . $query . '%')
                 ->orderBy('fecha', 'desc')
                 ->paginate(15);
 
@@ -154,7 +163,7 @@ class HomeController extends Controller
      * Elimina la notificación especificada de la base de datos.
      *
      * @param  int  $id
-     * @return void
+     * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
 
@@ -165,6 +174,25 @@ class HomeController extends Controller
             ->where('id', '=', $id);
 
         $notificacion->delete();
+
+        return back();
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Elimina las notificaciones del usuario de la base de datos.
+     *
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function eliminarNotificaciones()
+    {
+        $notificaciones = \Auth::user()
+            ->notifications()
+            ->where('type', '=', 'qfproject\Notifications\ReservacionNotification');
+
+        $notificaciones->delete();
 
         return back();
     }
@@ -188,7 +216,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Actualiza el usuario especificado en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\UserRequest  $request
+     * @param  \qfproject\Http\Requests\UserRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
@@ -252,7 +280,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Almacena una actividad recién creada en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\ActividadRequest  $request
+     * @param  \qfproject\Http\Requests\ActividadRequest  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -282,7 +310,7 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      * Almacena una asignatura recién creada en la base de datos.
      * 
-     * @param  qfproject\Http\Requests\AsignaturaRequest  $request
+     * @param  \qfproject\Http\Requests\AsignaturaRequest  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -326,5 +354,24 @@ class HomeController extends Controller
 
         return view('acciones')
             ->with('acciones', $acciones);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Elimina las notificaciones de acción de la base de datos.
+     *
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function eliminarAcciones()
+    {
+        $acciones = \Auth::user()
+            ->notifications()
+            ->where('type', '=', 'qfproject\Notifications\TareaNotification');
+
+        $acciones->delete();
+
+        return back();
     }
 }

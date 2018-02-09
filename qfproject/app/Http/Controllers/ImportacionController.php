@@ -44,7 +44,7 @@ class ImportacionController extends Controller
      * Almacena las reservaciones recién importadas de un archivo de Excel en la
      * base de datos.
      * 
-     * @param  \qfproject\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -306,7 +306,7 @@ class ImportacionController extends Controller
      * Almacena las reservaciones recién importadas de un archivo de Excel en la
      * base de datos.
      * 
-     * @param  \qfproject\Http\Request  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */

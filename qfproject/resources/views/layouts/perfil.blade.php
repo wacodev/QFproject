@@ -10,6 +10,7 @@
         <p class="text-muted text-center">
             {{ Auth::user()->tipo }}
         </p>
+
         <ul class="list-group list-group-unbordered">
            
             <li class="list-group-item">
@@ -22,6 +23,7 @@
                 </p>
             </li>
         </ul>
+
         <a href="{{ route('reservaciones.paso-uno') }}" class="btn btn-success btn-block">
             Nueva reservación
         </a>
