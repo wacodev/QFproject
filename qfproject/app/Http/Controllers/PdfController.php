@@ -372,4 +372,6 @@ class PdfController extends Controller
 
         return $pdf->stream('listado_actividad.pdf');
     }
+
+   
 }

@@ -74,7 +74,7 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'asistente'], function
     Route::post('locales', 'ChartController@locales')->name('ver.locales');
     Route::post('asignaturas', 'ChartController@asignaturas')->name('ver.asignaturas');
     Route::post('usuarios', 'ChartController@usuarios')->name('ver.usuarios');
-
+   
 
 
 
