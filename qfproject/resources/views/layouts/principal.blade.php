@@ -395,6 +395,8 @@
                 <div class="row">
                     <!-- CONTENIDO -->
                     <div class="content">
+                        <!-- CONTENIDO PRINCIPAL OCUPANDO TODA LA PANTALLA -->
+                        @yield('contenido-fila')
                         <div class="col-md-8">
                             <!-- MENSAJES FLASH -->
                             @include('flash::message')
@@ -443,7 +445,7 @@
                 var refresh = function() {
                     location.reload(true);
                 };
-                var int = setInterval(refresh, 300000);
+                var int = setInterval(refresh, 600000);
             }())
         </script>
     </body>

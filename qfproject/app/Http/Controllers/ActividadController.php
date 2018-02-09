@@ -23,6 +23,7 @@ class ActividadController extends Controller
      * ---------------------------------------------------------------------------
      * Muestra una lista de actividades.
      * 
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * ---------------------------------------------------------------------------
      */
@@ -34,7 +35,7 @@ class ActividadController extends Controller
             
             $actividades = Actividad::where('nombre', 'like', '%' . $query . '%')
                 ->orderBy('nombre', 'asc')
-                ->paginate(10);
+                ->paginate(25);
             
             return view('administracion.actividades.index')
                 ->with('actividades', $actividades)
@@ -87,20 +88,6 @@ class ActividadController extends Controller
 
     /**
      * ---------------------------------------------------------------------------
-     * Muestra la actividad especificada.
-     * 
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     * ---------------------------------------------------------------------------
-     */
-
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * ---------------------------------------------------------------------------
      * Muestra el formulario para editar la actividad especificada.
      * 
      * @param  int  $id
@@ -111,6 +98,10 @@ class ActividadController extends Controller
     public function edit($id)
     {
         $actividad = Actividad::find($id);
+
+        if (!$actividad) {
+            abort(404);
+        }
 
         return view('administracion.actividades.edit')->with('actividad', $actividad);
     }
@@ -128,6 +119,10 @@ class ActividadController extends Controller
     public function update(ActividadRequest $request, $id)
     {
         $actividad = Actividad::find($id);
+
+        if (!$actividad) {
+            abort(404);
+        }
         
         $actividad->fill($request->all());
         
@@ -160,6 +155,10 @@ class ActividadController extends Controller
     public function destroy($id)
     {
         $actividad = Actividad::find($id);
+
+        if (!$actividad) {
+            abort(404);
+        }
 
         /**
          * Eliminando reservaciones registradas anteriormente con la actividad

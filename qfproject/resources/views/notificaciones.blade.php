@@ -32,7 +32,7 @@
                                     <i class="fa fa-ticket fa-2x icono-success" aria-hidden="true"></i>
                                 @elseif ($notificacion->data['tipo'] == 'editar')
                                     <i class="fa fa-wrench fa-2x icono-primary" aria-hidden="true"></i>
-                                @elseif ($notificacion->data['tipo'] == 'eliminar')
+                                @else
                                     <i class="fa fa-trash fa-2x icono-danger" aria-hidden="true"></i>
                                 @endif
                             </div>
@@ -112,9 +112,14 @@
                         </div>
                     </div>
                 @endforeach
+            <div class="text-center">
+                <a href="{{ route('notificaciones.destroy-multiple') }}" class="btn btn-danger" onclick="return confirm('¿Deseas eliminar todas las notificaciones?')">
+                    Eliminar todas las notificaciones
+                </a>
+            </div>
             @else
                 <div class="text-center">
-                    <i class="fa fa-bell-slash fa-5x verde-claro" aria-hidden="true"></i>
+                    <i class="fa fa-bell fa-5x verde-claro" aria-hidden="true"></i>
                     <h4 class="verde-claro">
                         No hay notificaciones
                     </h4>

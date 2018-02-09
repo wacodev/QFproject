@@ -83,7 +83,7 @@
                                     </label>
                                 @else
                                     <label class="label label-danger">
-                                        Expirada
+                                        Prescrita
                                     </label>
                                 @endif
                             </p>
