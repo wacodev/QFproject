@@ -14,6 +14,7 @@ use Laracasts\Flash\Flash;
 use qfproject\Actividad;
 use qfproject\Http\Requests\ActividadRequest;
 use qfproject\Notifications\ReservacionNotification;
+use qfproject\Notifications\TareaNotification;
 use qfproject\Reservacion;
 use qfproject\User;
 
@@ -186,6 +187,8 @@ class ActividadController extends Controller
 
                     $user->notify(new ReservacionNotification($reservacion, 'actividad', false));
                 }
+
+                \Auth::user()->notify(new TareaNotification($reservacion, 'eliminar'));
 
                 $i++;
             }

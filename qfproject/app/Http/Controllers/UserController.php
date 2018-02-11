@@ -21,6 +21,19 @@ class UserController extends Controller
 {
     /**
      * ---------------------------------------------------------------------------
+     * Crea una nueva instancia de controlador.
+     *
+     * @return void
+     * ---------------------------------------------------------------------------
+     */
+
+    public function __construct()
+    {
+        Carbon::setLocale('es');
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
      * Muestra una lista de usuarios.
      * 
      * @param  \Illuminate\Http\Request  $request
@@ -37,7 +50,7 @@ class UserController extends Controller
                 ->orWhere('lastname', 'like', '%' . $query . '%')
                 ->orWhere('tipo', 'like', '%' . $query . '%')
                 ->orderBy('name', 'asc')
-                ->paginate(10);
+                ->paginate(25);
 
             return view('administracion.users.index')
                 ->with('users', $users)

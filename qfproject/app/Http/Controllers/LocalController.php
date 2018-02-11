@@ -14,6 +14,7 @@ use Laracasts\Flash\Flash;
 use qfproject\Http\Requests\LocalRequest;
 use qfproject\Local;
 use qfproject\Notifications\ReservacionNotification;
+use qfproject\Notifications\TareaNotification;
 use qfproject\Reservacion;
 use qfproject\User;
 
@@ -35,7 +36,7 @@ class LocalController extends Controller
 
             $locales = Local::where('nombre', 'like', '%' . $query . '%')
                 ->orderBy('nombre', 'asc')
-                ->paginate(10);
+                ->paginate(15);
 
             return view('administracion.locales.index')
                 ->with('locales', $locales)
@@ -234,6 +235,8 @@ class LocalController extends Controller
 
                     $user->notify(new ReservacionNotification($reservacion, 'local', false));
                 }
+
+                \Auth::user()->notify(new TareaNotification($reservacion, 'eliminar'));
 
                 $i++;
             }

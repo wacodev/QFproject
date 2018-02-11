@@ -14,6 +14,7 @@ use Laracasts\Flash\Flash;
 use qfproject\Asignatura;
 use qfproject\Http\Requests\AsignaturaRequest;
 use qfproject\Notifications\ReservacionNotification;
+use qfproject\Notifications\TareaNotification;
 use qfproject\Reservacion;
 use qfproject\User;
 
@@ -36,7 +37,7 @@ class AsignaturaController extends Controller
             $asignaturas = Asignatura::where('nombre', 'like', '%' . $query . '%')
                 ->orWhere('codigo', 'like', '%' . $query . '%')
                 ->orderBy('codigo', 'asc')
-                ->paginate(10);
+                ->paginate(25);
 
             return view('administracion.asignaturas.index')
                 ->with('asignaturas', $asignaturas)
@@ -187,6 +188,8 @@ class AsignaturaController extends Controller
 
                     $user->notify(new ReservacionNotification($reservacion, 'asignatura', false));
                 }
+
+                \Auth::user()->notify(new TareaNotification($reservacion, 'eliminar'));
 
                 $i++;
             }

@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Laracasts\Flash\Flash;
 use qfproject\Http\Requests\SuspensionRequest;
 use qfproject\Notifications\ReservacionNotification;
+use qfproject\Notifications\TareaNotification;
 use qfproject\Reservacion;
 use qfproject\Suspension;
 use qfproject\User;
@@ -38,7 +39,7 @@ class SuspensionController extends Controller
                 ->orWhere('hora_inicio', 'like', '%' . $query . '%')
                 ->orWhere('hora_fin', 'like', '%' . $query . '%')
                 ->orderBy('fecha', 'desc')
-                ->paginate(10);
+                ->paginate(25);
 
             return view('administracion.suspensiones.index')
                 ->with('suspensiones', $suspensiones)
@@ -125,6 +126,8 @@ class SuspensionController extends Controller
 
                     $user->notify(new ReservacionNotification($reservacion, 'suspension', false));
                 }
+
+                \Auth::user()->notify(new TareaNotification($reservacion, 'eliminar'));
 
                 $i++;
             }

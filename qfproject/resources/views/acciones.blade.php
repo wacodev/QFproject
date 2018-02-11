@@ -33,7 +33,7 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <i class="fa fa-trash icono-margen-izq" aria-hidden="true"></i>
                                 </th>
                                 <th>Usuario</th>
                                 <th>Tipo</th>

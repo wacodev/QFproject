@@ -323,6 +323,10 @@ a:hover {
     margin-right: 5px;
 }
 
+.icono-margen-izq {
+    margin-left: 5px;
+}
+
 .icono-notificacion i {
     margin-right: 15px;
     margin-top: 10px;

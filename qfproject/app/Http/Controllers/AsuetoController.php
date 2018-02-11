@@ -35,7 +35,7 @@ class AsuetoController extends Controller
                 ->orWhere('dia', 'like', '%' . $query . '%')
                 ->orWhere('mes', 'like', '%' . $query . '%')
                 ->orderBy('nombre', 'asc')
-                ->paginate(10);
+                ->paginate(25);
 
             return view('administracion.asuetos.index')
                 ->with('asuetos', $asuetos)

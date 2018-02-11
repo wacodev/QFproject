@@ -39,13 +39,28 @@
                         {{ $user->id }}
                     </p>
                 </li>
-               
                 <li class="list-group-item">
                     <strong>
                         Correo electrónico
                     </strong>
                     <p class="pull-right">
                         {{ $user->email }}
+                    </p>
+                </li>
+                <li class="list-group-item">
+                    <strong>
+                        Fecha y hora de registro
+                    </strong>
+                    <p class="pull-right">
+                        {{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y - h:i A') }}
+                    </p>
+                </li>
+                <li class="list-group-item">
+                    <strong>
+                        Última actualización
+                    </strong>
+                    <p class="pull-right">
+                        {{ \Carbon\Carbon::parse($user->updated_at)->format('d/m/Y - h:i A') }}
                     </p>
                 </li>
             </ul>
