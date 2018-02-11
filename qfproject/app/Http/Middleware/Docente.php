@@ -12,7 +12,7 @@ use Closure;
 
 use Illuminate\Contracts\Auth\Guard;
 
-class Visitante
+class Docente
 {
     /**
      * ---------------------------------------------------------------------------
@@ -50,7 +50,7 @@ class Visitante
 
     public function handle($request, Closure $next)
     {
-        if ($this->auth->user()->visitante() || $this->auth->user()->asistente() || $this->auth->user()->docente() || $this->auth->user()->administrador()) {
+        if ($this->auth->user()->administrador() || $this->auth->user()->asistente() || $this->auth->user()->docente()) {
             return $next($request);
         } else {
             abort(403);

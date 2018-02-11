@@ -63,8 +63,12 @@ Route::get('ayuda', 'AyudaController@mostrar')->name('mostrar-ayuda');
  * ---------------------------------------------------------------------------
  */
 
-Route::get('/editar', 'HomeController@editarPerfil')->name('editar-perfil');
-Route::put('/{user}', 'HomeController@actualizarPerfil')->name('actualizar-perfil');
+Route::group(['middleware' => ['auth', 'docente']], function() {
+
+    Route::get('/editar', 'HomeController@editarPerfil')->name('editar-perfil');
+    Route::put('/{user}', 'HomeController@actualizarPerfil')->name('actualizar-perfil');
+
+});
 
 /**
  * ---------------------------------------------------------------------------
@@ -82,9 +86,6 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'asistente'], function
     Route::post('locales', 'ChartController@locales')->name('ver.locales');
     Route::post('asignaturas', 'ChartController@asignaturas')->name('ver.asignaturas');
     Route::post('usuarios', 'ChartController@usuarios')->name('ver.usuarios');
-   
-
-
 
 });
 
@@ -108,15 +109,12 @@ Route::group(['prefix' => 'notificaciones', 'middleware' => 'auth'], function() 
  * ---------------------------------------------------------------------------
  */
 
-Route::group(['prefix' => 'acciones', 'middleware' => 'asistente'], function() {
+Route::group(['prefix' => 'acciones', 'middleware' => ['auth', 'asistente']], function() {
 
     Route::get('/', 'HomeController@verAcciones')->name('acciones');
     Route::get('/{accion}/destroy', 'HomeController@eliminarNotificacion')->name('acciones.destroy');
     Route::get('/destroy-multiple', 'HomeController@eliminarAcciones')->name('acciones.destroy-multiple');
 
-});
-
-Route::group(['prefix' => 'estadisticas', 'middleware' => 'asistente'], function() {
 });
 
 /**
@@ -134,6 +132,14 @@ Route::get('/home', 'HomeController@index')->name('home');
  */
 
 Route::get('/', 'HomeController@index');
+
+/**
+ * ---------------------------------------------------------------------------
+ * Registro.
+ * ---------------------------------------------------------------------------
+ */
+
+Route::get('/register', 'HomeController@index');
 
 /**
  * ---------------------------------------------------------------------------
@@ -171,6 +177,12 @@ Route::group(['prefix' => 'reportes', 'middleware' => ['auth', 'asistente']], fu
     Route::get('/exportar-reporte-ocupacion', 'PdfController@exportarReporteOcupacion')->name('reportes.exportar-reporte-ocupacion');
     Route::post('/reporte-ocupacion', 'PdfController@generarReporteOcupacion')->name('reportes.reporte-ocupacion');
 
+    /**
+     * Próximas reservas.
+     */
+
+     Route::get('/listado_reservas', 'PdfController@proximasReservas')->name('reportes.reservacion-lista');
+
 });
 
 /**
@@ -180,9 +192,7 @@ Route::group(['prefix' => 'reportes', 'middleware' => ['auth', 'asistente']], fu
  */
 
 Route::group(['prefix' => 'reservaciones', 'middleware' => 'auth'], function() {
-Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function() {
 
-});
     /**
      * Opciones básicas para las reservaciones.
      */
@@ -211,11 +221,6 @@ Route::group(['prefix' => 'estadisticas', 'middleware' => 'visitante'], function
      */
 
     Route::get('/historial', 'HomeController@verHistorial')->name('reservaciones.historial');
-
-    /**
-     * Próximas reservas.
-     */
-     Route::get('/listado_reservas', 'PdfController@proximasReservas')->name('reportes.reservacion-lista');
 
     /**
      * Reservaciones individuales.

@@ -64,6 +64,8 @@ class Kernel extends HttpKernel
          */
 
         'administrador' => \qfproject\Http\Middleware\Administrador::class,
-        'asistente' => \qfproject\Http\Middleware\Asistente::class,
+        'asistente'     => \qfproject\Http\Middleware\Asistente::class,
+        'docente'       => \qfproject\Http\Middleware\Docente::class,
+        'visitante'     => \qfproject\Http\Middleware\Visitante::class,
     ];
 }
