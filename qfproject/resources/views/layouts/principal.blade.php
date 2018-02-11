@@ -197,78 +197,83 @@
                                 </li>
                             </ul>
                         </li>
-                        @if(Auth::user()->tipo == 'Administrador' || Auth::user()->tipo == 'Asistente')
-                        <li class="treeview">
-                            <a href="">
-                                <i class="fa fa-file-text"></i>
-                                <span>
-                                    Reportes
-                                </span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="{{ route('reportes.reservacion-lista') }}">
-                                        <i class="fa fa-circle-o"></i><small class="label pull-right bg-red">PDF</small>
-                                        Reservas próximas
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('reportes.exportar-horarios') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Horarios
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('reportes.exportar-lista-actividad') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Programación por actividad
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('reportes.exportar-lista-actividad') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Reservas por usuario
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                         
-                        <li class="treeview">
-                            <a href="">
-                                <i class="fa fa-bar-chart"></i>
-                                <span>
-                                    Estadísticas
-                                </span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="{{ route('estadisticas.dos') }}"> 
-                                        <i class="fa fa-circle-o"></i>
-                                        Por actividades
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('estadisticas.tres') }}"> 
-                                        <i class="fa fa-circle-o"></i>
-                                        Por asignaturas
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('estadisticas.uno') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Por locales
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('estadisticas.cuatro') }}">
-                                        <i class="fa fa-circle-o"></i>
-                                        Por usuarios
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        @if(Auth::user()->administrador() || Auth::user()->asistente())
+                            <li class="treeview">
+                                <a href="">
+                                    <i class="fa fa-file-text"></i>
+                                    <span>
+                                        Reportes
+                                    </span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="{{ route('reportes.reservacion-lista') }}">
+                                            <i class="fa fa-circle-o"></i><small class="label pull-right bg-red">PDF</small>
+                                            Reservas próximas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('reportes.exportar-horarios') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Horarios
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('reportes.exportar-lista-actividad') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Programación por actividad
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('reportes.exportar-lista-usuario') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Reservas por usuario
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('reportes.exportar-reporte-ocupacion') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Ocupación de locales
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="treeview">
+                                <a href="">
+                                    <i class="fa fa-bar-chart"></i>
+                                    <span>
+                                        Estadísticas
+                                    </span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="{{ route('estadisticas.dos') }}"> 
+                                            <i class="fa fa-circle-o"></i>
+                                            Por actividades
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('estadisticas.tres') }}"> 
+                                            <i class="fa fa-circle-o"></i>
+                                            Por asignaturas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('estadisticas.uno') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Por locales
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('estadisticas.cuatro') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Por usuarios
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         @endif
                         @if (Auth::user()->administrador())
                             <li class="treeview">

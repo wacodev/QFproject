@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
         <!-- TÍTULO -->
-        <title>Listado de reservaciones por actividad</title>
+        <title>Reporte de ocupación de espacio físico</title>
         <!-- BOOTSTRAP 3.3.5 -->
         <link rel="stylesheet" href="css/bootstrap.min.css" />
         <!-- MIS ESTILOS -->
@@ -28,22 +28,16 @@
         <!-- TÍTULO DEL DOCUMENTO -->
         <div class="text-center">
             <p class="titulo">
-                LISTADO DE RESERVACIONES POR ACTIVIDAD
+                REPORTE DE OCUPACIÓN DE ESPACIO FÍSICO
             </p>
         </div>
         <!-- INFORMACIÓN GENERAL -->
         <div class="cero-margen">
             <p>
                 <strong>
-                    Asignatura:
+                    Local:
                 </strong>
-                {{ $asignatura->nombre }}
-            </p>
-            <p>
-                <strong>
-                    Actividad:
-                </strong>
-                {{ $actividad->nombre }}
+                {{ $local->nombre }}
             </p>
         </div>
         <p>
@@ -57,19 +51,17 @@
             <table class="table table-bordered table-condensed">
                 <thead>
                     <tr class="active">
-                        <th>Fecha</th>
-                        <th>Local</th>
-                        <th>{{ $actividad->nombre }}</th>
+                        <th>Hora</th>
+                        <th>Porcentaje de ocupación (%)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($reservaciones as $reservacion)
+                    @for ($i = 0; $i < 11; $i++)
                         <tr>
-                            <td>{{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }}</td>
-                            <td>{{ substr($reservacion->local->nombre, 0, 35) }}</td>
-                            <td>{{ substr($reservacion->tema, 0, 80) }}</td>
+                            <td>{{ \Carbon\Carbon::parse($horas[$i])->format('h:i A') }}</td>
+                            <td>{{ $porcentajes[$i] }}</td>
                         </tr>
-                    @endforeach
+                    @endfor
                 </tbody>
             </table>
         </div>

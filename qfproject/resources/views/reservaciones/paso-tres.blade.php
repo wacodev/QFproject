@@ -63,7 +63,7 @@
                 <div class="form-group{{ $errors->has('tema') ? ' has-error' : '' }}">
                     {!! Form::label('tema', 'Tema', ['class' => 'col-sm-4 control-label']) !!}
                     <div class="col-sm-7">
-                        {!! Form::text('tema', old('tema'), ['class' => 'form-control', 'placeholder' => 'Tema a desarrollar']) !!}
+                        {!! Form::text('tema', old('tema'), ['class' => 'form-control', 'placeholder' => 'Tema a desarrollar (opcional)']) !!}
                         @if ($errors->has('tema'))
                             <span class="help-block">
                                 <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -76,7 +76,7 @@
                     <div class="form-group{{ $errors->has('user_id') ? ' has-error' : '' }}">
                         {!! Form::label('user_id', 'Asignar a', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::select('user_id', $users, old('user_id'), ['class' => 'form-control', 'placeholder' => '-- Seleccione un usuario --']) !!}
+                            {!! Form::select('user_id', $users, old('user_id'), ['class' => 'form-control', 'placeholder' => '-- Seleccione un usuario (opcional) --']) !!}
                             @if ($errors->has('user_id'))
                                 <span class="help-block">
                                     <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>

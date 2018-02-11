@@ -6,7 +6,7 @@
 
 @section('breadcrumb')
     <li>
-       <i class="fa fa-question-circle"></i>
+       <i class="fa fa-question-circle icono-margen"></i>
         Ayuda
     </li>
     <li class="active">
@@ -216,6 +216,8 @@
 <div class="contenido"><h4><a href="#cero0">Reservas próximas</a></h4></div>
 <div class="contenido"><h4><a href="#uno1">Reporte de reservaciones en horario</a></h4></div>
 <div class="contenido"><h4><a href="#dos2">Programación por actividad</a></h4></div>
+<div class="contenido"><h4><a href="#tres3">Reporte de reservaciones de un usuario</a></h4></div>
+<div class="contenido"><h4><a href="#cuatro4">Reporte de ocupación de espacio físico</a></h4></div>
 
 <hr>
   <a name="cero0"><h4>Reservas próximas</h4></a>
@@ -231,7 +233,6 @@
   <center>
   <td><img src="{{ url('images/ayuda/horarios2.png') }}"></td></center>
   <br>
-
   <a name="dos2"><h4>Programación por actividad</h4></a>
   <p align="justify">Para obtener una lista de reservaciones filtrada las actividades realizadas en una asignatura específica, seleccionamos el rango de fechas, la asignatura y la actividad, al hacer clic en Aceptar, se generará automáticamente la lista de reservas en el rango de fechas seleccionado. </p> 
   <center>
@@ -239,6 +240,23 @@
   <br>
   <center>
   <td><img src="{{ url('images/ayuda/actividad2.png') }}"></td></center>
+  <br>
+  <a name="tres3"><h4>Reporte de reservaciones de un usuario</h4></a>
+  <p align="justify">Para obtener una lista de reservaciones realizadas por un usuario específico en un determinado periodo de tiempo, seleccionamos el rango de fechas y el usuario, al hacer clic en Aceptar, se generará automáticamente la lista de reservas en el rango de fechas seleccionado.</p> 
+  <center>
+  <td><img src="{{ url('images/ayuda/form-reporte-usuario.png') }}" style="width: 400px;"></td></center>
+  <br>
+  <center>
+  <td><img src="{{ url('images/ayuda/reporte-usuario.png') }}" style="width: 400px;"></td></center>
+  <br>
+  <a name="cuatro4"><h4>Reporte de ocupación de espacio físico</h4></a>
+  <p align="justify">Este reporte presenta el porcentaje de ocupación por bloque de clase de un local en un intervalo de fechas dado. Para obtener el informe, seleccionamos el rango de fechas y el local, al hacer clic en Aceptar, se generará automáticamente el reporte de ocupación de espacio físico en el rango de fechas seleccionado.</p> 
+  <p align="justify">La información se obtiene contando el número de reservaciones realizadas en cada bloque de horas y dividiendo dicho número con la cantidad de días que hay en el rango de fechas ingresado.</p>
+  <center>
+  <td><img src="{{ url('images/ayuda/ocupacion.png') }}" style="width: 400px;"></td></center>
+  <br>
+  <center>
+  <td><img src="{{ url('images/ayuda/ocupacion-reporte.png') }}" style="width: 400px;"></td></center>
 </div>
 
 

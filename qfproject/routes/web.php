@@ -157,6 +157,20 @@ Route::group(['prefix' => 'reportes', 'middleware' => ['auth', 'asistente']], fu
     Route::get('/exportar-lista-actividad', 'PdfController@exportarListaActividad')->name('reportes.exportar-lista-actividad');
     Route::post('/lista-actividad', 'PdfController@generarListaActividad')->name('reportes.lista-actividad');
 
+    /**
+     * Lista de reservaciones por usuario.
+     */
+
+    Route::get('/exportar-lista-usuario', 'PdfController@exportarListaUsuario')->name('reportes.exportar-lista-usuario');
+    Route::post('/lista-usuario', 'PdfController@generarListaUsuario')->name('reportes.lista-usuario');
+
+    /**
+     * Reporte de ocupación de locales por hora.
+     */
+
+    Route::get('/exportar-reporte-ocupacion', 'PdfController@exportarReporteOcupacion')->name('reportes.exportar-reporte-ocupacion');
+    Route::post('/reporte-ocupacion', 'PdfController@generarReporteOcupacion')->name('reportes.reporte-ocupacion');
+
 });
 
 /**

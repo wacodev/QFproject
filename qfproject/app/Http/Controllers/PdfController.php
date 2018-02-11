@@ -17,6 +17,7 @@ use qfproject\Actividad;
 use qfproject\Asignatura;
 use qfproject\Local;
 use qfproject\Reservacion;
+use qfproject\User;
 
 class PdfController extends Controller
 {
@@ -348,6 +349,8 @@ class PdfController extends Controller
         $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
         $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
 
+        $horas = ['07:00:00', '08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00']; // Arreglo con todas las horas.
+
         $reservaciones = Reservacion::where('asignatura_id', '=', $request->asignatura_id)
             ->where('actividad_id', '=', $request->actividad_id)
             ->where('fecha', '>=', $fecha[0])
@@ -372,5 +375,167 @@ class PdfController extends Controller
         return $pdf->stream('listado_actividad.pdf');
     }
 
-   
+    /******************* LISTADO DE RESERVACIONES POR USUARIO *******************/
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario para generar el listado de reservaciones por
+     * usuario.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function exportarListaUsuario()
+    {
+        $users = User::orderBy('name')->pluck('name', 'id');
+
+        return view('reportes.exportar-lista-usuario')->with('users', $users);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Genera un listado con las reservaciones de un usuario.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function generarListaUsuario(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'fecha' => 'required',
+            'user_id' => 'required'
+        ]);
+
+        /**
+         * Obteniendo datos solicitados por el usuario.
+         */
+
+        $fecha = explode(' - ', $request->fecha);
+
+        $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
+        $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+
+        $reservaciones = Reservacion::where('user_id', '=', $request->user_id)
+            ->where('fecha', '>=', $fecha[0])
+            ->where('fecha', '<=', $fecha[1])
+            ->orderBy('fecha', 'asc')
+            ->get();
+
+        /**
+         * Generando PDF.
+         */
+
+        $user = User::find($request->user_id);
+
+        $fecha_inicio = Carbon::parse($fecha[0])->format('d/m/Y');
+
+        $fecha_fin = Carbon::parse($fecha[1])->format('d/m/Y');
+
+        $pdf = \PDF::loadView('reportes.lista-usuario', ['reservaciones' => $reservaciones, 'user' => $user, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin])->setPaper('letter', 'landscape');
+
+        return $pdf->stream('listado_usuario.pdf');
+    }
+
+    /*************************** OCUPACIÓN DE LOCALES ***************************/
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario para generar el reporte del porcentaje de ocupación
+     * de un local en cada bloque de clases.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function exportarReporteOcupacion()
+    {
+        $locales = Local::orderBy('nombre')->pluck('nombre', 'id');
+
+        return view('reportes.exportar-reporte-ocupacion')->with('locales', $locales);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Genera un reporte del porcentaje de ocupación de un local en cada bloque
+     * de clases.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function generarReporteOcupacion(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'fecha' => 'required',
+            'local_id' => 'required'
+        ]);
+
+        /**
+         * Obteniendo datos solicitados por el usuario.
+         */
+
+        $fecha = explode(' - ', $request->fecha);
+
+        $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
+        $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+
+        /**
+         * Obteniendo diferencia de días entre los limites del rango de fechas.
+         */
+
+        $f0 = explode('-', $fecha[0]);
+        $f1 = explode('-', $fecha[1]);
+
+        $f0_carbon = Carbon::create($f0[0], $f0[1], $f0[2], 0);
+        $f1_carbon = Carbon::create($f1[0], $f1[1], $f1[2], 0);
+
+        $diferencia = $f0_carbon->diffInDays($f1_carbon) + 1;
+
+        /**
+         * Obteniendo arreglo con los porcentajes de ocupación del local por hora.
+         */
+
+        $horas = ['07:00:00', '08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00']; // Arreglo con todas las horas.
+
+        $porcentajes = []; // Arreglo con los porcentajes de ocupación del local por hora.
+
+        foreach ($horas as $hora) {
+            $reservaciones = Reservacion::where('local_id', '=', $request->local_id)
+                ->where('fecha', '>=', $fecha[0])
+                ->where('fecha', '<=', $fecha[1])
+                ->where('hora_inicio', '<=', $hora)
+                ->where('hora_fin', '>', $hora)
+                ->count();
+
+            $porcentaje = $reservaciones * 100.00 / $diferencia;
+
+            array_push($porcentajes, $porcentaje);
+        }
+
+        /**
+         * Generando PDF.
+         */
+
+        $fecha_inicio = Carbon::parse($fecha[0])->format('d/m/Y');
+
+        $fecha_fin = Carbon::parse($fecha[1])->format('d/m/Y');
+
+        $local = Local::find($request->local_id);
+
+        $pdf = \PDF::loadView('reportes.reporte-ocupacion', ['horas' => $horas, 'porcentajes' => $porcentajes, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin, 'local' => $local]);
+
+        return $pdf->stream('reporte_ocupacion_del_local.pdf');
+    }
 }

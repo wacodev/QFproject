@@ -42,23 +42,25 @@
                         <th>Responsable</th>
                         <th>Asignatura</th>
                         <th>Actividad</th>
+                        <th>Código</th>
                     </tr>
                 </thead>
                 <tbody>
           
                 @foreach($reservaciones as $reservacion)
                     <tr>
-                        <td>{{ $reservacion->local->nombre }}</td>
-                        <td>{{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}</td>
+                        <td>{{ substr($reservacion->local->nombre, 0, 22) }}</td>
+                        <td>{{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h A') }}</td>
                         <td>
                             @if ($reservacion->responsable)
-                                {{ $reservacion->responsable }}
+                                {{ substr($reservacion->responsable, 0, 30) }}
                             @else
-                                {{ $reservacion->user->name }} {{ $reservacion->user->lastname }}
+                                {{ substr($reservacion->user->name . ' ' . $reservacion->user->lastname, 0, 30) }}
                             @endif
                         </td>
-                        <td>{{ substr($reservacion->asignatura->nombre, 0, 30) }}</td>
-                        <td>{{ substr($reservacion->actividad->nombre, 0, 20) }}</td>
+                        <td>{{ substr($reservacion->asignatura->nombre, 0, 20) }}</td>
+                        <td>{{ substr($reservacion->actividad->nombre, 0, 15) }}</td>
+                        <td>{{ $reservacion->codigo }}</td>
                     </tr>
                 @endforeach
                 </tbody>

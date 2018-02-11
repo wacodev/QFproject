@@ -18,6 +18,11 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('reportes.reporte-ocupacion') }}">                    
+                    Ocupación de locales
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('reportes.exportar-lista-actividad') }}">
                     Programación por actividad
                 </a>
