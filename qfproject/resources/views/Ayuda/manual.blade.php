@@ -221,6 +221,7 @@
 <div class="contenido"><h4><a href="#two">Estadísticas por Asignaturas</a></h4></div>
 <div class="contenido"><h4><a href="#three">Estadísticas por Locales</a></h4></div>
 <div class="contenido"><h4><a href="#four">Estadísticas por Usuarios</a></h4></div>
+<div class="contenido"><h4><a href="#five">Imprimir gráficos estadísticos</a></h4></div>
 
 <hr>
 
@@ -253,6 +254,15 @@
   <center>
   <td><img src="{{ url('images/ayuda/estadisticas4.png') }}"></td></center>
   <br>
+
+  
+  <a name="five"><h4>Imprimir gráficos estadísticos</h4></a>
+  <p align="justify">Para imprimir las estadísticas, hacemos clic sobre el botón "Guardar como PDF y automáticamente se generará un archivo .pdf desde donde podrá imprimir.</p> 
+  <center>
+  <td><img src="{{ url('images/ayuda/estadisticas5.png') }}"></td></center>
+  <br>
+  <center>
+   <td><img src="{{ url('images/ayuda/estadisticas6.png') }}"></td></center>
 </div>
 
 
