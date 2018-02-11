@@ -169,18 +169,13 @@ class PdfController extends Controller
      */
    public function proximasReservas(){
 
-    $mañana = new Carbon('tomorrow');
+    $manana = new Carbon('tomorrow');
 
-    $reservaciones=DB::table('reservaciones')
-    ->join('locales', 'reservaciones.local_id', '=', 'locales.id')
-    ->join('asignaturas', 'reservaciones.asignatura_id', '=', 'asignaturas.id')
-    ->join('actividades', 'reservaciones.actividad_id', '=', 'actividades.id')
-    ->select('reservaciones.*', 'locales.nombre as local', 'asignaturas.nombre', 'actividades.nombre as actividad')
-    ->where('reservaciones.fecha', [$mañana])
-    ->get();
+    $reservaciones = Reservacion::where('fecha', '=', $manana)
+        ->orderBy('local_id', 'asc')
+        ->get();
 
-
-    $pdf=PDF::loadView('reportes.reservacion-lista', ['reservaciones'=>$reservaciones]);
+    $pdf=PDF::loadView('reportes.reservacion-lista', ['reservaciones'=>$reservaciones, 'manana' => $manana])->setPaper('letter', 'landscape');
     return $pdf ->stream('proximasReservas.pdf');
 
    }

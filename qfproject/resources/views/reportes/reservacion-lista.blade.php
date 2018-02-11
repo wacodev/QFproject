@@ -27,19 +27,19 @@
         </div>
         <!-- TÍTULO DEL DOCUMENTO -->
         <div class="text-center">
-            <p class="titulo">PRÓXIMAS RESERVAS</p>
+            <p class="titulo">LISTADO DE RESERVACIONES</p>
         </div>
 
         <!-- DATOS DE LA RESERVACIÓN -->
-        <p><strong><center>LISTADO DE RESERVAS PARA EL DÍA DE MAÑANA</center></strong></p>
+        <p><strong><center>FECHA: {{ \Carbon\Carbon::parse($manana)->format('d/m/Y') }}</center></strong></p>
             @if ($reservaciones->count() > 0)
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
                     <tr class="active">
-                        <th>Fecha</th>
-                        <th>Hora</th>
                         <th>Local</th>
+                        <th>Hora</th>
+                        <th>Responsable</th>
                         <th>Asignatura</th>
                         <th>Actividad</th>
                     </tr>
@@ -48,11 +48,17 @@
           
                 @foreach($reservaciones as $reservacion)
                     <tr>
-                        <td>{{ $reservacion->fecha }}</td>
-                        <td>{{ $reservacion->hora_inicio }} - {{ $reservacion->hora_fin }}</td>
-                        <td>{{ $reservacion->local }}</td>
-                        <td>{{ $reservacion->nombre }}</td>
-                        <td>{{ $reservacion->actividad }}</td>
+                        <td>{{ $reservacion->local->nombre }}</td>
+                        <td>{{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}</td>
+                        <td>
+                            @if ($reservacion->responsable)
+                                {{ $reservacion->responsable }}
+                            @else
+                                {{ $reservacion->user->name }} {{ $reservacion->user->lastname }}
+                            @endif
+                        </td>
+                        <td>{{ substr($reservacion->asignatura->nombre, 0, 30) }}</td>
+                        <td>{{ substr($reservacion->actividad->nombre, 0, 20) }}</td>
                     </tr>
                 @endforeach
                 </tbody>
