@@ -1,4 +1,4 @@
-<!-- AYUDA DE EXPORTAR RESERVACIONES A EXCEL -->
+<!-- AYUDA DE RESERVACIONES SEMANALES -->
 <div class="box box-success">
     <div class="box-header with-border">
         <h3 class="box-title">
@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Esta herramienta le permite exportar a un archivo de Excel todas las reservaciones efectuadas en un periodo determinado. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Reservaciones &#62; Exportar reservaciones a Excel.
+            En esta sección puede reservar un local que se encuentren disponible en un determinado día y hora en múltiples semanas. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Reservaciones &#62; Reservación semanal.
         </p>
     </div>
 </div>

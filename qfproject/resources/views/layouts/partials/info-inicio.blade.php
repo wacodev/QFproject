@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Panel de inicio con el listado de tus reservaciones vigentes. Edita, elimina y descarga el comprobante de tus reservaciones de forma rápida y sencilla en el menú desplegable al lado de la imagen del local reservado.
+            Panel de inicio con el listado de tus reservaciones vigentes. Edita, elimina y descarga el comprobante de tus reservaciones de forma rápida y sencilla en el menú desplegable al lado de la imagen del local reservado. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Pantalla principal &#62; Mis reservaciones.
         </p>
     </div>
 </div>

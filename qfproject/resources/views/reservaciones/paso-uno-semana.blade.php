@@ -111,6 +111,13 @@
     </div>
 @endsection
 
+@section('sidebar')
+    <!-- MENÚ DE HERRAMIENTAS ADICIONALES PARA LAS RESERVACIONES -->
+    @include('reservaciones.partials.herramientas')
+    <!-- AYUDA DE RESERVACIONES SEMANALES -->
+    @include('reservaciones.partials.info-reserva-semanal')
+@endsection
+
 @push('scripts')
     <!--  BOOTSTRAP DATE PICKER -->
     <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>

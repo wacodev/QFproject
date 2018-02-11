@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Panel para editar tu perfil. Si no vas a editar tu contraseña deja el campo vacío al igual que el de confirmar contraseña, así seguirá siendo la misma que tenías.
+            Panel para editar tu perfil. Si no vas a editar tu contraseña deja el campo vacío al igual que el de confirmar contraseña, así seguirá siendo la misma que tenías. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Pantalla principal &#62; Inicio del sistema.
         </p>
     </div>
 </div>

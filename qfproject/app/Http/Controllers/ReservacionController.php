@@ -1134,6 +1134,27 @@ class ReservacionController extends Controller
         $rango_fecha = explode(' - ', $request->rango_fecha); // Rango de fechas del ciclo anterior.
         $rango_fecha[0] = Carbon::parse($rango_fecha[0])->format('Y-m-d');
         $rango_fecha[1] = Carbon::parse($rango_fecha[1])->format('Y-m-d');
+
+        /**
+         * Validando que la fecha del limite inferior del rango de fechas y la
+         * la fecha de inicio del ciclo correspondan al mismo día de la semana.
+         */
+
+        if (date('N', strtotime($fecha)) != date('N', strtotime($rango_fecha[0]))) {
+            flash('
+                <h4>
+                    <i class="fa fa-ban icon" aria-hidden="true"></i>
+                    ¡Error en ingreso de datos!
+                </h4>
+                <p class="ban">
+                    La fecha del limite inferior del rango de fechas y la fecha de inicio del ciclo no corresponden a un mismo día de la semana.
+                </p>
+            ')
+                ->error()
+                ->important();
+            
+            return back();
+        }
         
         /**
          * Validando que en el rango de fechas, el limite superior sea mayor al
@@ -1454,42 +1475,48 @@ class ReservacionController extends Controller
              * que provocaban el choque son eliminadas.
              */
 
-            foreach ($seleccionadas as $seleccion) {
-                if ($r[0] == $seleccion) {
-                    if (count($r) > 2) {
-                        $reservacion->save();
-
-                        /**
-                         * Notificando a los usuarios correspondientes la acción realizada.
-                         */
-
-                        $this->notificar($reservacion, 'crear');                        
-
-                        $registrada = true;
-                    } else {
-                        $reservacion = Reservacion::find($r[1]);
-
-                        $reservacion->delete();
-
-                        /**
-                         * Notificando a los usuarios correspondientes la acción realizada.
-                         */
-
-                        $this->notificar($reservacion, 'eliminar');
-
-                        \Auth::user()->notify(new TareaNotification($reservacion, 'eliminar'));
-
-                        $re++;
-                    }
-
-                    break;
-                }
-            }
-
-            if (!$registrada && count($r) > 2) {
+            if (count($seleccionadas) == 0 && count($r) > 2) {
                 $rnr++;
 
                 \Auth::user()->notify(new TareaNotification($reservacion, 'no-registro'));
+            } else {
+                foreach ($seleccionadas as $seleccion) {
+                    if ($r[0] == $seleccion) {
+                        if (count($r) > 2) {
+                            $reservacion->save();
+
+                            /**
+                             * Notificando a los usuarios correspondientes la acción realizada.
+                             */
+
+                            $this->notificar($reservacion, 'crear');                        
+
+                            $registrada = true;
+                        } else {
+                            $reservacion = Reservacion::find($r[1]);
+
+                            $reservacion->delete();
+
+                            /**
+                             * Notificando a los usuarios correspondientes la acción realizada.
+                             */
+
+                            $this->notificar($reservacion, 'eliminar');
+
+                            \Auth::user()->notify(new TareaNotification($reservacion, 'eliminar'));
+
+                            $re++;
+                        }
+
+                        break;
+                    }
+                }
+
+                if (!$registrada && count($r) > 2) {
+                    $rnr++;
+
+                    \Auth::user()->notify(new TareaNotification($reservacion, 'no-registro'));
+                }
             }
         }
 

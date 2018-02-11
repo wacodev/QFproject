@@ -1,4 +1,4 @@
-<!-- AYUDA DE EXPORTAR RESERVACIONES A EXCEL -->
+<!-- AYUDA DE PROGRAMACIÓN POR ACTIVIDAD -->
 <div class="box box-success">
     <div class="box-header with-border">
         <h3 class="box-title">
@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Esta herramienta le permite exportar a un archivo de Excel todas las reservaciones efectuadas en un periodo determinado. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Reservaciones &#62; Exportar reservaciones a Excel.
+            El reporte es un listado de reservaciones filtrado por las actividades realizadas en una asignatura específica.  Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Reportes &#62; Programación por actividad.
         </p>
     </div>
 </div>

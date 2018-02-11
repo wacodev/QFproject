@@ -1,6 +1,6 @@
 @extends('layouts.principal')
 
-@section('titulo', 'Reportes | Listado de reservaciones por actividad')
+@section('titulo', 'Reportes | Programación por actividad')
 
 @section('estilos')
     <!-- DATE RANGE PICKER -->
@@ -9,7 +9,7 @@
 
 @section('encabezado', 'Reportes')
 
-@section('subencabezado', 'Listado de reservaciones por actividad')
+@section('subencabezado', 'Programación por actividad')
 
 @section('breadcrumb')
     <li>
@@ -17,7 +17,7 @@
         Reportes
     </li>
     <li class="active">
-        Listado de reservaciones por actividad
+        Programación por actividad
     </li>
 @endsection
 
@@ -25,7 +25,7 @@
     <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">
-                Listado de reservaciones por actividad
+                Programación por actividad
             </h3>
         </div>
         {!! Form::open(['route' => 'reportes.lista-actividad', 'autocomplete' => 'off', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
@@ -77,6 +77,13 @@
             </div>
         {!! Form::close() !!}
     </div>
+@endsection
+
+@section('sidebar')
+    <!-- MENÚ DE HERRAMIENTAS PARA REPORTES -->
+    @include('reportes.partials.herramientas')
+    <!-- AYUDA PARA PROGRAMACIÓN POR ACTIVIDAD -->
+    @include('reportes.partials.info-proactividad')
 @endsection
 
 @push('scripts')

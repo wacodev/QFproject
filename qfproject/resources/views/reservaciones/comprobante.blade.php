@@ -48,3 +48,12 @@
         {!! Form::close() !!}
     </div>
 @endsection
+
+@section('sidebar')
+    @if (Auth::user()->administrador() || Auth::user()->asistente())
+        <!-- MENÚ DE HERRAMIENTAS ADICIONALES PARA LAS RESERVACIONES -->
+        @include('reservaciones.partials.herramientas')
+    @endif
+    <!-- AYUDA DE RESERVACIONES INDIVIDUALES -->
+    @include('reservaciones.partials.info-reserva-individual')
+@endsection

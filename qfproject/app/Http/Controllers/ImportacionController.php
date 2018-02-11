@@ -371,7 +371,6 @@ class ImportacionController extends Controller
 
                     $user->name = $fila->name;
                     $user->lastname = $fila->lastname;
-                    $user->carnet = $fila->carnet;
                     $user->email = $fila->email;
                     $user->password = $fila->password;
                     $user->tipo = $fila->tipo;
@@ -430,14 +429,12 @@ class ImportacionController extends Controller
          * del negocio.
          */
 
-        if ($fila->name == null || $fila->lastname == null || $fila->carnet == null || $fila->email == null || $fila->password == null || $fila->tipo == null) {
+        if ($fila->name == null || $fila->lastname == null || $fila->email == null || $fila->password == null || $fila->tipo == null) {
             return [true, 'La fila está vacía o no ingresó algún dato requerido para registrar al usuario.'];
-        } elseif ($fila->tipo != 'Administrador' && $fila->tipo != 'Asistente' && $fila->tipo != 'Docente') {
+        } elseif ($fila->tipo != 'Administrador' && $fila->tipo != 'Asistente' && $fila->tipo != 'Docente' && $fila->tipo != 'Visitante') {
             return [true, 'El tipo de usuario ingresado no existe'];
         } elseif (User::where('email', '=', $fila->email)->first()) {
             return [true, 'El correo electrónico ' . $fila->email . ' ya existe.'];
-        } elseif (User::where('carnet', '=', $fila->carnet)->first()) {
-            return [true, 'El carnet ' . $fila->carnet . ' ya existe.'];
         }
 
         /**

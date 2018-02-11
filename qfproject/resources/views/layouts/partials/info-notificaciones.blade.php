@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Cualquier actividad relevante entorno a tus reservaciones será notificada en este panel.
+            Cualquier actividad relevante entorno a tus reservaciones será notificada en este panel.  Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Pantalla principal &#62; Inicio del sistema.
         </p>
     </div>
 </div>

@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Defina y mantenga actualizada la información de todos los locales con que cuenta la facultad.
+            Defina y mantenga actualizada la información de todos los locales con que cuenta la facultad. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Configuración &#62; Locales.
         </p>
     </div>
 </div>

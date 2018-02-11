@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Esta herramienta le permite registrar todas las reservaciones ordinarias de un ciclo anterior en uno nuevo.
+            Esta herramienta le permite registrar todas las reservaciones ordinarias de un ciclo anterior en uno nuevo. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Reservaciones &#62; Reservación por ciclo.
         </p>
     </div>
 </div>

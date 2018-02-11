@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Las actividades son acciones o eventos que se pueden realizar en los locales. Defina clases teóricas, laboratorios, evaluaciones o cualquier actividad que crea conveniente.
+            Las actividades son acciones o eventos que se pueden realizar en los locales. Defina clases teóricas, laboratorios, evaluaciones o cualquier actividad que crea conveniente. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Configuración &#62; Actividades.
         </p>
     </div>
 </div>

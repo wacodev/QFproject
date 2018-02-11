@@ -222,44 +222,20 @@
                                 <li>
                                     <a href="{{ route('reportes.exportar-lista-actividad') }}">
                                         <i class="fa fa-circle-o"></i>
-                                        Reservas por actividad
+                                        Programación por actividad
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#"> <!-- Editar -->
+                                    <a href="{{ route('reportes.exportar-lista-actividad') }}">
                                         <i class="fa fa-circle-o"></i>
-                                        General
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <!-- Editar -->
-                                        <i class="fa fa-circle-o"></i>
-                                        Por actividades
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <!-- Editar -->
-                                        <i class="fa fa-circle-o"></i>
-                                        Por asignaturas
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <!-- Editar -->
-                                        <i class="fa fa-circle-o"></i>
-                                        Por locales
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#"> <!-- Editar -->
-                                        <i class="fa fa-circle-o"></i>
-                                        Por usuarios
+                                        Reservas por usuario
                                     </a>
                                 </li>
                             </ul>
                         </li>
                          
                         <li class="treeview">
-                            <a href="#"> <!-- Editar -->
+                            <a href="">
                                 <i class="fa fa-bar-chart"></i>
                                 <span>
                                     Estadísticas

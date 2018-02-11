@@ -67,6 +67,13 @@
     </div>
 @endsection
 
+@section('sidebar')
+    <!-- MENÚ DE HERRAMIENTAS PARA REPORTES -->
+    @include('reportes.partials.herramientas')
+    <!-- AYUDA PARA HORARIOS -->
+    @include('reportes.partials.info-horarios')
+@endsection
+
 @push('scripts')
     <!--  BOOTSTRAP DATE PICKER -->
     <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>

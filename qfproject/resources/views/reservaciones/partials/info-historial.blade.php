@@ -1,4 +1,4 @@
-<!-- AYUDA DE EXPORTAR RESERVACIONES A EXCEL -->
+<!-- AYUDA DE HORARIOS -->
 <div class="box box-success">
     <div class="box-header with-border">
         <h3 class="box-title">
@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Esta herramienta le permite exportar a un archivo de Excel todas las reservaciones efectuadas en un periodo determinado. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Reservaciones &#62; Exportar reservaciones a Excel.
+            Listado de las reservaciones vigentes y prescritas del usuario. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Reservaciones &#62; Historial de reservas.
         </p>
     </div>
 </div>

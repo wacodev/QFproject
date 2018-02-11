@@ -107,3 +107,10 @@
         @include('reservaciones.modal-asignatura')
     </div>
 @endsection
+
+@section('sidebar')
+    <!-- MENÚ DE HERRAMIENTAS ADICIONALES PARA LAS RESERVACIONES -->
+    @include('reservaciones.partials.herramientas')
+    <!-- AYUDA DE RESERVACIONES SEMANALES -->
+    @include('reservaciones.partials.info-reserva-semanal')
+@endsection

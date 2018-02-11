@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Esta herramienta le permite importar reservaciones desde un archivo de Excel para ser almacenadas en la base de datos.
+            Esta herramienta le permite importar reservaciones desde un archivo de Excel para ser almacenadas en la base de datos. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Reservaciones &#62; Importar reservaciones a Excel.
         </p>
     </div>
 </div>

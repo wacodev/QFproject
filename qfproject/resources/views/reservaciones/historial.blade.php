@@ -142,4 +142,6 @@
 @section('sidebar')
     <!-- PANEL DEL PERFIL DE USUARIO -->
     @include('layouts.perfil')
+    <!-- AYUDA DE HISTORIAL -->
+    @include('reservaciones.partials.info-historial')
 @endsection

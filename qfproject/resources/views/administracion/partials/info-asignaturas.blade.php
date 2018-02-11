@@ -12,7 +12,7 @@
     </div>
     <div class="box-body">
         <p class="text-justify">
-            Defina todas las asignaturas que se imparten en la facultad.
+            Defina todas las asignaturas que se imparten en la facultad. Para más información, ingrese <a href="{{ route('mostrar-ayuda') }}" target="_blank">aquí</a> en la sección Configuración &#62; Asignaturas.
         </p>
     </div>
 </div>
