@@ -21,10 +21,14 @@
   <button class="tablinks" onclick="abrir(event, 'Inicio')" id="defaultOpen">Inicio</button>
   <button class="tablinks" onclick="abrir(event, 'Home')">Pantalla Principal</button>
   <button class="tablinks" onclick="abrir(event, 'Reservas')">Reservaciones</button>
+  @if (Auth::user()->administrador() || Auth::user()->asistente())
   <button class="tablinks" onclick="abrir(event, 'Reportes')">Reportes</button>
   <button class="tablinks" onclick="abrir(event, 'Estadísticas')">Estadísticas</button>
+  @endif
+  @if (Auth::user()->administrador())
   <button class="tablinks" onclick="abrir(event, 'Configuración')">Configuración</button>
   <button class="tablinks" onclick="abrir(event, 'Usuarios')">Usuarios</button>
+  @endif
 </div>
 
 
@@ -97,12 +101,14 @@
   <h4><b>Contenido</b></h4>
 <div class="contenido"><h4><a href="#uno">Nueva Reservación de Local</a></h4></div>
 <div class="contenido"><h4><a href="#dos">Historial de reservaciones</a></h4></div>
+@if (Auth::user()->administrador() || Auth::user()->asistente())
 <div class="contenido"><h4><a href="#cuatro">Panel de Administración</a></h4></div>
 <div class="sangria"><h4><a href="#cinco">Reservación Individual</a></h4></div>
 <div class="sangria"><h4><a href="#seis">Exportar reservaciones a excel</a></h4></div>
 <div class="sangria"><h4><a href="#siete">Importar reservaciones a excel</a></h4></div>
 <div class="sangria"><h4><a href="#ocho">Reservación por ciclo</a></h4></div>
 <div class="sangria"><h4><a href="#nueve">Reservación semanal</a></h4></div>
+@endif
 
 <hr>
 <a name="uno"><h4>Nueva Reserva de Local</h4></a>
@@ -142,6 +148,7 @@
 <td><img src="{{ url('images/ayuda/historial.png') }}"></td></center>
 <br>
 
+@if (Auth::user()->administrador() || Auth::user()->asistente())
 <a name="cuatro"><h4>Panel de Administración</h4></a>
 <p align="justify">Aquí podemos observar la lista de reservas realizadas por todos los usuarios del sistema, donde tendremos la opción de ver, editar y eliminar las reservas, así como también eliminar varias reservas a la vez seleccionando cada reserva que queremos eliminar y haciendo click en el botón de eliminar seleccionadas.</p> 
   <center>
@@ -203,7 +210,7 @@
   <center>
   <td><img src="{{ url('images/ayuda/semanal3.png') }}"></td></center>
   <br>
-
+@endif
 
 </div>
 
