@@ -48,7 +48,7 @@ class PdfController extends Controller
 
         $pdf = \PDF::loadView('reportes.comprobante', ['reservacion' => $reservacion, 'hoy' => $hoy]);
 
-        return $pdf->stream('comprobante_' . $reservacion->codigo . '.pdf');
+        return $pdf->download('comprobante_' . $reservacion->codigo . '.pdf');
     }
 
     /**
@@ -78,7 +78,7 @@ class PdfController extends Controller
             $pdf = \PDF::loadView('reportes.comprobante', ['reservacion' => $reservaciones[0], 'hoy' => $hoy]); 
         }
 
-        return $pdf->stream('comprobante.pdf');
+        return $pdf->download('comprobante.pdf');
     }
 
     /**
@@ -161,7 +161,7 @@ class PdfController extends Controller
             $pdf = \PDF::loadView('reportes.comprobante', ['reservacion' => $reservaciones[0], 'hoy' => $hoy]); 
         }
 
-        return $pdf->stream('comprobante.pdf');
+        return $pdf->download('comprobante.pdf');
     }
 
     /**
@@ -177,7 +177,7 @@ class PdfController extends Controller
         ->get();
 
     $pdf=PDF::loadView('reportes.reservacion-lista', ['reservaciones'=>$reservaciones, 'manana' => $manana])->setPaper('letter', 'landscape');
-    return $pdf ->stream('proximasReservas.pdf');
+    return $pdf ->download('proximasReservas.pdf');
 
    }
 
@@ -294,7 +294,7 @@ class PdfController extends Controller
         $pdf = \PDF::loadView('reportes.horarios', ['tabla' => $tabla, 'local' => $local, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin])
             ->setPaper('letter', 'landscape');
 
-        return $pdf->stream('horarios.pdf');
+        return $pdf->download('horarios.pdf');
     }
 
     /****************** LISTADO DE RESERVACIONES POR ACTIVIDAD ******************/
@@ -372,7 +372,7 @@ class PdfController extends Controller
 
         $pdf = \PDF::loadView('reportes.lista-actividad', ['reservaciones' => $reservaciones, 'asignatura' => $asignatura, 'actividad' => $actividad, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin]);
 
-        return $pdf->stream('listado_actividad.pdf');
+        return $pdf->download('listado_actividad.pdf');
     }
 
     /******************* LISTADO DE RESERVACIONES POR USUARIO *******************/
@@ -440,7 +440,7 @@ class PdfController extends Controller
 
         $pdf = \PDF::loadView('reportes.lista-usuario', ['reservaciones' => $reservaciones, 'user' => $user, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin])->setPaper('letter', 'landscape');
 
-        return $pdf->stream('listado_usuario.pdf');
+        return $pdf->download('listado_usuario.pdf');
     }
 
     /*************************** OCUPACIÓN DE LOCALES ***************************/
@@ -501,7 +501,7 @@ class PdfController extends Controller
         $f0_carbon = Carbon::create($f0[0], $f0[1], $f0[2], 0);
         $f1_carbon = Carbon::create($f1[0], $f1[1], $f1[2], 0);
 
-        $diferencia = $f0_carbon->diffInDays($f1_carbon) + 1;
+        $diferencia = $f1_carbon->diffInDays($f0_carbon) + 1;
 
         /**
          * Obteniendo arreglo con los porcentajes de ocupación del local por hora.
@@ -536,6 +536,6 @@ class PdfController extends Controller
 
         $pdf = \PDF::loadView('reportes.reporte-ocupacion', ['horas' => $horas, 'porcentajes' => $porcentajes, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin, 'local' => $local]);
 
-        return $pdf->stream('reporte_ocupacion_del_local.pdf');
+        return $pdf->download('reporte_ocupacion_del_local.pdf');
     }
 }

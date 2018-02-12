@@ -33,7 +33,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('reportes.reservacion-lista') }}">
+                <a href="{{ route('reportes.reservacion-lista') }}" target="_blanck">
                     <small class="label pull-right bg-red">PDF</small>
                     Reservas próximas
                 </a>

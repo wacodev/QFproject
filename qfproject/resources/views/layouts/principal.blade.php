@@ -208,7 +208,7 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     <li>
-                                        <a href="{{ route('reportes.reservacion-lista') }}">
+                                        <a href="{{ route('reportes.reservacion-lista') }}" target="_blanck">
                                             <i class="fa fa-circle-o"></i><small class="label pull-right bg-red">PDF</small>
                                             Reservas próximas
                                         </a>

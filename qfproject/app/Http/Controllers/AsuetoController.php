@@ -229,7 +229,7 @@ class AsuetoController extends Controller
         $fi_carbon = Carbon::create($fi[0], $fi[1], $fi[2], 0);
         $ff_carbon = Carbon::create($ff[0], $ff[1], $ff[2], 0);
 
-        $diferencia = $fi_carbon->diffInDays($ff_carbon);
+        $diferencia = $ff_carbon->diffInDays($fi_carbon);
 
         /**
          * Obteniendo datos solicitados por el usuario.

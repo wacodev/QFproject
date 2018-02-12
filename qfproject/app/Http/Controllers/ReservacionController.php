@@ -845,7 +845,7 @@ class ReservacionController extends Controller
 
             array_push($l_disponibles, $l_almacenar);
 
-            $f_carbon = $f_carbon->addDays(7);
+            $f_carbon = $f_carbon->addDays(7 * $frecuencia);
         }
 
         /**
@@ -1213,7 +1213,7 @@ class ReservacionController extends Controller
         $f = explode('-', $fecha);
         $f_carbon = Carbon::create($f[0], $f[1], $f[2], 0);
 
-        $diferencia = $li_carbon->diffInDays($f_carbon);
+        $diferencia = $f_carbon->diffInDays($li_carbon);
         
         /**
          * En caso de ocurrir un problema en algún registro toda la operación es
@@ -1475,10 +1475,12 @@ class ReservacionController extends Controller
              * que provocaban el choque son eliminadas.
              */
 
-            if (count($seleccionadas) == 0 && count($r) > 2) {
-                $rnr++;
+            if (count($seleccionadas) == 0) {
+                if (count($r) > 2) {
+                    $rnr++;
 
-                \Auth::user()->notify(new TareaNotification($reservacion, 'no-registro'));
+                    \Auth::user()->notify(new TareaNotification($reservacion, 'no-registro'));
+                }
             } else {
                 foreach ($seleccionadas as $seleccion) {
                     if ($r[0] == $seleccion) {
@@ -1563,7 +1565,7 @@ class ReservacionController extends Controller
          * Obteniendo datos necesarios con los parámetros recibidos.
          */
         
-        $locales = Local::all();
+        $locales = Local::orderBy('nombre', 'asc')->get();
 
         $reservaciones = Reservacion::where('fecha', '=', $fecha)
             ->where('hora_inicio', '>=', $hora_inicio)
