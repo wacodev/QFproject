@@ -136,6 +136,10 @@ Route::get('/', 'HomeController@index');
 /**
  * ---------------------------------------------------------------------------
  * Registro.
+ *
+ * En caso de querer usar el registro de usuario comentar la siguiente ruta y
+ * cambiar nombre al archivo register-qf.blade.php a register.blade.php que
+ * se encuentra en qfproject/resources/views/auth
  * ---------------------------------------------------------------------------
  */
 

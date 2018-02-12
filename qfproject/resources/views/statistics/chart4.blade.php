@@ -108,7 +108,7 @@ var btnSave = document.getElementById('save-pdf');
 
     var doc = new jsPDF();
     doc.addImage(imgData, 'PNG', 15, 12, 24, 24)
-    doc.addImage(chart.getImageURI(), 2, 35);
+    doc.addImage(chart.getImageURI(), 2, 40);
      doc.addImage(chart2.getImageURI(), -10, 115);
      doc.addImage(chart3.getImageURI(), -10, 202);
    

@@ -1621,13 +1621,15 @@ class ReservacionController extends Controller
         
         $f = explode('-', $fecha);
         
-        foreach ($asuetos as $asueto) {
-            if ($f[1] == $asueto->mes && $f[2] == $asueto->dia) {
-                return [true, 'Para la fecha que ingresaste hay programado un asueto por ser: ' . $asueto->nombre . '.'];
-            } else {
-                return [false, null];
+        if ($asuetos->count() > 0) {
+            foreach ($asuetos as $asueto) {
+                if ($f[1] == $asueto->mes && $f[2] == $asueto->dia) {
+                    return [true, 'Para la fecha que ingresaste hay programado un asueto por ser: ' . $asueto->nombre . '.'];
+                }
             }
         }
+        
+        return [false, null];
     }
 
     /**
