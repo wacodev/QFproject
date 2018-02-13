@@ -28,6 +28,9 @@
                 {{ $user->name }} {{ $user->lastname }}
             </h3>
             <p class="text-muted text-center">
+                {{ $user->username }}
+            </p>
+            <p class="text-muted text-center">
                 {{ $user->tipo }}
             </p>
             <ul class="list-group list-group-unbordered">
@@ -37,6 +40,14 @@
                     </strong>
                     <p class="pull-right">
                         {{ $user->id }}
+                    </p>
+                </li>
+                <li class="list-group-item">
+                    <strong>
+                        Username
+                    </strong>
+                    <p class="pull-right">
+                        {{ $user->username }}
                     </p>
                 </li>
                 <li class="list-group-item">
