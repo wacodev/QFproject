@@ -48,6 +48,7 @@ class UserController extends Controller
 
             $users = User::where('name', 'like', '%' . $query . '%')
                 ->orWhere('lastname', 'like', '%' . $query . '%')
+                ->orWhere('username', 'like', '%' . $query . '%')
                 ->orWhere('tipo', 'like', '%' . $query . '%')
                 ->orderBy('name', 'asc')
                 ->paginate(25);
@@ -224,6 +225,7 @@ class UserController extends Controller
 
         $user->name = $request->get('name');
         $user->lastname = $request->get('lastname');
+        $user->username = $request->get('username');
         $user->email = $request->get('email');
         $user->password = $request->get('password');
         $user->tipo = $request->get('tipo');

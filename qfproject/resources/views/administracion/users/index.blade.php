@@ -33,8 +33,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                              
-                                <th>Nombre</th>
+                                 <th>Nombre</th>
+                                <th>Username</th>
                                 <th>Tipo</th>
                                 <th>Opciones</th>
                             </tr>
@@ -48,6 +48,9 @@
                                    
                                     <td>
                                         {{ $user->name }} {{ $user->lastname }}
+                                    </td>
+                                    <td>
+                                        {{ $user->username}}
                                     </td>
                                     <td class="tipo-size">
                                         {{ $user->tipo }}
