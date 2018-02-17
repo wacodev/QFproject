@@ -11,8 +11,9 @@
         <title>
             @yield('titulo', 'Química y Farmacia')
         </title>
-        <!-- BOOTSTRAP 3.3.5 -->
+        <!-- STYLE -->
         <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+        <!-- BOOTSTRAP 3.3.5 -->
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
         <!-- FONT AWESOME -->
         <link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}" />
@@ -141,12 +142,12 @@
                         </div>
                         <div class="pull-left info">
                             <p>
-                                {{ $nombre[0] }} {{ $apellido[0] }}
-                            </p>
-                            <p>
                                 <small>
-                                    {{ Auth::user()->tipo }}
+                                    {{ $nombre[0] }} {{ $apellido[0] }}
                                 </small>
+                            </p>
+                            <p class="texto-mini">
+                                {{ Auth::user()->tipo }}
                             </p>
                         </div>
                     </div>
@@ -416,13 +417,5 @@
         <script src="{{ asset('js/hora-y-fecha.js') }}"></script>
         <!-- SECCIÓN PARA AGREGAR SCRIPTS -->
         @stack('scripts')
-        <script>
-            (function() {
-                var refresh = function() {
-                    location.reload(true);
-                };
-                var int = setInterval(refresh, 600000);
-            }())
-        </script>
     </body>
 </html>

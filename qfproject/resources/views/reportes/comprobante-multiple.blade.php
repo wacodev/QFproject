@@ -8,9 +8,9 @@
         <!-- TÍTULO -->
         <title>Comprobante de reservación</title>
         <!-- BOOTSTRAP 3.3.5 -->
-        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
         <!-- MIS ESTILOS -->
-        <link rel="stylesheet" href="css/mis-estilos.css" />
+        <link rel="stylesheet" href="{{ asset('css/mis-estilos.css') }}" />
         <!-- FAVICON -->
         <link rel="logo-simple" href="{{ asset('images/sistema/logos-simple.png') }}" />
         <link rel="shortcut icon" href="{{ asset('images/sistema/logo-simple.ico') }}" />
@@ -18,7 +18,7 @@
     <body>
         <!-- ENCABEZADO -->
         <div>
-            <img src="images/sistema/logo.png"  alt="Logo de la Facultad de Química y Farmacia" class="logo">
+            <img src="{{ asset('images/sistema/logo.png') }}"  alt="Logo de la Facultad de Química y Farmacia" class="logo">
             <div class="cero-margen">
                 <p>UNIVERSIDAD DE EL SALVADOR</p>
                 <p>FACULTAD DE QUÍMICA Y FARMACIA</p>
@@ -112,7 +112,7 @@
         </ul>
         <!-- FECHA Y HORA DE EMISIÓN DEL DOCUMENTO -->
         <div class="footer-pagina text-right">
-            <img src="images/sistema/sello.png"  alt="Logo de la Facultad de Química y Farmacia" class="sello">
+            <img src="{{ asset('images/sistema/sello.png') }}"  alt="Logo de la Facultad de Química y Farmacia" class="sello">
             <p>
                 Fecha y hora de emisión: {{ $hoy }}
             </p>

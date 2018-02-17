@@ -41,24 +41,25 @@ class ReservacionController extends Controller
         if ($request) {
             $query = trim($request->get('searchText'));
             
-
             $reservaciones=DB::table('reservaciones')
-            ->join('locales', 'reservaciones.local_id', 'locales.id')
-            ->join('asignaturas', 'reservaciones.asignatura_id', 'asignaturas.id')
-            ->join('users', 'reservaciones.user_id', 'users.id')
-            ->join('actividades', 'reservaciones.actividad_id', 'actividades.id')
-            ->select('reservaciones.*', 'locales.nombre as local', 'asignaturas.nombre as asignatura', 'users.name as user', 'users.lastname as last', 'users.tipo as t', 'actividades.nombre as actividad')
-            ->where('asignaturas.nombre', 'like', '%' .$query .'%')
-            ->orWhere('locales.nombre', 'like', '%' .$query .'%')
-            ->orWhere('users.name', 'like', '%' .$query .'%')
-            ->orWhere('users.lastname', 'like', '%' .$query .'%')
-            ->orWhere('actividades.nombre', 'like', '%' .$query .'%')
-            ->orWhere('responsable', 'like', '%' .$query .'%')
-            ->orWhere('fecha', 'like', '%' .$query .'%')
-            ->orWhere('hora_inicio', 'like', '%' .$query .'%')
-            ->orWhere('hora_fin', 'like', '%' .$query .'%')
-            ->orderBy('id', 'desc')
-            ->paginate(25);
+                ->join('locales', 'reservaciones.local_id', 'locales.id')
+                ->join('asignaturas', 'reservaciones.asignatura_id', 'asignaturas.id')
+                ->join('users', 'reservaciones.user_id', 'users.id')
+                ->join('actividades', 'reservaciones.actividad_id', 'actividades.id')
+                ->select('reservaciones.*', 'locales.nombre as local', 'asignaturas.nombre as asignatura', 'users.name as user', 'users.lastname as last', 'users.tipo as t', 'actividades.nombre as actividad')
+                ->where('asignaturas.nombre', 'like', '%' .$query .'%')
+                ->orWhere('locales.nombre', 'like', '%' .$query .'%')
+                ->orWhere('users.name', 'like', '%' .$query .'%')
+                ->orWhere('users.lastname', 'like', '%' .$query .'%')
+                ->orWhere('actividades.nombre', 'like', '%' .$query .'%')
+                ->orWhere('responsable', 'like', '%' .$query .'%')
+                ->orWhere('fecha', 'like', '%' .$query .'%')
+                ->orWhere('hora_inicio', 'like', '%' .$query .'%')
+                ->orWhere('hora_fin', 'like', '%' .$query .'%')
+                ->orWhere('reservaciones.codigo', 'like', '%' .$query .'%')
+                ->orWhere('asignaturas.codigo', 'like', '%' .$query .'%')
+                ->orderBy('id', 'desc')
+                ->paginate(25);
 
             return view('reservaciones.index')
                 ->with('reservaciones', $reservaciones)

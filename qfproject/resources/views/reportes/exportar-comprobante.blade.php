@@ -111,6 +111,8 @@
 @section('sidebar')
     <!-- PANEL DEL PERFIL DE USUARIO -->
     @include('layouts.perfil')
+    <!-- AYUDA DE COMPROBANTE -->
+    @include('reportes.partials.info-comprobante')
 @endsection
 
 @push('scripts')

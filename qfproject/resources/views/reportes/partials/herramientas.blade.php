@@ -18,7 +18,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('reportes.reporte-ocupacion') }}">                    
+                <a href="{{ route('reportes.exportar-reporte-ocupacion') }}">                    
                     Ocupación de locales
                 </a>
             </li>
@@ -28,7 +28,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('reportes.reservacion-lista') }}">
+                <a href="{{ route('reportes.exportar-lista-usuario') }}">
                     Reservas por usuario
                 </a>
             </li>

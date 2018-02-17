@@ -34,7 +34,6 @@
 
 .logo {
     float: right;
-    height: 100px;
     padding-left: 15px;
     width: 100px;
 }
@@ -47,9 +46,8 @@
 
 .logo-horarios {
     float: left;
-    height: 60px;
     padding-right: 15px;
-    width: 60px;
+    width: 75px;
 }
 
 .margen-arriba-grande {
@@ -125,6 +123,10 @@
 .panel-sin-leer {
     background-color: #dff0d8;
     border-color: #d6e9c6;
+}
+
+.texto-mini {
+    font-size: 10px;
 }
 
 .texto-mini p {
