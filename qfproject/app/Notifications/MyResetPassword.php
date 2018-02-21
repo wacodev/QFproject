@@ -27,7 +27,7 @@ class MyResetPassword extends ResetPassword
                      ->line('Estás recibiendo este correo porque hiciste una solicitud de recuperación de contraseña para tu cuenta.')
                      ->action('Recuperar contraseña', route('password.reset', $this->token))
                      ->line('Si no realizaste esta solicitud, ignora este mensaje.')
-                    ->salutation('Saludos, '. config('qfproject.name'));
+                    ->salutation('Saludos.');
     }
 
 }

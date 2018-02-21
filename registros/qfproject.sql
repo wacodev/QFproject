@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-02-2018 a las 02:24:44
+-- Tiempo de generación: 18-02-2018 a las 00:53:14
 -- Versión del servidor: 10.1.25-MariaDB
 -- Versión de PHP: 5.6.31
 
@@ -40,12 +40,13 @@ CREATE TABLE `actividades` (
 --
 
 INSERT INTO `actividades` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
-(1, 'Clase teórica', NULL, NULL),
-(2, 'Discusión', NULL, NULL),
-(3, 'Laboratorio', NULL, NULL),
-(4, 'Parcial', NULL, NULL),
-(5, 'Capacitación', NULL, NULL),
-(6, 'Reunión', NULL, NULL);
+(1, 'Capacitación', NULL, NULL),
+(2, 'Clase teórica', NULL, NULL),
+(3, 'Discusión', NULL, NULL),
+(4, 'Laboratorio', NULL, NULL),
+(5, 'Parcial', NULL, NULL),
+(6, 'Prelaboratorio', NULL, NULL),
+(7, 'Reunión', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -66,49 +67,65 @@ CREATE TABLE `asignaturas` (
 --
 
 INSERT INTO `asignaturas` (`id`, `codigo`, `nombre`, `created_at`, `updated_at`) VALUES
-(1, 'QUG116', 'Química General I', NULL, NULL),
-(2, 'FIS116', 'Física I', NULL, NULL),
-(3, 'MAT116', 'Matemática I', NULL, NULL),
-(4, 'ING116', 'Inglés Técnico I', NULL, NULL),
-(5, 'QUG216', 'Química General IÍ', NULL, NULL),
-(6, 'FIS216', 'Física II', NULL, NULL),
-(7, 'MAT216', 'Matemática II', NULL, NULL),
-(8, 'ING216', 'Inglés Técnico II', NULL, NULL),
-(9, 'TRI116', 'Técnicas de Redacción e Investigación', NULL, NULL),
-(10, 'QUO116', 'Química Orgánica I', NULL, NULL),
-(11, 'QAQ116', 'Química Analítica Cualitativa', NULL, NULL),
-(12, 'MAT316', 'Matemática III', NULL, NULL),
-(13, 'QUI116', 'Química Inorgánica', NULL, NULL),
-(14, 'QUO216', 'Química Orgánica II', NULL, NULL),
-(15, 'QAC116', 'Química Analítica Cuantitativa', NULL, NULL),
-(16, 'EGE116', 'Estadística', NULL, NULL),
-(17, 'BIG116', 'Biología General', NULL, NULL),
-(18, 'SOG116', 'Sociología', NULL, NULL),
-(19, 'AOE116', 'Análisis Orgánico Estructural', NULL, NULL),
-(20, 'FQF116', 'Físicofarmacia I', NULL, NULL),
-(21, 'BIQ116', 'Bioquímica General', NULL, NULL),
-(22, 'ZAF116', 'Zoología Aplicada a la Farmacia', NULL, NULL),
-(23, 'PAP116', 'Psicología Aplicada a la Empresa', NULL, NULL),
-(24, 'ANT116', 'Anatomía', NULL, NULL),
-(25, 'FQF216', 'Físicofarmacia II', NULL, NULL),
-(26, 'MYP116', 'Microbiología y Parasitología', NULL, NULL),
-(27, 'BGF116', 'Botánica General y Farmacéutica', NULL, NULL),
-(28, 'PAD116', 'Principios de Administración', NULL, NULL),
-(29, 'FIG116', 'Fisiología', NULL, NULL),
-(30, 'ANI116', 'Análisis Instrumental', NULL, NULL),
-(31, 'FMQ116', 'Farmacoquímica', NULL, NULL),
-(32, 'FAR116', 'Farmacognosía', NULL, NULL),
-(33, 'FRM116', 'Farmacología', NULL, NULL),
-(34, 'ABR116', 'Análisis Bromatológico', NULL, NULL),
-(35, 'FAT115', 'Farmacotécnia', NULL, NULL),
-(36, 'QFT116', 'Química Forense y Toxicología', NULL, NULL),
-(37, 'CPF116', 'Control de Calidad de Productos Farmacéuticas', NULL, NULL),
-(38, 'TFA116', 'Tecnología Farmacéutica', NULL, NULL),
-(39, 'CAS116', 'Contaminación Ambiental y Salud Pública', NULL, NULL),
-(40, 'LFD116', 'Legislación Farmacéutica y Deontología', NULL, NULL),
-(41, 'CFC116', 'Control de Calidad de Productos Farmacéuticos y Cosméticos', NULL, NULL),
-(42, 'TFC116', 'Tecnología Farmacéutica y Cosmética', NULL, NULL),
-(43, 'QIA116', 'Química Industrial y Aprovechamiento de los Recursos Naturales y Renovables', NULL, NULL);
+(1, 'ABR116', 'Análisis Bromatológico', NULL, NULL),
+(2, 'ANI116', 'Análisis Instrumental', NULL, NULL),
+(3, 'AOE116', 'Análisis Orgánico Estructural', NULL, NULL),
+(4, 'ANT116', 'Anatomía', NULL, NULL),
+(5, 'BIG116', 'Biología General', NULL, NULL),
+(6, 'BIQ116', 'Bioquímica General', NULL, NULL),
+(7, 'BGF116', 'Botánica General y Farmacéutica', NULL, NULL),
+(8, 'CAS116', 'Contaminación Ambiental y Salud Pública', NULL, NULL),
+(9, 'CPF116', 'Control de Calidad de Productos Farmacéuticas', NULL, NULL),
+(10, 'CFC116', 'Control de Calidad de Productos Farmacéuticos y Cosméticos', NULL, NULL),
+(11, 'EGE116', 'Estadística', NULL, NULL),
+(12, 'FAH116', 'Farmacia Hospitalaria I', NULL, NULL),
+(13, 'FAH216', 'Farmacia Hospitalaria II', NULL, NULL),
+(14, 'FAH316', 'Farmacia Hospitalaria III', NULL, NULL),
+(15, 'FAH416', 'Farmacia Hospitalaria IV', NULL, NULL),
+(16, 'FIN116', 'Farmacia Industrial I', NULL, NULL),
+(17, 'FIN216', 'Farmacia Industrial II', NULL, NULL),
+(18, 'FIN316', 'Farmacia Industrial III', NULL, NULL),
+(19, 'FIN416', 'Farmacia Industrial IV', NULL, NULL),
+(20, 'FAR116', 'Farmacognosía', NULL, NULL),
+(21, 'FRM116', 'Farmacología', NULL, NULL),
+(22, 'FMQ116', 'Farmacoquímica', NULL, NULL),
+(23, 'FAT115', 'Farmacotécnia', NULL, NULL),
+(24, 'FIS116', 'Física I', NULL, NULL),
+(25, 'FIS216', 'Física II', NULL, NULL),
+(26, 'FQF116', 'Físicofarmacia I', NULL, NULL),
+(27, 'FQF216', 'Físicofarmacia II', NULL, NULL),
+(28, 'FIG116', 'Fisiología', NULL, NULL),
+(29, 'ING116', 'Inglés Técnico I', NULL, NULL),
+(30, 'ING216', 'Inglés Técnico II', NULL, NULL),
+(31, 'LFD116', 'Legislación Farmacéutica y Deontología', NULL, NULL),
+(32, 'MAT116', 'Matemática I', NULL, NULL),
+(33, 'MAT216', 'Matemática II', NULL, NULL),
+(34, 'MAT316', 'Matemática III', NULL, NULL),
+(35, 'MIA116', 'Microbiología Aplicada I', NULL, NULL),
+(36, 'MIA216', 'Microbiología Aplicada II', NULL, NULL),
+(37, 'MIA316', 'Microbiología Aplicada III', NULL, NULL),
+(38, 'MIA416', 'Microbiología Aplicada IV', NULL, NULL),
+(39, 'MYP116', 'Microbiología y Parasitología', NULL, NULL),
+(40, 'PAD116', 'Principios de Administración', NULL, NULL),
+(41, 'PAP116', 'Psicología Aplicada a la Empresa', NULL, NULL),
+(42, 'QAA116', 'Química Agrícola Aplicada I', NULL, NULL),
+(43, 'QAA216', 'Química Agrícola Aplicada II', NULL, NULL),
+(44, 'QAA316', 'Química Agrícola Aplicada III', NULL, NULL),
+(45, 'QAA416', 'Química Agrícola Aplicada IV', NULL, NULL),
+(46, 'QAQ116', 'Química Analítica Cualitativa', NULL, NULL),
+(47, 'QAC116', 'Química Analítica Cuantitativa', NULL, NULL),
+(48, 'QFT116', 'Química Forense y Toxicología', NULL, NULL),
+(49, 'QUG116', 'Química General I', NULL, NULL),
+(50, 'QUG216', 'Química General IÍ', NULL, NULL),
+(51, 'QIA116', 'Química Industrial y Aprovechamiento de los Recursos Naturales y Renovables', NULL, NULL),
+(52, 'QUI116', 'Química Inorgánica', NULL, NULL),
+(53, 'QUO116', 'Química Orgánica I', NULL, NULL),
+(54, 'QUO216', 'Química Orgánica II', NULL, NULL),
+(55, 'SOG116', 'Sociología', NULL, NULL),
+(56, 'TRI116', 'Técnicas de Redacción e Investigación', NULL, NULL),
+(57, 'TFA116', 'Tecnología Farmacéutica', NULL, NULL),
+(58, 'TFC116', 'Tecnología Farmacéutica y Cosmética', NULL, NULL),
+(59, 'ZAF116', 'Zoología Aplicada a la Farmacia', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -145,19 +162,19 @@ CREATE TABLE `locales` (
 --
 
 INSERT INTO `locales` (`id`, `nombre`, `capacidad`, `imagen`, `created_at`, `updated_at`) VALUES
-(1, 'Aula 201', 50, 'local_default.jpg', NULL, NULL),
-(2, 'Aula 202', 50, 'local_default.jpg', NULL, NULL),
-(3, 'Aula 205', 50, 'local_default.jpg', NULL, NULL),
-(4, 'Aula 206', 50, 'local_default.jpg', NULL, NULL),
-(5, 'Aula 207', 50, 'local_default.jpg', NULL, NULL),
-(6, 'Aula 208', 50, 'local_default.jpg', NULL, NULL),
-(7, 'Aula 209', 50, 'local_default.jpg', NULL, NULL),
-(8, 'Aula 210', 50, 'local_default.jpg', NULL, NULL),
-(9, 'Auditorium No. 1', 100, 'local_default.jpg', NULL, NULL),
-(10, 'Auditorium No. 2', 100, 'local_default.jpg', NULL, NULL),
-(11, 'Aula No. 6', 50, 'local_default.jpg', NULL, NULL),
-(12, 'Aula de farmacología', 50, 'local_default.jpg', NULL, NULL),
-(13, 'Aula tecnología', 50, 'local_default.jpg', NULL, NULL);
+(1, 'Auditorium No. 1', 100, 'local_default.jpg', NULL, NULL),
+(2, 'Auditorium No. 2', 100, 'local_default.jpg', NULL, NULL),
+(3, 'Aula 201', 75, 'local_default.jpg', NULL, NULL),
+(4, 'Aula 202', 75, 'local_default.jpg', NULL, NULL),
+(5, 'Aula 205', 75, 'local_default.jpg', NULL, NULL),
+(6, 'Aula 206', 75, 'local_default.jpg', NULL, NULL),
+(7, 'Aula 207', 75, 'local_default.jpg', NULL, NULL),
+(8, 'Aula 208', 75, 'local_default.jpg', NULL, NULL),
+(9, 'Aula 209', 75, 'local_default.jpg', NULL, NULL),
+(10, 'Aula 210', 75, 'local_default.jpg', NULL, NULL),
+(11, 'Aula de farmacología', 75, 'local_default.jpg', NULL, NULL),
+(12, 'Aula No. 6', 75, 'local_default.jpg', NULL, NULL),
+(13, 'Aula tecnología', 75, 'local_default.jpg', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -263,6 +280,7 @@ CREATE TABLE `users` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lastname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tipo` enum('Administrador','Asistente','Docente','Visitante') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Docente',
@@ -276,8 +294,8 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `lastname`, `email`, `password`, `tipo`, `imagen`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Usuario', 'Administrador', 'administrador@gmail.com', '$2y$10$ph0fdJdrQCIPRmpDxm/FeOMGkFIwiEtf6i.o/K0gteLt.eLXUChrq', 'Administrador', 'user_default.jpg', 'ibOJy2op3sP1k9Kh6JLdPoYg8f4yhq729aaFOndvqwHsotMpCFhzLrTosJt8', '2018-02-12 01:22:04', '2018-02-12 01:22:04');
+INSERT INTO `users` (`id`, `name`, `lastname`, `username`, `email`, `password`, `tipo`, `imagen`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Usuario', 'Administrador', 'admin', 'admin@mail.com', '$2y$10$8WXD2acmh0vM8bvOCL4cDeP86VqY7y4WuVp96IUYKkpn7giOIJD.2', 'Administrador', 'user_default.jpg', NULL, '2018-02-17 22:18:49', '2018-02-17 22:18:49');
 
 --
 -- Índices para tablas volcadas
@@ -351,6 +369,7 @@ ALTER TABLE `suspensiones`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_username_unique` (`username`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
@@ -361,12 +380,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `actividades`
 --
 ALTER TABLE `actividades`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `asignaturas`
 --
 ALTER TABLE `asignaturas`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 --
 -- AUTO_INCREMENT de la tabla `asuetos`
 --

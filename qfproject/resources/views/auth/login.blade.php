@@ -34,8 +34,8 @@
                 <form method="POST" action="{{ route('login') }}">
                     {{ csrf_field() }}
                     <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }} has-feedback">
-                        <input id="username" type="username" class="form-control" name="username" value="{{ old('username') }}" required placeholder="Correo electrónico">
-                        <span class="fa fa-envelope-o form-control-feedback"></span>
+                        <input id="username" type="username" class="form-control" name="username" value="{{ old('username') }}" required placeholder="Usuario">
+                        <span class="fa fa-user form-control-feedback"></span>
                         @if ($errors->has('username'))
                             <span class="help-block">
                                 <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -69,14 +69,6 @@
                         </div>
                     </div>
                 </form>
-                <!-- LOGIN SOCIAL -->
-                <!-- 
-                <div class="social-auth-links text-center">
-                    <p>- OR -</p>
-                    <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook</a>
-                    <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign in using Google+</a>
-                </div>
-                -->
                 <!-- RECUPERAR CONTRASEÑA Y REGISTRAR NUEVO USUARIO -->
                 <div class="text-center">
                     <a href="{{ route('password.request') }}">No recuerdo mi contraseña</a><br>

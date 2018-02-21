@@ -24,17 +24,6 @@ class CreateUsersTable extends Migration
             $table->string('imagen')->default('user_default.jpg');
             $table->rememberToken();
             $table->timestamps();
-            
-            
-            /*
-             * ---------------------------------------------------------------------------
-             * Agregar luego en caso de usar acceso por medio de Google y permitir que
-             * password sea nula:
-             *
-             * $table->string('provider');
-             * $table->string('provider_id')->unique();
-             * ---------------------------------------------------------------------------
-             */
         });
     }
 

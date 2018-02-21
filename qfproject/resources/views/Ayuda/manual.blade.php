@@ -258,7 +258,7 @@
     </a>
   </td></center>
   <br>
-  <p align="justify">El archivo debe tener una cabecera con los siguientes datos: local_id, asignatura_id, actividad_id, fecha, hora_inicio, hora_fin, tema y tipo. El orden de los elementos debe ser respetado. En las primeras tres columnas se coloca el identificador del local, asignatura y actividad respectivamente, luego la fecha, hora de inicio y hora de finalización de la reservación, el campo de tema se puede dejar vacío si se desea y el campo de tipo de reservación debe tener la palabra "Ordinaria" o "Extraordinario" según el caso y debe iniciar en mayúscula. En la imagen puede ver un ejemplo correcto del formato que debe tener el archivo.</p> 
+  <p align="justify">El archivo debe tener una cabecera con los siguientes datos: user_id, local_id, asignatura_id, actividad_id, fecha, hora_inicio, hora_fin, tema y tipo. El orden de los elementos debe ser respetado y las celdas deben tener el formato de fecha y hora donde corresponda. En las primeras tres columnas se coloca el identificador del local, asignatura y actividad respectivamente, luego la fecha, hora de inicio y hora de finalización de la reservación, el campo de tema se puede dejar vacío si se desea y el campo de tipo de reservación debe tener la palabra "Ordinaria" o "Extraordinaria" según el caso y debe iniciar en mayúscula. En la imagen puede ver un ejemplo correcto del formato que debe tener el archivo.</p> 
   <center>
   <td>
     <a href="{{ url('images/ayuda/excel-reserva.png') }}" target="_blanck">

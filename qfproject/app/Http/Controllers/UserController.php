@@ -14,6 +14,7 @@ use DB;
 use Carbon\Carbon;
 use Laracasts\Flash\Flash;
 use qfproject\Http\Requests\UserRequest;
+use qfproject\Notifications\CredencialesNotification;
 use qfproject\Reservacion;
 use qfproject\User;
 
@@ -99,12 +100,41 @@ class UserController extends Controller
 
         $user = new User($request->all());
 
-
         if ($user->imagen) {
             $user->imagen = $nombre;
         }
 
+        /**
+         * Almacenando username.
+         */
+
+        $username = explode('@', $request->email);
+
+        $username_almacenar = $username[0];
+
+        $i = 1;
+
+        $bandera = true;
+
+        while ($bandera) {
+            if (User::where('username', '=', $username_almacenar)->first()) {
+                $username_almacenar = $username[0] . $i;
+
+                $i++;
+            } else {
+                $user->username = $username_almacenar;
+
+                $bandera = false;
+            }
+        }
+
         $user->save();
+
+        /**
+         * Notificando sus credenciales al usuario.
+         */
+
+        $user->notify(new CredencialesNotification($user->username, $request->password));
 
         flash('
             <h4>
@@ -223,9 +253,36 @@ class UserController extends Controller
             $user->imagen = $nombre;
         }
 
+        /**
+         * Almacenando username.
+         */
+
+        $username = explode('@', $request->email);
+
+        $email = explode('@', $user->email);
+
+        if ($username[0] != $email[0]) {
+            $username_almacenar = $username[0];
+
+            $i = 1;
+
+            $bandera = true;
+
+            while ($bandera) {
+                if (User::where('username', '=', $username_almacenar)->first()) {
+                    $username_almacenar = $username[0] . $i;
+
+                    $i++;
+                } else {
+                    $user->username = $username_almacenar;
+
+                    $bandera = false;
+                }
+            }
+        }
+
         $user->name = $request->get('name');
         $user->lastname = $request->get('lastname');
-        $user->username = $request->get('username');
         $user->email = $request->get('email');
         $user->password = $request->get('password');
         $user->tipo = $request->get('tipo');

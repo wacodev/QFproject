@@ -13,10 +13,10 @@
             {{ Auth::user()->tipo }}
         </p>
         @if (!Auth::user()->visitante())
-         <ul class="list-group list-group-unbordered">
+            <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
                     <strong>
-                        Username
+                        Usuario
                     </strong>
                     <p class="pull-right">
                         {{ Auth::user()->username }}

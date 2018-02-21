@@ -33,7 +33,7 @@
                         <div class="form-group">
                             
                                 <button type="submit" class="btn btn-success">
-                                    Enviar enlace para reestablecer su contraseña
+                                    Enviar enlace para restablecer su contraseña
                                 </button>
                         </div>
                     </form>

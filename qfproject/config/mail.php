@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'quimica.farmaciaUES@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Recuperar Contraseña'),
+        'name' => env('MAIL_FROM_NAME', 'Facultad de Química y Farmacia'),
     ],
 
     /*

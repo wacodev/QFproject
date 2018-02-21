@@ -54,20 +54,6 @@
                             @endif
                         </div>
                     </div>
-                    <!-- USERNAME -->
-                    <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                        {!! Form::label('username', 'Username', ['class' => 'col-sm-4 control-label']) !!}
-                        <div class="col-sm-7">
-                            {!! Form::text('username', old('username'), ['class' => 'form-control', 'placeholder' => 'Username', 'required']) !!}
-                            @if ($errors->has('username'))
-                                <span class="help-block">
-                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
-                                    {{ $errors->first('username') }}
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                   
                     <!-- CORREO ELECTRÓNICO -->
                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                         {!! Form::label('email', 'Correo electrónico', ['class' => 'col-sm-4 control-label']) !!}

@@ -158,7 +158,7 @@ class ReservacionNotification extends Notification
 
     /**
      * ---------------------------------------------------------------------------
-     * Obtiene la representación de la matriz de la notificación.
+     * Obtiene la representación de matriz de la notificación.
      *
      * @param  mixed  $notifiable
      * @return array

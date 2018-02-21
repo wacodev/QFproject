@@ -17,6 +17,7 @@ use qfproject\Actividad;
 use qfproject\Asignatura;
 use qfproject\Asueto;
 use qfproject\Local;
+use qfproject\Notifications\CredencialesNotification;
 use qfproject\Notifications\ReservacionNotification;
 use qfproject\Reservacion;
 use qfproject\Suspension;
@@ -25,6 +26,8 @@ use Storage;
 
 class ImportacionController extends Controller
 {
+    /****************************** RESERVACIONES *******************************/
+
     /**
      * ---------------------------------------------------------------------------
      * Muestra el formulario para crear nuevas reservaciones mediante un archivo
@@ -93,7 +96,7 @@ class ImportacionController extends Controller
                                 Detalles de la operación
                             </h4>
                             <p class="info-circle">
-                                <strong>Reservaciones registradas satisfactoriamente: ' . $j . '.</strong>
+                                Reservaciones registradas satisfactoriamente: ' . $j . '.
                             </p>
                             <p class="info-circle">
                                 En la fila ' . $i . ' se presentó el siguiente error: ' . $error[1] . ' <strong>Los registros en las filas anteriores se guardaron correctamente</strong>.
@@ -107,7 +110,7 @@ class ImportacionController extends Controller
 
                     $reservacion = new Reservacion;
 
-                    $reservacion->user_id = \Auth::user()->id;
+                    $reservacion->user_id = $fila->user_id;
                     $reservacion->local_id = $fila->local_id;
                     $reservacion->asignatura_id = $fila->asignatura_id;
                     $reservacion->actividad_id = $fila->actividad_id;
@@ -121,7 +124,7 @@ class ImportacionController extends Controller
                      * Generando código de comprobación.
                      */
 
-                    $cr = str_pad(mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
+                    $cr = str_pad(substr($j, -3, 3), 3, '0', STR_PAD_LEFT);
                     $ca = str_pad(substr($reservacion->asignatura_id, 0, 2), 2, '0', STR_PAD_LEFT);
                     $cl = str_pad(substr($reservacion->local_id, 0, 2), 2, '0', STR_PAD_LEFT);
                     $cu = str_pad(substr($reservacion->user_id, 0, 2), 2, '0', STR_PAD_LEFT);
@@ -148,10 +151,10 @@ class ImportacionController extends Controller
                             ¡Bien hecho!
                         </h4>
                         <p class="check">
-                            <strong>Todos las reservaciones fueron registradas correctamente.</strong>
+                            Todas las reservaciones fueron registradas correctamente.
                         </p>
                         <p class="check">
-                            <strong>Total de reservaciones registradas:</strong> ' . $j . '.
+                            Total de reservaciones registradas: ' . $j . '.
                         </p>
                     ')
                     ->success()
@@ -184,15 +187,17 @@ class ImportacionController extends Controller
     {
         /**
          * Validando ingreso de campos obligatorios y que existe el local, la
-         * asignatura y la actividad ingresada.
+         * asignatura, el usuario y la actividad ingresada.
          */
 
         $fila->fecha = Carbon::parse($fila->fecha)->format('Y-m-d');
         $fila->hora_inicio = Carbon::parse($fila->hora_inicio)->format('H:i:s');
         $fila->hora_fin = Carbon::parse($fila->hora_fin)->format('H:i:s');
 
-        if ($fila->local_id == null || $fila->asignatura_id == null || $fila->actividad_id == null || $fila->fecha == null || $fila->hora_inicio == null || $fila->hora_fin == null) {
+        if ($fila->user_id == null || $fila->local_id == null || $fila->asignatura_id == null || $fila->actividad_id == null || $fila->fecha == null || $fila->hora_inicio == null || $fila->hora_fin == null) {
             return [true, 'La fila está vacía o no ingresó algún dato requerido para realizar la reservación.'];
+        } elseif (User::where('id', '=', $fila->user_id)->first() == null) {
+            return [true, 'No existe el usuario ingresado.'];
         } elseif (Local::where('id', '=', $fila->local_id)->first() == null) {
             return [true, 'No existe el local ingresado.'];
         } elseif (Asignatura::where('id', '=', $fila->asignatura_id)->first() == null) {
@@ -289,6 +294,8 @@ class ImportacionController extends Controller
         return [false, null];
     }
 
+    /********************************* USUARIOS *********************************/
+
     /**
      * ---------------------------------------------------------------------------
      * Muestra el formulario para crear nuevos usuarios mediante un archivo de
@@ -377,7 +384,37 @@ class ImportacionController extends Controller
                     $user->password = $fila->password;
                     $user->tipo = $fila->tipo;
 
+                    /**
+                     * Almacenando username.
+                     */
+
+                    $username = explode('@', $fila->email);
+
+                    $username_almacenar = $username[0];
+
+                    $u = 1;
+
+                    $bandera = true;
+
+                    while ($bandera) {
+                        if (User::where('username', '=', $username_almacenar)->first()) {
+                            $username_almacenar = $username[0] . $u;
+
+                            $u++;
+                        } else {
+                            $user->username = $username_almacenar;
+
+                            $bandera = false;
+                        }
+                    }
+
                     $user->save();
+
+                    /**
+                     * Notificando sus credenciales al usuario.
+                     */
+
+                    $user->notify(new CredencialesNotification($user->username, $request->password));
 
                     $i++;
 

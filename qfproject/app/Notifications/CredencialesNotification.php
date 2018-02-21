@@ -7,41 +7,29 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-/**
- * ---------------------------------------------------------------------------
- * Clases agregadas.
- * ---------------------------------------------------------------------------
- */
-
-use qfproject\Actividad;
-use qfproject\Asignatura;
-use qfproject\Local;
-use qfproject\Reservacion;
-use qfproject\User;
-
-class TareaNotification extends Notification
+class CredencialesNotification extends Notification
 {
     use Queueable;
 
     /**
      * ---------------------------------------------------------------------------
-     * Instancia de Reservación.
-     *
-     * @var \qfproject\Reservacion
-     * ---------------------------------------------------------------------------
-     */
-
-    protected $reservacion;
-
-    /**
-     * ---------------------------------------------------------------------------
-     * Tipo de notificación según la acción realizada por el usuario.
+     * Nombre de usuario.
      *
      * @var string
      * ---------------------------------------------------------------------------
      */
 
-    protected $tipo;
+    protected $username;
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Contraseña del usuario.
+     *
+     * @var string
+     * ---------------------------------------------------------------------------
+     */
+
+    protected $password;
 
     /**
      * ---------------------------------------------------------------------------
@@ -51,11 +39,11 @@ class TareaNotification extends Notification
      * ---------------------------------------------------------------------------
      */
 
-    public function __construct($reservacion, $tipo)
+    public function __construct($username, $password)
     {
-        $this->reservacion = $reservacion;
+        $this->username = $username;
 
-        $this->tipo = $tipo;
+        $this->password = $password;
     }
 
     /**
@@ -69,28 +57,26 @@ class TareaNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        return ['mail'];
     }
 
     /**
      * ---------------------------------------------------------------------------
-     * Obtiene la representación de base de datos de la notificación.
+     * Obtiene la representación de correo electrónico de la notificación.
      *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      * ---------------------------------------------------------------------------
      */
 
-    public function toDatabase($notifiable)
+    public function toMail($notifiable)
     {
-        return [
-            'reservacion' => $this->reservacion,
-            'tipo'        => $this->tipo,
-            'propietario' => User::find($this->reservacion->user_id),
-            'local'       => Local::find($this->reservacion->local_id),
-            'asignatura'  => Asignatura::find($this->reservacion->asignatura_id),
-            'actividad'   => Actividad::find($this->reservacion->actividad_id)
-        ];
+        return (new MailMessage)
+            ->subject('Credenciales')
+            ->greeting('Hola')
+            ->line('Se ha creado tu cuenta satisfactoriamente. Tus credenciales para acceder al Sistema de Reservación de Locales de la Facultad de Química y Farmacia son:')
+            ->line('Usuario: ' . $this->username)
+            ->line('Contraseña: ' . $this->password);
     }
 
     /**

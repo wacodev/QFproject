@@ -45,7 +45,6 @@
                             @endif
                         </div>
                     </div>
-                  
                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                         {!! Form::label('email', 'Correo electrónico', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">

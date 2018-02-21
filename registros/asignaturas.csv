@@ -1,43 +1,59 @@
-﻿Química General I;QUG116
-Física I;FIS116
-Matemática I;MAT116
-Inglés Técnico I;ING116
-Química General IÍ;QUG216
-Física II;FIS216
-Matemática II;MAT216
-Inglés Técnico II;ING216
-Técnicas de Redacción e Investigación;TRI116
-Química Orgánica I;QUO116
-Química Analítica Cualitativa;QAQ116
-Matemática III;MAT316
-Química Inorgánica;QUI116
-Química Orgánica II;QUO216
-Química Analítica Cuantitativa;QAC116
-Estadística;EGE116
-Biología General;BIG116
-Sociología;SOG116
-Análisis Orgánico Estructural;AOE116
-Físicofarmacia I;FQF116
-Bioquímica General;BIQ116
-Zoología Aplicada a la Farmacia;ZAF116
-Psicología Aplicada a la Empresa;PAP116
-Anatomía;ANT116
-Físicofarmacia II;FQF216
-Microbiología y Parasitología;MYP116
-Botánica General y Farmacéutica;BGF116
-Principios de Administración;PAD116
-Fisiología;FIG116
+﻿Análisis Bromatológico;ABR116
 Análisis Instrumental;ANI116
-Farmacoquímica;FMQ116
+Análisis Orgánico Estructural;AOE116
+Anatomía;ANT116
+Biología General;BIG116
+Bioquímica General;BIQ116
+Botánica General y Farmacéutica;BGF116
+Contaminación Ambiental y Salud Pública;CAS116
+Control de Calidad de Productos Farmacéuticas;CPF116
+Control de Calidad de Productos Farmacéuticos y Cosméticos;CFC116
+Estadística;EGE116
+Farmacia Hospitalaria I;FAH116
+Farmacia Hospitalaria II;FAH216
+Farmacia Hospitalaria III;FAH316
+Farmacia Hospitalaria IV;FAH416
+Farmacia Industrial I;FIN116
+Farmacia Industrial II;FIN216
+Farmacia Industrial III;FIN316
+Farmacia Industrial IV;FIN416
 Farmacognosía;FAR116
 Farmacología;FRM116
-Análisis Bromatológico;ABR116
+Farmacoquímica;FMQ116
 Farmacotécnia;FAT115
-Química Forense y Toxicología;QFT116
-Control de Calidad de Productos Farmacéuticas;CPF116
-Tecnología Farmacéutica;TFA116
-Contaminación Ambiental y Salud Pública;CAS116
+Física I;FIS116
+Física II;FIS216
+Físicofarmacia I;FQF116
+Físicofarmacia II;FQF216
+Fisiología;FIG116
+Inglés Técnico I;ING116
+Inglés Técnico II;ING216
 Legislación Farmacéutica y Deontología;LFD116
-Control de Calidad de Productos Farmacéuticos y Cosméticos;CFC116
-Tecnología Farmacéutica y Cosmética;TFC116
+Matemática I;MAT116
+Matemática II;MAT216
+Matemática III;MAT316
+Microbiología Aplicada I;MIA116
+Microbiología Aplicada II;MIA216
+Microbiología Aplicada III;MIA316
+Microbiología Aplicada IV;MIA416
+Microbiología y Parasitología;MYP116
+Principios de Administración;PAD116
+Psicología Aplicada a la Empresa;PAP116
+Química Agrícola Aplicada I;QAA116
+Química Agrícola Aplicada II;QAA216
+Química Agrícola Aplicada III;QAA316
+Química Agrícola Aplicada IV;QAA416
+Química Analítica Cualitativa;QAQ116
+Química Analítica Cuantitativa;QAC116
+Química Forense y Toxicología;QFT116
+Química General I;QUG116
+Química General IÍ;QUG216
 Química Industrial y Aprovechamiento de los Recursos Naturales y Renovables;QIA116
+Química Inorgánica;QUI116
+Química Orgánica I;QUO116
+Química Orgánica II;QUO216
+Sociología;SOG116
+Técnicas de Redacción e Investigación;TRI116
+Tecnología Farmacéutica;TFA116
+Tecnología Farmacéutica y Cosmética;TFC116
+Zoología Aplicada a la Farmacia;ZAF116
