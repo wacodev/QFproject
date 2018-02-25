@@ -531,10 +531,13 @@ class ReservacionController extends Controller
 
         $locales = $request->get('locales');
 
-        $asignaturas = Asignatura::orderBy('nombre')->pluck('nombre', 'id');
+        $asignaturas = Asignatura::orderBy('nombre', 'asc')->pluck('nombre', 'id');
 
-        $actividades = Actividad::orderBy('nombre')->pluck('nombre', 'id');
+        $actividades = Actividad::orderBy('nombre', 'asc')->pluck('nombre', 'id');
 
+        $users = User::orderBy('name', 'asc')->get();
+
+        /*
         if (\Auth::user()->administrador()) {
             $users = User::where('tipo', '!=', 'Administrador')
                 ->orderBy('name')
@@ -545,6 +548,7 @@ class ReservacionController extends Controller
                 ->orderBy('name')
                 ->pluck('name', 'id');
         }
+        */
 
         return view('reservaciones.paso-tres')
             ->with('reservacion', $reservacion)
@@ -929,20 +933,11 @@ class ReservacionController extends Controller
         $hora_fin = $request->get('hora_fin');
         $local_id = $request->get('local_id');
 
-        $asignaturas = Asignatura::orderBy('nombre')->pluck('nombre', 'id');
+        $asignaturas = Asignatura::orderBy('nombre', 'asc')->pluck('nombre', 'id');
 
-        $actividades = Actividad::orderBy('nombre')->pluck('nombre', 'id');
+        $actividades = Actividad::orderBy('nombre', 'asc')->pluck('nombre', 'id');
 
-        if (\Auth::user()->administrador()) {
-            $users = User::where('tipo', '!=', 'Administrador')
-                ->orderBy('name')
-                ->pluck('name', 'id');
-        } else {
-            $users = User::where('tipo', '!=', 'Administrador')
-                ->where('tipo', '!=', 'Asistente')
-                ->orderBy('name')
-                ->pluck('name', 'id');
-        }
+        $users = User::orderBy('name', 'asc')->get();
         
         return view('reservaciones.paso-tres-semana')
             ->with('fechas', $fechas)

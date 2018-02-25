@@ -76,7 +76,16 @@
                     <div class="form-group{{ $errors->has('user_id') ? ' has-error' : '' }}">
                         {!! Form::label('user_id', 'Asignar a', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">
-                            {!! Form::select('user_id', $users, old('user_id'), ['class' => 'form-control', 'placeholder' => '-- Seleccione un usuario (opcional) --']) !!}
+                            <select name="user_id" id="user_id" class="form-control">
+                                <option selected="selected" value="">
+                                    -- Seleccione el usuario (opcional) --
+                                </option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">
+                                        {{ $user->name }} {{ $user->lastname }}
+                                    </option>
+                                @endforeach
+                            </select>
                             @if ($errors->has('user_id'))
                                 <span class="help-block">
                                     <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
@@ -87,18 +96,18 @@
                     </div>
                 @endif
                 @if (Auth::user()->visitante())
-                <div class="form-group{{ $errors->has('responsable') ? ' has-error' : '' }}">
-                    {!! Form::label('responsable', 'Responsable', ['class' => 'col-sm-4 control-label']) !!}
-                    <div class="col-sm-7">
-                        {!! Form::text('responsable', old('responsable'), ['class' => 'form-control', 'placeholder' => 'Responsable de reserva', 'required']) !!}
-                        @if ($errors->has('responsable'))
-                            <span class="help-block">
-                                <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
-                                {{ $errors->first('responsable') }}
-                            </span>
-                        @endif
+                    <div class="form-group{{ $errors->has('responsable') ? ' has-error' : '' }}">
+                        {!! Form::label('responsable', 'Responsable', ['class' => 'col-sm-4 control-label']) !!}
+                        <div class="col-sm-7">
+                            {!! Form::text('responsable', old('responsable'), ['class' => 'form-control', 'placeholder' => 'Responsable de reserva', 'required']) !!}
+                            @if ($errors->has('responsable'))
+                                <span class="help-block">
+                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                                    {{ $errors->first('responsable') }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
-                </div>
                 @endif
                 @foreach ($locales as $local)
                     {!! Form::hidden('l[]', $local) !!}
