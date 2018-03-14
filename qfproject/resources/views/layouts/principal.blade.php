@@ -238,6 +238,18 @@
                                             Ocupación de locales
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('reportes.exportar-lista-choques') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Lista de choques
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('reportes.exportar-lista-sistema') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Registros del sistema
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="treeview">

@@ -571,4 +571,204 @@ class PdfController extends Controller
             ->with('fecha_fin', $fecha_fin)
             ->with('locales', $locales);
     }
+
+    /******************* LISTADO DE CHOQUES DE RESERVACIONES ********************/
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario para generar el listado de choques de reservaciones.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function exportarListaChoques()
+    {
+        return view('reportes.exportar-lista-choques');
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Genera un listado con las reservaciones que chocan en un periodo
+     * determinado.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function generarListaChoques(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'fecha' => 'required'
+        ]);
+
+        /**
+         * Obteniendo datos solicitados por el usuario.
+         */
+
+        $fecha = explode(' - ', $request->fecha);
+
+        $fecha[0] = Carbon::parse($fecha[0])->format('Y-m-d');
+        $fecha[1] = Carbon::parse($fecha[1])->format('Y-m-d');
+
+        $reservaciones = Reservacion::where('fecha', '>=', $fecha[0])
+            ->where('fecha', '<=', $fecha[1])
+            ->orderBy('fecha', 'asc')
+            ->get();
+
+        /**
+         * Obteniendo todas aquellas reservaciones que chocan entre si.
+         */
+
+        $listado = []; // Arreglo con el listado de todos los choques de reservaciones.
+
+        foreach ($reservaciones as $reservacion) {
+
+            /**
+             * Validando si la reservación ya fue agregada al listado de choques
+             * para evitar repeticiones de registros.
+             */
+
+            $agregada = false; // Indica si la reservación ya ha sido agregada al listado de choques.
+
+            if (count($listado) > 0) {
+                foreach ($listado as $lista) {
+                    foreach ($lista as $elemento) {
+                        if ($elemento->id == $reservacion->id) {
+                            $agregada = true;
+                        }
+                    }
+                }
+            }
+
+            if (!$agregada) {
+                $choques = Reservacion::where('id', '!=', $reservacion->id)
+                    ->where('fecha', '=', $reservacion->fecha)
+                    ->where('hora_inicio', '>=', $reservacion->hora_inicio)
+                    ->where('hora_inicio', '<', $reservacion->hora_fin)
+                    ->where('local_id', '=', $reservacion->local_id)
+                    ->orWhere('id', '!=', $reservacion->id)
+                    ->where('fecha', '=', $reservacion->fecha)
+                    ->where('hora_fin', '<=', $reservacion->hora_fin)
+                    ->where('hora_fin', '>', $reservacion->hora_inicio)
+                    ->where('local_id', '=', $reservacion->local_id)
+                    ->get();
+
+                if (count($choques) > 0) {
+                    $lista = []; // Arreglo con las reservaciones que chocan con $reservacion.
+
+                    array_push($lista, $reservacion);
+
+                    foreach ($choques as $choque) {
+                        array_push($lista, $choque);
+                    }
+
+                    array_push($listado, $lista);
+                }
+            }
+        }
+
+        /**
+         * En caso de encontrar choques se genera el PDF, si no se envía un
+         * mensaje informando que no hay choques para el periodo definido.
+         */
+
+        if (count($listado) > 0) {
+            /**
+             * Generando PDF.
+             */
+
+            return view('reportes.lista-choques')
+                ->with('listado', $listado);
+        } else {
+            flash('
+                <h4>
+                    <i class="fa fa-info-circle icon" aria-hidden="true"></i>
+                    No hay choques
+                </h4>
+                <p class="info-circle">
+                    Para el periodo ingresado no hay ningún choque entre reservaciones.
+                </p>
+            ')
+                ->info()
+                ->important();
+
+            return back();
+        }
+    }
+
+    /************************** REGISTROS DEL SISTEMA ***************************/
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Muestra el formulario para seleccionar el tipo de reporte de los registros
+     * del sistema a generar.
+     * 
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function exportarListaSistema()
+    {
+        return view('reportes.exportar-lista-sistema');
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * Genera un reporte con el listado de registros solicitados.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * ---------------------------------------------------------------------------
+     */
+
+    public function generarListaSistema(Request $request)
+    {
+        /**
+         * Validando datos de entrada.
+         */
+
+        $this->validate(request(), [
+            'reporte' => 'required'
+        ]);
+
+        /**
+         * Generando el reporte según la petición del usuario.
+         */
+
+        switch ($request->reporte) {
+            case 1:
+                $actividades = Actividad::orderBy('nombre', 'asc')->get();
+
+                return view('reportes.lista-sistema-actividades')->with('actividades', $actividades);
+
+                break;
+
+            case 2:
+                $asignaturas = Asignatura::orderBy('nombre', 'asc')->get();
+
+                return view('reportes.lista-sistema-asignaturas')->with('asignaturas', $asignaturas);
+
+                break;
+
+            case 3:
+                $locales = Local::orderBy('nombre', 'asc')->get();
+
+                return view('reportes.lista-sistema-locales')->with('locales', $locales);
+
+                break;
+
+            case 4:
+                $users = User::orderBy('name', 'asc')->get();
+
+                return view('reportes.lista-sistema-users')->with('users', $users);
+
+                break;
+        }
+    }
 }

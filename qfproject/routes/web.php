@@ -187,6 +187,20 @@ Route::group(['prefix' => 'reportes', 'middleware' => ['auth', 'asistente']], fu
 
      Route::get('/listado_reservas', 'PdfController@proximasReservas')->name('reportes.reservacion-lista');
 
+     /**
+      * Lista de choques de reservaciones.
+      */
+
+    Route::get('/exportar-lista-choques', 'PdfController@exportarListaChoques')->name('reportes.exportar-lista-choques');
+    Route::post('/lista-choques', 'PdfController@generarListaChoques')->name('reportes.lista-choques');
+
+    /**
+     * Lista de registros del sistema.
+     */
+
+    Route::get('/exportar-lista-sistema', 'PdfController@exportarListaSistema')->name('reportes.exportar-lista-sistema');
+    Route::post('/lista-sistema', 'PdfController@generarListaSistema')->name('reportes.lista-sistema');
+
 });
 
 /**

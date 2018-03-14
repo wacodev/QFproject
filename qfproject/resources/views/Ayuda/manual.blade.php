@@ -333,6 +333,8 @@
 <div class="contenido"><h4><a href="#dos2">Programación por actividad</a></h4></div>
 <div class="contenido"><h4><a href="#tres3">Reporte de reservaciones de un usuario</a></h4></div>
 <div class="contenido"><h4><a href="#cuatro4">Reporte de ocupación de espacio físico</a></h4></div>
+<div class="contenido"><h4><a href="#cinco5">Reporte de choques de reservaciones</a></h4></div>
+<div class="contenido"><h4><a href="#seis6">Reporte de registros del sistema</a></h4></div>
 
 <hr>
   <a name="cero0"><h4>Reservas próximas</h4></a>
@@ -407,6 +409,31 @@
   <td>
     <a href="{{ url('images/ayuda/ocupacion-reporte.png') }}" target="_blanck">
       <img src="{{ asset('images/ayuda/ocupacion-reporte.png') }}" style="width: 400px;">
+    </a>
+  </td></center>
+  <br>
+  <a name="cinco5"><h4>Reporte de choques de reservaciones</h4></a>
+  <p align="justify">En caso de ocurrir un error en las validaciones para evitar choques de reservaciones, esta herramienta le permite obtener un listado con los choques entre reservaciones en un periodo determinado para que realice las modificaciones necesarias para corregir este conflicto. Para obtener el reporte solo debe seleccionar el rango de fechas que quiere examinar y pulsar en el botón de "Aceptar".</p> 
+  <center>
+  <td>    
+    <a href="{{ url('images/ayuda/reportes-choques-form.png') }}" target="_blanck">
+      <img src="{{ asset('images/ayuda/reportes-choques-form.png') }}" style="width: 400px;">
+    </a>
+  </td></center>
+  <br>
+  <center>
+  <td>
+    <a href="{{ url('images/ayuda/reportes-choques.png') }}" target="_blanck">
+      <img src="{{ asset('images/ayuda/reportes-choques.png') }}" style="width: 400px;">
+    </a>
+  </td></center>
+  <br>
+  <a name="seis6"><h4>Reporte de registros del sistema</h4></a>
+  <p align="justify">Para obtener registros del sistema que usted necesita solo debe escoger el tipo de reporte y pulsar el botón de "Aceptar". Puede escoger entre los siguientes reportes: actividades, asignaturas, locales y usuarios. El reporte contendrá todos los registros del elemento seleccionado de forma rápida y sencilla.</p> 
+  <center>
+  <td>    
+    <a href="{{ url('images/ayuda/reporte-sistema.png') }}" target="_blanck">
+      <img src="{{ asset('images/ayuda/reporte-sistema.png') }}" style="width: 400px;">
     </a>
   </td></center>
 </div>

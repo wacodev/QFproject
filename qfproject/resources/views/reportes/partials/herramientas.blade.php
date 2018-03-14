@@ -38,6 +38,16 @@
                     Reservas próximas
                 </a>
             </li>
+            <li>
+                <a href="{{ route('reportes.exportar-lista-choques') }}">
+                    Listado de choques de reservaciones
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('reportes.exportar-lista-sistema') }}">
+                    Registros del sistema
+                </a>
+            </li>
         </ul>
     </div>
 </div>

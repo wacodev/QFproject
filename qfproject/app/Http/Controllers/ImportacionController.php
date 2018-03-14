@@ -354,6 +354,8 @@ class ImportacionController extends Controller
 
                 $j = 0; // Número de usuarios registrados.
 
+                $envio_falla = []; // Arreglo con los correos a los que el envío de credenciales falló.
+
                 foreach ($registros as $fila) {
                     $error = $this->validarUser($fila);
 
@@ -414,7 +416,11 @@ class ImportacionController extends Controller
                      * Notificando sus credenciales al usuario.
                      */
 
-                    $user->notify(new CredencialesNotification($user->username, $request->password));
+                    try {
+                        $user->notify(new CredencialesNotification($user->username, $request->password));
+                    } catch (\Exception $e) {
+                        array_push($envio_falla, $user->email);
+                    }
 
                     $i++;
 
@@ -428,14 +434,30 @@ class ImportacionController extends Controller
                             ¡Bien hecho!
                         </h4>
                         <p class="check">
-                            <strong>Todos los usuarios fueron registrados correctamente.</strong>
+                            Todos los usuarios fueron registrados correctamente.
                         </p>
                         <p class="check">
-                            <strong>Total de usuarios registrados:</strong> ' . $j . '.
+                            Total de usuarios registrados: ' . $j . '.
                         </p>
                     ')
-                    ->success()
-                    ->important();
+                        ->success()
+                        ->important();
+
+                    if (count($envio_falla) > 0) {
+                        foreach ($envio_falla as $ef) {
+                            flash('
+                                <h4>
+                                    <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                                    ¡Envío de correo con credenciales falló!
+                                </h4>
+                                <p class="exclamation-triangle">
+                                    No se pudo enviar las credenciales al correo: ' . $ef . '
+                                </p>
+                            ')
+                                ->warning()
+                                ->important();
+                        }
+                    }
                 }
             });
 

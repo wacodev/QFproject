@@ -21,6 +21,42 @@
             <!-- FORMULARIO PARA EDITAR PERFIL DE USUARIO -->
             {!! Form::open(['route' => ['actualizar-perfil', $user], 'autocomplete' => 'off', 'method' => 'PUT', 'files' => true, 'class' => 'form-horizontal']) !!}
                 <div class="box-body">
+                    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                        {!! Form::label('name', 'Nombre', ['class' => 'col-sm-4 control-label']) !!}
+                        <div class="col-sm-7">
+                            {!! Form::text('name', $user->name, ['class' => 'form-control', 'placeholder' => 'Nombres del usuario', 'required']) !!}
+                            @if ($errors->has('name'))
+                                <span class="help-block">
+                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                                    {{ $errors->first('name') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('lastname') ? ' has-error' : '' }}">
+                        {!! Form::label('lastname', 'Apellido', ['class' => 'col-sm-4 control-label']) !!}
+                        <div class="col-sm-7">
+                            {!! Form::text('lastname', $user->lastname, ['class' => 'form-control', 'placeholder' => 'Apellidos del usuario', 'required']) !!}
+                            @if ($errors->has('lastname'))
+                                <span class="help-block">
+                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                                    {{ $errors->first('lastname') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                        {!! Form::label('email', 'Correo electrónico', ['class' => 'col-sm-4 control-label']) !!}
+                        <div class="col-sm-7">
+                            {!! Form::email('email', $user->email, ['class' => 'form-control', 'placeholder' => 'ejemplo@correo.com', 'required']) !!}
+                            @if ($errors->has('email'))
+                                <span class="help-block">
+                                    <i class="fa fa-exclamation-triangle icono-margen" aria-hidden="true"></i>
+                                    {{ $errors->first('email') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
                     <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                         {!! Form::label('password', 'Contraseña', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-7">

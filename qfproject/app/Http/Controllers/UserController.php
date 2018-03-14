@@ -134,7 +134,13 @@ class UserController extends Controller
          * Notificando sus credenciales al usuario.
          */
 
-        $user->notify(new CredencialesNotification($user->username, $request->password));
+        $envio_falla = false;
+
+        try {
+            $user->notify(new CredencialesNotification($user->username, $request->password));
+        } catch (\Exception $e) {
+            $envio_falla = true;
+        }
 
         flash('
             <h4>
@@ -147,6 +153,20 @@ class UserController extends Controller
         ')
             ->success()
             ->important();
+
+        if ($envio_falla) {
+            flash('
+                <h4>
+                    <i class="fa fa-exclamation-triangle icon" aria-hidden="true"></i>
+                    ¡Envío de correo con credenciales falló!
+                </h4>
+                <p class="exclamation-triangle">
+                    No se pudo enviar las credenciales al correo del usuario creado.
+                </p>
+            ')
+                ->warning()
+                ->important();
+        }
 
         return redirect()->route('users.index');
     }

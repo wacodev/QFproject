@@ -228,17 +228,8 @@ class HomeController extends Controller
      * ---------------------------------------------------------------------------
      */
 
-    public function actualizarPerfil(Request $request, $id)
+    public function actualizarPerfil(UserRequest $request, $id)
     {
-        /**
-         * Validando datos de entrada.
-         */
-
-        $this->validate(request(), [
-            'password' => 'max:190|confirmed',
-            'imagen'   => 'image|mimes:jpeg,png,bmp|max:2048'
-        ]);
-
         $user = User::find($id);
 
         /**
@@ -268,6 +259,38 @@ class HomeController extends Controller
 
             $user->imagen = $nombre;
         }
+
+        /**
+         * Almacenando username.
+         */
+
+        $username = explode('@', $request->email);
+
+        $email = explode('@', $user->email);
+
+        if ($username[0] != $email[0]) {
+            $username_almacenar = $username[0];
+
+            $i = 1;
+
+            $bandera = true;
+
+            while ($bandera) {
+                if (User::where('username', '=', $username_almacenar)->first()) {
+                    $username_almacenar = $username[0] . $i;
+
+                    $i++;
+                } else {
+                    $user->username = $username_almacenar;
+
+                    $bandera = false;
+                }
+            }
+        }
+
+        $user->name = $request->get('name');
+        $user->lastname = $request->get('lastname');
+        $user->email = $request->get('email');
 
         $user->password = $request->get('password');
 
