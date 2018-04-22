@@ -42,20 +42,19 @@
                             <thead>
                                 <tr class="active">
                                     <th>ID</th>
-                                    <th>Fecha</th>
-                                    <th>Hora</th>
+                                    <th>Fecha y hora de reservación</th>
                                     <th>Local</th>
                                     <th>Responsable</th>
                                     <th>Código</th>
+                                    <th>Fecha y hora de realización</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($lista as $reservacion)
                                     <tr>
                                         <td>{{ $reservacion->id }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }}</td>
                                         <td>
-                                            {{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}
+                                            {{ \Carbon\Carbon::parse($reservacion->fecha)->format('d/m/Y') }} &nbsp;&#8226;&nbsp; {{ \Carbon\Carbon::parse($reservacion->hora_inicio)->format('h:i A') }} - {{ \Carbon\Carbon::parse($reservacion->hora_fin)->format('h:i A') }}
                                         </td>
                                         <td>{{ $reservacion->local->nombre }}</td>
                                         @if ($reservacion->responsable)
@@ -64,6 +63,9 @@
                                             <td>{{ $reservacion->user->name }} {{ $reservacion->user->lastname }}</td>
                                         @endif
                                         <td>{{ $reservacion->codigo }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($reservacion->created_at)->format('d/m/Y - h:i:s A') }}
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
