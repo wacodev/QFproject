@@ -303,7 +303,7 @@ class ReservacionController extends Controller
                 <p class="info-circle">
                     Reservaciones eliminadas correctamente: ' . $i . '.
                 </p>
-                <p>
+                <p class="info-circle">
                     Reservaciones que no fueron eliminadas por no tener los permisos necesarios: ' . $j . '.
                 </p>
             ')
@@ -1807,7 +1807,7 @@ class ReservacionController extends Controller
                 
                 break;
 
-            case 'visitante':
+            case 'Visitante':
                 if (\Auth::user()->administrador() || \Auth::user()->asistente() || \Auth::user()->id == $propietario) {
                     $acceso = true;
                 }

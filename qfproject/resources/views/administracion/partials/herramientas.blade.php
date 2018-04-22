@@ -37,11 +37,13 @@
                     Suspensiones
                 </a>
             </li>
-            <li>
-                <a href="{{ route('users.index') }}">
-                    Usuarios
-                </a>
-            </li>
+            @if (Auth::user()->administrador())
+                <li>
+                    <a href="{{ route('users.index') }}">
+                        Usuarios
+                    </a>
+                </li>
+            @endif
         </ul>
     </div>
 </div>

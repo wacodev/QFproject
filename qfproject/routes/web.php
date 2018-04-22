@@ -17,7 +17,7 @@
  * ---------------------------------------------------------------------------
  */
 
-Route::group(['prefix' => 'administracion', 'middleware' => ['auth', 'administrador']], function() {
+Route::group(['prefix' => 'administracion', 'middleware' => ['auth', 'asistente']], function() {
 
     /**
      * Opciones de configuración.
@@ -35,9 +35,13 @@ Route::group(['prefix' => 'administracion', 'middleware' => ['auth', 'administra
      * Usuarios.
      */
 
-    Route::resource('users', 'UserController');
-    Route::get('/importar/users', 'ImportacionController@importarUsers')->name('users.importar');
-    Route::post('/almacenar/users', 'ImportacionController@almacenarUsers')->name('users.almacenar');
+    Route::group(['middleware' => 'administrador'], function() {
+
+        Route::resource('users', 'UserController');
+        Route::get('/importar/users', 'ImportacionController@importarUsers')->name('users.importar');
+        Route::post('/almacenar/users', 'ImportacionController@almacenarUsers')->name('users.almacenar');
+
+    });
 
 });
 

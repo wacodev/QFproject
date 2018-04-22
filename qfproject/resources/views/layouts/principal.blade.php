@@ -288,7 +288,7 @@
                                 </ul>
                             </li>
                         @endif
-                        @if (Auth::user()->administrador())
+                        @if (Auth::user()->asistente())
                             <li class="treeview">
                                 <a href="#"> <!-- Editar -->
                                     <i class="fa fa-cog"></i>
@@ -330,6 +330,8 @@
                                     </li>
                                 </ul>
                             </li>
+                        @endif
+                        @if (Auth::user()->administrador())
                             <li>
                                 <a href="{{ route('users.index') }}">
                                     <i class="fa fa-users"></i>

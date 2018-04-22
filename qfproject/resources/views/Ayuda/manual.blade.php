@@ -38,8 +38,6 @@
   <p align="justify">El sistema de reservación de locales está compuesto por una interfaz que muestra una serie de opciones que el usuario puede seleccionar de acuerdo a su rol, opciones como ingresar locales, asuetos, asignaturas y suspensiones, gestionar usuarios, realizar reservas, entre otras opciones, con el fin de seleccionar el local que más le convenga y evitar que se presenten situaciones en las cuales implique que una actividad se traslape con otra y ocasione inconvenientes, contratiempos, e incluso cancelación de actividades.</p>
 </div>
 
-
-
 <!--MÓDULO PANTALLA PRINCIPAL -->
 <div id="Home" class="tabcontent"><span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
 <br>
@@ -66,12 +64,12 @@
    <li>Usuarios</li>
   </ul>
    <br>
-   <p align="justify">Además encontramos la información del perfil de su usuario al lado derecho, desde donde podemos realizar una nueva reserva o editar nuestro perfil para hacer cambios de contraseña, fotografía, entre otros. </p>  
+   <p align="justify">Además encontramos la información del perfil de su usuario al lado derecho, desde donde podemos realizar una nueva reserva o editar nuestro perfil para hacer cambios de contraseña y fotografía.</p>  
    <br>
    <center>
    <td>
     <a href="{{ url('images/ayuda/36.png') }}" target="_blanck">
-      <img src="{{ asset('images/ayuda/36.png') }}">
+      <img src="{{ asset('images/ayuda/36.png') }}" style="width: 400px;">
     </a>
   </td></center> 
    <hr> 
