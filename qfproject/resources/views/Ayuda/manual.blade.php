@@ -24,9 +24,9 @@
   @if (Auth::user()->administrador() || Auth::user()->asistente())
   <button class="tablinks" onclick="abrir(event, 'Reportes')">Reportes</button>
   <button class="tablinks" onclick="abrir(event, 'Estadísticas')">Estadísticas</button>
+  <button class="tablinks" onclick="abrir(event, 'Configuración')">Configuración</button>
   @endif
   @if (Auth::user()->administrador())
-  <button class="tablinks" onclick="abrir(event, 'Configuración')">Configuración</button>
   <button class="tablinks" onclick="abrir(event, 'Usuarios')">Usuarios</button>
   @endif
 </div>
@@ -340,7 +340,7 @@
   <center>
   <td>
     <a href="{{ url('images/ayuda/19.png') }}" target="_blanck">
-      <img src="{{ asset('images/ayuda/19.png') }}">
+      <img src="{{ asset('images/ayuda/19.png') }}" style="width: 400px;">
     </a>
   </td></center>
   <br>
