@@ -537,8 +537,12 @@ class PdfController extends Controller
 
         $principal = []; // Arreglo con todos los porcentajes.
 
+        $uso = []; // Arreglo con todas las veces que se ha usado los locales.
+
         foreach ($locales as $local) {
             $porcentajes = []; // Arreglo con los porcentajes de ocupación del local por hora.
+
+            $veces = []; // Arreglo con las veces que se ocupó el local por hora.
 
             foreach ($horas as $hora) {
                 $reservaciones = Reservacion::where('local_id', '=', $local->id)
@@ -551,9 +555,13 @@ class PdfController extends Controller
                 $porcentaje = round($reservaciones * 100.00 / $diferencia, 2);
 
                 array_push($porcentajes, $porcentaje);
+
+                array_push($veces, $reservaciones);
             }
 
             array_push($principal, $porcentajes);
+
+            array_push($uso, $veces);
         }
 
         /**
@@ -567,6 +575,8 @@ class PdfController extends Controller
         return view('reportes.reporte-ocupacion')
             ->with('horas', $horas)
             ->with('principal', $principal)
+            ->with('uso', $uso)
+            ->with('diferencia', $diferencia)
             ->with('fecha_inicio', $fecha_inicio)
             ->with('fecha_fin', $fecha_fin)
             ->with('locales', $locales);

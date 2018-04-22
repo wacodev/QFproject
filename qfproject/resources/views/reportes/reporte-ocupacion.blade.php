@@ -44,12 +44,18 @@
                             </strong>
                             {{ $locales[$i]->nombre }}
                         </p>
-                    </div>
-                    <p>
+                        <p>
                         <strong>
                             Fecha:
                         </strong>
                         {{ $fecha_inicio }} - {{ $fecha_fin }}
+                    </p>
+                    </div>
+                    <p>
+                        <strong>
+                            Total de días:
+                        </strong>
+                        {{ $diferencia }}
                     </p>
                     <!-- DATOS DE LAS RESERVACIONES -->
                     <div class="table-responsive">
@@ -57,6 +63,7 @@
                             <thead>
                                 <tr class="active">
                                     <th>Hora</th>
+                                    <th>Cantidad de días de ocupación</th>
                                     <th>Porcentaje de ocupación (%)</th>
                                 </tr>
                             </thead>
@@ -64,6 +71,7 @@
                                 @for ($j = 0; $j < 11; $j++)
                                     <tr>
                                         <td>{{ \Carbon\Carbon::parse($horas[$j])->format('h:i A') }}</td>
+                                        <td>{{ $uso[$i][$j] }}</td>
                                         <td>{{ $principal[$i][$j] }}</td>
                                     </tr>
                                 @endfor
