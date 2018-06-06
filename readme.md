@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SoyWACO/QFproject/master/qfproject/public/images/sistema/logo-simple.png" style="width: 150px;">
+  <img src="https://raw.githubusercontent.com/SoyWACO/QFproject/master/qfproject/public/images/sistema/logo-simple-mini.png" style="width: 150px;">
 </p>
 
 # QFproject
@@ -53,5 +53,7 @@ php artisan key:generate
 Ingresa a https://demoqf.000webhostapp.com/ para usar un demo del sistema.
 
 > Las credenciales para ingresar son:
+>
 > Usuario: admin
+>
 > Contraseña: 123456
