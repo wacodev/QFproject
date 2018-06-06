@@ -66,6 +66,10 @@ class PdfController extends Controller
         foreach ($request->reservaciones as $id) {
             $reservacion = Reservacion::find($id);
 
+            if (!$reservacion) {
+                abort(404);
+            }
+
             array_push($reservaciones, $reservacion);
         }
 
@@ -407,7 +411,9 @@ class PdfController extends Controller
 
     public function exportarListaUsuario()
     {
-        $users = User::orderBy('name')->pluck('name', 'id');
+        // $users = User::orderBy('name')->pluck('name', 'id');
+
+        $users = User::orderBy('name', 'asc')->get();
 
         return view('reportes.exportar-lista-usuario')->with('users', $users);
     }

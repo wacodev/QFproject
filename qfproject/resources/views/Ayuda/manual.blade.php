@@ -29,6 +29,7 @@
   @if (Auth::user()->administrador())
   <button class="tablinks" onclick="abrir(event, 'Usuarios')">Usuarios</button>
   @endif
+  <button class="tablinks" onclick="abrir(event, 'Descargar')">Descargar Manual</button>
 </div>
 
 
@@ -256,7 +257,7 @@
     </a>
   </td></center>
   <br>
-  <p align="justify">El archivo debe tener una cabecera con los siguientes datos: user_id, local_id, asignatura_id, actividad_id, fecha, hora_inicio, hora_fin, tema y tipo. El orden de los elementos debe ser respetado y las celdas deben tener el formato de fecha y hora donde corresponda. En las primeras tres columnas se coloca el identificador del local, asignatura y actividad respectivamente, luego la fecha, hora de inicio y hora de finalización de la reservación, el campo de tema se puede dejar vacío si se desea y el campo de tipo de reservación debe tener la palabra "Ordinaria" o "Extraordinaria" según el caso y debe iniciar en mayúscula. En la imagen puede ver un ejemplo correcto del formato que debe tener el archivo.</p> 
+  <p align="justify">El archivo debe tener una cabecera con los siguientes datos: user_id, local_id, asignatura_id, actividad_id, fecha, hora_inicio, hora_fin, tema y tipo. El orden de los elementos debe ser respetado y las celdas deben tener el formato de fecha y hora donde corresponda. En las primeras cuatro columnas se coloca el identificador del usuario, local, asignatura y actividad respectivamente, luego la fecha, hora de inicio y hora de finalización de la reservación, el campo de tema se puede dejar vacío si se desea y el campo de tipo de reservación debe tener la palabra "Ordinaria" o "Extraordinaria" según el caso y debe iniciar en mayúscula. En la imagen puede ver un ejemplo correcto del formato que debe tener el archivo.</p> 
   <center>
   <td>
     <a href="{{ url('images/ayuda/excel-reserva.png') }}" target="_blanck">
@@ -644,6 +645,26 @@
     </a>
   </td></center>
   <br>
+</div>
+
+<!-- MÓDULO DESCARGAR MANUAL -->
+<div id="Descargar" class="tabcontent"><span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+  <h3>Descargar manual en PDF</h3>
+  <center>
+    <img src="{{ asset('images/ayuda/portada_manual.png') }}" style="width: 200px;">
+    <br><br>
+    <p>
+      <strong>Nombre:</strong> Manual de usuario del Sistema de Reservación de Locales
+      <br>
+      <strong>Número de páginas:</strong> 87
+      <br>
+      <strong>Peso:</strong> 3.8 MB
+    </p>
+    <a href="{{ asset('files/manual_usuario.pdf') }}" target="_blanck" class="btn btn-success">
+      <i class="fa fa-download icono-margen" aria-hidden="true"></i>
+      Descargar
+    </a>
+  </center>
 </div>
 @endsection
 

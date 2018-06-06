@@ -288,7 +288,7 @@
                                 </ul>
                             </li>
                         @endif
-                        @if (Auth::user()->asistente())
+                        @if (Auth::user()->asistente() || Auth::user()->administrador())
                             <li class="treeview">
                                 <a href="#"> <!-- Editar -->
                                     <i class="fa fa-cog"></i>

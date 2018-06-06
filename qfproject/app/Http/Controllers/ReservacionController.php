@@ -142,8 +142,7 @@ class ReservacionController extends Controller
 
         $this->validate(request(), [
             'asignatura_id' => 'required',
-            'actividad_id'  => 'required',
-            'tipo'          => 'required'
+            'actividad_id'  => 'required'
         ]);
 
         $reservacion = Reservacion::find($id);
@@ -151,8 +150,18 @@ class ReservacionController extends Controller
         if (!$reservacion) {
             abort(404);
         }
-        
+
+
         $reservacion->fill($request->all());
+
+        /**
+         * Asignando tipo de reservación Extraordinaria en caso que el usuario sea
+         * de tipo Docente o no se haya llenado el campo en el formulario.
+         */
+
+        if ($reservacion->tipo == null) {
+            $reservacion->tipo = 'Extraordinaria';
+        }
         
         $reservacion->save();
 

@@ -43,3 +43,12 @@ php artisan key:generate
 7. Ingresa a `http://localhost/QFproject/qfproject/public/` para ver la aplicación.
 
 > También puedes utilizar el servidor de Composer. En la consola ubicate en `..\xampp\htdocs\QFproject\qfproject` y ejecuta la siguiente instrucción: `php artisan serve`. Luego ingresa a `http://localhost:8000` para ver la aplicación.
+
+## Demo del sistema
+
+Ingresa a https://demoqf.000webhostapp.com/ para usar un demo del sistema.
+
+> Las credenciales para ingresar son:
+> 
+> Usuario: admin
+> Contraseña: 123456

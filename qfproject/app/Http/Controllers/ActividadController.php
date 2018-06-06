@@ -166,9 +166,7 @@ class ActividadController extends Controller
          * recién eliminada.
          */
 
-        $reservaciones = Reservacion::where('actividad_id', '=', $actividad->id)
-            ->where('tipo', '=', 'Extraordinaria')
-            ->get();
+        $reservaciones = Reservacion::where('actividad_id', '=', $actividad->id)->get();
 
         $actividad->delete();
 
@@ -203,7 +201,7 @@ class ActividadController extends Controller
                 La actividad ha sido eliminada correctamente.
             </p>
             <p class="check">
-                Reservaciones extraordinarias eliminadas por tener asignadas la actividad recién eliminada: ' . $i . '.
+                Reservaciones eliminadas por tener asignadas la actividad recién eliminada: ' . $i . '.
             </p>
         ')
             ->success()

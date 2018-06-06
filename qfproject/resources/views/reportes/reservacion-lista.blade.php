@@ -57,7 +57,7 @@
                                             @if ($reservacion->responsable)
                                                 {{ $reservacion->responsable }}
                                             @else
-                                                {{ $reservacion->user->name }} {{ $reservacion->user->lastname }} {{ $reservacion->user->name }} {{ $reservacion->user->lastname }}
+                                                {{ $reservacion->user->name }} {{ $reservacion->user->lastname }}
                                             @endif
                                         </td>
                                         <td>{{ substr($reservacion->asignatura->nombre, 0, 25) }}</td>
