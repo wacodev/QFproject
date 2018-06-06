@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/SoyWACO/QFproject/master/qfproject/public/images/sistema/logo-simple.png" style="width: 150px;">
+</p>
+
 # QFproject
 
 *Sistema de reservación de locales para la Facultad de Química y Farmacia de la Universidad de El Salvador.*
@@ -49,6 +53,5 @@ php artisan key:generate
 Ingresa a https://demoqf.000webhostapp.com/ para usar un demo del sistema.
 
 > Las credenciales para ingresar son:
-> 
 > Usuario: admin
 > Contraseña: 123456
