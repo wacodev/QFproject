@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 18-02-2018 a las 00:53:14
--- Versión del servidor: 10.1.25-MariaDB
--- Versión de PHP: 5.6.31
+-- Servidor: localhost
+-- Tiempo de generación: 25-07-2020 a las 04:20:37
+-- Versión del servidor: 10.4.13-MariaDB
+-- Versión de PHP: 7.4.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -295,7 +294,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `lastname`, `username`, `email`, `password`, `tipo`, `imagen`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Usuario', 'Administrador', 'admin', 'admin@mail.com', '$2y$10$8WXD2acmh0vM8bvOCL4cDeP86VqY7y4WuVp96IUYKkpn7giOIJD.2', 'Administrador', 'user_default.jpg', NULL, '2018-02-17 22:18:49', '2018-02-17 22:18:49');
+(1, 'Usuario', 'Administrador', 'admin', 'admin@mail.com', '$2y$10$PFNAE0.QU3v8RSOHXHo23uuPKLakj3/UrzQnFP6YlHryVWcDYIjaG', 'Administrador', 'user_default.jpg', 'SumqtkJBvYhRCAD0QbUxoGpAO5vxsB0eLIqOeKIp4G5IS7yIw5EMEFFQKu3G', '2020-07-25 00:40:25', '2020-07-25 00:44:02');
 
 --
 -- Índices para tablas volcadas
@@ -381,41 +380,49 @@ ALTER TABLE `users`
 --
 ALTER TABLE `actividades`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT de la tabla `asignaturas`
 --
 ALTER TABLE `asignaturas`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+
 --
 -- AUTO_INCREMENT de la tabla `asuetos`
 --
 ALTER TABLE `asuetos`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `locales`
 --
 ALTER TABLE `locales`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
 --
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
 --
 -- AUTO_INCREMENT de la tabla `reservaciones`
 --
 ALTER TABLE `reservaciones`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `suspensiones`
 --
 ALTER TABLE `suspensiones`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- Restricciones para tablas volcadas
 --
