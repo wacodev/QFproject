@@ -1,26 +1,40 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SoyWACO/QFproject/master/qfproject/public/images/sistema/logo-simple-mini.png" style="width: 150px;">
+  <img src="https://raw.githubusercontent.com/wacodev/QFproject/master/qfproject/public/images/sistema/logo-simple-mini.png" style="width: 150px;">
 </p>
 
 # QFproject
 
-*Sistema de reservación de locales para la Facultad de Química y Farmacia de la Universidad de El Salvador.*
+Sistema de reservación de locales para la Facultad de Química y Farmacia de la Universidad de El Salvador.
 
 ## Instalación
 
-1. Clonar el respositorio en `..\xampp\htdocs` con la siguiente instrucción:
+1. Clonar el respositorio.
 
-```bash
-git clone https://github.com/SoyWACO/QFproject.git
+```
+git clone https://github.com/wacodev/QFproject.git
 ```
 
-2. En la consola ubicate en `..\xampp\htdocs\QFproject\qfproject` y ejecuta la siguiente instrucción:
+2. Abrir una terminal y ubicarse en la carpeta `qfproject` que es la raíz del proyecto.
 
-```bash
+3. Instalar las dependencias del proyecto.
+
+```
 composer install
 ```
 
-3. Copia el archivo `.env.example`, cambia su nombre a `.env` y modifica según tus necesidades los siguientes campos:
+4. Copiar el archivo `.env.example` y nombrarlo como `.env`.
+
+```
+cp .env.example .env
+```
+
+5. Crear una nueva API key.
+
+```
+php artisan key:generate
+```
+
+6. Editar el archivo `.env` con las credenciales de su base de datos. A continuación se presenta un ejemplo.
 
 ```
 DB_DATABASE=qfproject
@@ -28,32 +42,54 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-> En el ejemplo anterior se usaron las credenciales de usuario por defecto de XAMPP y se nombró a la base de datos `qfproject`.
+> En el ejemplo anterior se usaron las credenciales de usuario por defecto de XAMPP y el nombre de la base de datos es `qfproject`.
 
-4. En la consola ubicate en `..\xampp\htdocs\QFproject\qfproject` y ejecuta la siguiente instrucción para realizar las migraciones de la base de datos:
+7. Realizar las migraciones de la base de datos.
 
-```bash
+```
 php artisan migrate
 ```
 
-5. En la consola ubicate en `..\xampp\htdocs\QFproject\qfproject` y ejecuta la siguiente instrucción para generar la llave de encriptación:
+8. Activar Tinker.
 
-```bash
-php artisan key:generate
+```
+php artisan tinker
 ```
 
-6. Abre XAMPP y enciende el modulo de Apache y MySQL.
+9. Crear un usuario de tipo `Administrador` para ingresar al sistema. A continuación se presenta un ejemplo.
 
-7. Ingresa a `http://localhost/QFproject/qfproject/public/` para ver la aplicación.
+```php
+$user = new qfproject\User
+$user->name = "William";
+$user->lastname = "Coto";
+$user->username = "wacodev";
+$user->email = "wacodev@outlook.com";
+$user->password = "123456";
+$user->tipo = "Administrador";
+$user->save();
+```
 
-> También puedes utilizar el servidor de Composer. En la consola ubicate en `..\xampp\htdocs\QFproject\qfproject` y ejecuta la siguiente instrucción: `php artisan serve`. Luego ingresa a `http://localhost:8000` para ver la aplicación.
+10. Correr el proyecto.
+
+```
+php artisan serve
+```
+
+11. Ingresar desde un navegador web a `http://localhost:8000` o url que indique la instrucción anterior.
+
+## Vista preliminar del sistema
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wacodev/QFproject/master/preview.png" style="border-radius: 5px;">
+</p>
 
 ## Demo del sistema
 
-Ingresa a https://demoqf.000webhostapp.com/ para usar un demo del sistema.
+Ingresa a https://demoqfproject.000webhostapp.com/ para usar una demo del sistema.
 
-> Las credenciales para ingresar son:
->
-> Usuario: admin
->
-> Contraseña: 123456
+Las credenciales para ingresar son:
+
+* Usuario: admin
+* Contraseña: admin
+
+> En caso que la demo no esté en funcionamiento o no se permita el acceso con las credenciales provistas, escribir al correo wacodev@outlook.com e informar del problema.
