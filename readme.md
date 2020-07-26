@@ -59,7 +59,7 @@ php artisan tinker
 9. Crear un usuario de tipo `Administrador` para ingresar al sistema. A continuación se presenta un ejemplo.
 
 ```php
-$user = new qfproject\User
+$user = new qfproject\User;
 $user->name = "William";
 $user->lastname = "Coto";
 $user->username = "wacodev";
@@ -77,19 +77,19 @@ php artisan serve
 
 11. Ingresar desde un navegador web a `http://localhost:8000` o url que indique la instrucción anterior.
 
-## Vista preliminar del sistema
+## Vista preliminar
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/wacodev/QFproject/master/preview.png" style="border-radius: 5px;">
 </p>
 
-## Demo del sistema
+## Demo
 
-Ingresa a https://demoqfproject.000webhostapp.com/ para usar una demo del sistema.
+Ingresar a https://demoqfproject.000webhostapp.com/ para usar la demo del sistema.
 
 Las credenciales para ingresar son:
 
 * Usuario: admin
 * Contraseña: admin
 
-> En caso que la demo no esté en funcionamiento o no se permita el acceso con las credenciales provistas, escribir al correo wacodev@outlook.com e informar del problema.
+> En caso que la demo no esté en funcionamiento o no se permita el acceso con las credenciales provistas, escribir al correo wacodev@outlook.com e informar del problema que se presenta.
